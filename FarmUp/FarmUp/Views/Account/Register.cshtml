@@ -1,0 +1,62 @@
+﻿@{
+    ViewData["Title"] = "Register";
+    Layout = "~/Views/Shared/_BuyerLogin.cshtml";
+}
+
+<!-- Main Start -->
+<main class="main-wrap login-page mb-xxl">
+    <!--img class="logo" src="~/assets/images/logo/logo.png" alt="logo" /-->
+    <!--img class="logo logo-w" src="~/assets/images/logo/logo-w.png" alt="logo" /-->
+    <h1 class="font-md title-color fw-600">สมัครใช้งาน</h1>
+    <p class="font-sm content-color">ผู้ช่วยออนไลน์ส่วนตัวของเกษตรกรไทย</p>
+
+    <!-- Login Section Start -->
+    <section class="login-section p-0">
+        <!-- Login Form Start -->
+        <form action="~/Account/SendWelcomeMesage" class="custom-form">
+
+            <!-- Name Input start -->
+            <div class="input-box row">
+                <div class="col-3"><h4>ชื่อ - นามสกุล</h4></div>
+                <div class="col-9">
+                    <input type="text" placeholder="ชื่อ นามสกุล" required class="form-control" />
+                </div>
+            </div>
+            <!-- Name Input End -->
+            <!-- Phone Input start -->
+            <div class="input-box row">
+                <div class="col-3"><h4>เบอร์โทร</h4></div>
+                <div class="col-9">
+                    <input type="text" placeholder="เบอร์โทร" required class="form-control" />
+                </div>
+            </div>
+            <!-- Phone Input End -->
+            <!-- Area Size Input start -->
+            <div class="input-box row">
+                <div class="col-3"><h4>ขนาดพื้นที่</h4></div>
+                <div class="col-9">
+                    <input type="text" placeholder="ขนาดพื้นที่" required class="form-control" />
+                </div>
+            </div>
+            <!-- Area Size Input End -->
+            <!-- Location Input start -->
+            <div class="input-box row">
+                <div class="col-3"><h4>ที่อยู่ของสวน</h4></div>
+                <div class="col-9">
+                    <input type="text" placeholder="ที่อยู่ของสวน" required class="form-control" />
+                </div>
+            </div>
+            <!-- Location Input End -->
+            <!-- Password Input start -->
+            <!--div class="input-box">
+                <input type="password" placeholder="Password" required class="form-control" />
+                <i class="iconly-Hide icli showHidePassword"></i>
+            </div-->
+            <!-- Password Input End -->
+            <button type="submit" class="btn-solid">ลงทะเบียน</button>
+        </form>
+        <!-- Login Form End -->
+    </section>
+    <!-- Login Section End -->
+</main>
+<!-- Main End -->

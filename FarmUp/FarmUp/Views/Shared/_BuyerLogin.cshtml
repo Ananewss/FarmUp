@@ -1,0 +1,66 @@
+﻿@{
+}
+<!DOCTYPE html>
+<!-- Html Start -->
+<html lang="en">
+<!-- Head Start -->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="FarmUp" />
+    <meta name="keywords" content="FarmUp" />
+    <meta name="author" content="FarmUp" />
+    <link rel="manifest" href="/manifest.json" />
+    <title>@ViewData["Title"] - Durian Farm Up</title>
+    <link rel="icon" href="/assets/images/favicon.png" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="/assets/images/favicon.png" />
+    <meta name="theme-color" content="#0baf9a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="FarmUp" />
+    <meta name="msapplication-TileImage" content="/assets/images/favicon.png" />
+    <meta name="msapplication-TileColor" content="#FFFFFF" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/vendors/bootstrap.css" />
+
+    <!-- Iconly Icon css -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/iconly.css" />
+
+    <!-- Style css -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/style.css" />
+</head>
+<!-- Head End -->
+<!-- Body Start -->
+<body>
+    <div class="bg-pattern-wrap ratio2_1">
+        <!-- Background Image -->
+        <div class="bg-patter">
+            <img src="/assets/images/banner/bg-pattern2.png" class="bg-img" alt="pattern" />
+        </div>
+    </div>
+
+    @RenderBody()
+
+    <!-- jquery 3.6.0 -->
+    <script src="/assets/js/jquery-3.6.0.min.js"></script>
+
+    <!-- Bootstrap Js -->
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Feather Icon -->
+    <script src="/assets/js/feather.min.js"></script>
+
+    <!-- Theme Setting js -->
+    <script src="/assets/js/theme-setting.js"></script>
+
+    <!-- Script js -->
+    <script src="/assets/js/script.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+<!-- Body End -->
+</html>
+<!-- Html End -->
