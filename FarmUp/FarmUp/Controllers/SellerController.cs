@@ -8,5 +8,10 @@ namespace FarmUp.Controllers
         {
             return View();
         }
+
+        public ActionResult WeatherForecast()
+        {
+            return View();
+        }
     }
 }
