@@ -1,0 +1,23 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@section Scripts
+{
+    <script src="@Url.Content("~/scripts/jquery-1.12.4.min.js")"></script>
+    <script src="@Url.Content("~/jqwidgets/jqxcore.js")"></script>
+    <script src="@Url.Content("~/jqwidgets/jqxdatetimeinput.js")"></script>
+    <script src="@Url.Content("~/jqwidgets/jqxcalendar.js")"></script>
+    <script src="@Url.Content("~/jqwidgets/jqxtooltip.js")"></script>
+    <script src="@Url.Content("~/jqwidgets/globalization/globalize.js")"></script>
+    <script src="@Url.Content("~/scripts/demos.js")"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Create calendar.
+            $("#calendar").jqxCalendar({ width: '220px', height: '220px', enableOtherMonthDays: false });
+            // Style the weekends.
+            $("#calendar").jqxCalendar({ enableWeekend: true });
+        });
+    </script>
+}
+
+    <div id='calendar'></div>

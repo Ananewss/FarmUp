@@ -13,5 +13,10 @@ namespace FarmUp.Controllers
         {
             return View();
         }
+
+        public ActionResult TestJQWidget()
+        {
+            return View();
+        }
     }
 }
