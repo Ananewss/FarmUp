@@ -14,6 +14,11 @@ namespace FarmUp.Controllers
             return View();
         }
 
+        public ActionResult PlantMedic()
+        {
+            return View();
+        }
+
         public ActionResult TestJQWidget()
         {
             return View();

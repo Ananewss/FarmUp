@@ -12,7 +12,7 @@
     <meta name="keywords" content="FarmUp" />
     <meta name="author" content="FarmUp" />
     <link rel="manifest" href="/manifest.json" />
-    <title>@ViewData["Title"] - Durian Farm Up</title>
+    <title>@ViewData["Title"] - One Durian</title>
     <link rel="icon" href="/assets/images/favicon.png" type="image/x-icon" />
     <link rel="apple-touch-icon" href="/assets/images/favicon.png" />
     <meta name="theme-color" content="#0baf9a" />
@@ -31,6 +31,10 @@
 
     <!-- Style css -->
     <link rel="stylesheet" type="text/css" href="/assets/css/style.css" />
+
+    <!-- jqWidget -->
+    <link rel="stylesheet" href="@Url.Content("~/jqwidgets/styles/jqx.base.css")" type="text/css" />
+    <link rel="stylesheet" href="@Url.Content("~/jqwidgets/styles/jqx.light.css")" media="screen">
 </head>
 <!-- Head End -->
 <!-- Body Start -->
@@ -58,6 +62,9 @@
 
     <!-- Script js -->
     <script src="/assets/js/script.js"></script>
+
+    <!-- jqWidget -->
+    <script src="@Url.Content("~/jqwidgets/jqxcore.js")"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

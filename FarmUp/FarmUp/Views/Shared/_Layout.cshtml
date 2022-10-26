@@ -15,7 +15,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="~/assets/images/brand/favicon.ico" />
 
     <!-- TITLE -->
-    <title>@ViewData["Title"] | Fruit Matching</title>
+    <title>@ViewData["Title"] - One Durian</title>
 
     <!-- BOOTSTRAP CSS -->
     <link id="style" href="~/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
@@ -34,6 +34,10 @@
 
     <link rel="stylesheet" href="~/assets/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/FruitProject.styles.css" asp-append-version="true" />
+
+    <!-- jqWidget -->
+    <link rel="stylesheet" href="@Url.Content("~/jqwidgets/styles/jqx.base.css")" type="text/css" />
+    <link rel="stylesheet" href="@Url.Content("~/jqwidgets/styles/jqx.light.css")" media="screen">
 
 </head>
 
@@ -81,6 +85,9 @@
 
     <!-- CUSTOM JS -->
     <script src="~/assets/js/custom.js"></script>
+
+    <!-- jqWidget -->
+    <script src="@Url.Content("~/jqwidgets/jqxcore.js")"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 
