@@ -3,7 +3,7 @@
     Layout = "~/Views/Shared/_SellerPageLayout.cshtml";
 }
 @section Scripts
-{
+    {
     @*<script src="@Url.Content("~/scripts/jquery-1.12.4.min.js")"></script>*@
     <script src="@Url.Content("~/scripts/demos.js")"></script>
     <script src="@Url.Content("~/jqwidgets/jqxbuttons.js")"></script>
@@ -15,65 +15,93 @@
     <link rel="stylesheet" type="text/css" href="@Url.Content("~/assets/css/vendors/slick-theme.css")" />
 
     <!-- Slick Slider js -->
-    <script src="@Url.Content("~/assets/js/slick.js")"></script>
+    @*<script src="@Url.Content("~/assets/js/slick.js")"></script>*@
     <script src="@Url.Content("~/assets/js/slick.min.js")"></script>
-    <script src="@Url.Content("~/assets/js/slick-custom.js")"></script>
 
 
     <script type="text/javascript">
         $(document).ready(function () {
             var quotes = [];
             $('#jqxTextArea').jqxTextArea({ placeHolder: 'สอบถามปัญหาต่างๆ', height: 90, width: 300, minLength: 1, source: quotes });
+
+            $(".product-slider").slick({
+                dots: false,
+                slidesToShow: 3,
+                centerMode: true,
+                centerPadding: "50px",
+                arrows: false,
+                slidesToScroll: 1,
+                responsive: [
+                    {
+                        breakpoint: 567,
+                        settings: {
+                            slidesToShow: 3, centerPadding: "25px",
+                        },
+                    },
+                    {
+                        breakpoint: 475,
+                        settings: {
+                            slidesToShow: 2, centerPadding: "25px",
+                        },
+                    },
+                    {
+                        breakpoint: 375,
+                        settings: {
+                            slidesToShow: 1,
+                            centerPadding: "120px"
+                        },
+                    }
+                ],
+            });
         });
     </script>
 }
 
 
-<!-- Skeleton loader Start -->
-<div>
-    <!-- Header Start -->
-    <header class="header">
-        <div class="logo-wrap">
-            <a href="index.html"><i class="iconly-Arrow-Left-Square icli"></i></a>
-            <h1 class="title-color font-md">การดูแลรักษา</h1>
-        </div>
-        <div class="avatar-wrap">
-            <a href="index.html">
-                @*<i class="iconly-Home icli"></i>*@
-                <i class="fa fa-home" aria-hidden="true"></i>
-            </a>
-        </div>
-    </header>
-    <!-- Header End -->
-    <!-- Main Start -->
-    <div class="main-wrap order-detail mb-xxl">
-        <!-- Banner Start -->
-        <div class="">
-            <div class="banner-box">
-                <div class="media">
-                    <div class="img"></div>
-                    <div class="media-body">
-                        <h2>การดูแลรักษา</h2>
-                        <span class="font-sm title-color fw-600">&nbsp;</span>
+    <!-- Skeleton loader Start -->
+    <div>
+        <!-- Header Start -->
+        <header class="header">
+            <div class="logo-wrap">
+                <a href="index.html"><i class="iconly-Arrow-Left-Square icli"></i></a>
+                <h1 class="title-color font-md">การดูแลรักษา</h1>
+            </div>
+            <div class="avatar-wrap">
+                <a href="index.html">
+                    @*<i class="iconly-Home icli"></i>*@
+                    <i class="fa fa-home" aria-hidden="true"></i>
+                </a>
+            </div>
+        </header>
+        <!-- Header End -->
+        <!-- Main Start -->
+        <div class="main-wrap order-detail mb-xxl">
+            <!-- Banner Start -->
+            <div class="">
+                <div class="banner-box">
+                    <div class="media">
+                        <div class="img"></div>
+                        <div class="media-body">
+                            <h2>การดูแลรักษา</h2>
+                            <span class="font-sm title-color fw-600">&nbsp;</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Item Section Start -->
+            <!-- Item Section Start -->
             <div class="item-section p-0 pt-4  section-p-tb">
-            <h3 class="font-theme font-md" style="color:orangered !important;">สอบถามปัญหาต่างๆ :</h3>
+                <h3 class="font-theme font-md" style="color:orangered !important;">สอบถามปัญหาต่างๆ :</h3>
 
-            <div class="item-wrap">
+                <div class="item-wrap">
                     <textarea id="jqxTextArea"></textarea>
+                </div>
+
+                <button type="submit" class="btn-solid">ส่ง</button>
             </div>
-
-            <button type="submit" class="btn-solid">ส่ง</button>
-        </div>
-        <!-- Item Section End -->
-
-        <!-- Tab Content Start -->
-        <div class="tab-content ratio2_1" id="pills-tabContent">
+            <!-- Item Section End -->
+            <!-- Tab Content Start -->
+            <div class="tab-content ratio2_1" id="pills-tabContent">
                 <!-- Catagories Content Start -->
                 <div class="tab-pane fade show active" id="catagories1" role="tabpanel" aria-labelledby="catagories1-tab">
                     <h1 class="font-md fw-600">คำถามที่พบบ่อย</h1>
@@ -515,155 +543,149 @@
                 </div>
                 <!-- Catagories Content End -->
             </div>
-        <!-- Tab Content End -->
+            <!-- Tab Content End -->
+            <!-- Promotion Start -->
+            <div class="product-page">
+                <section class="recently-viewed">
+                    <div class="top-content">
+                        <div>
+                            <h4 class="title-color">Promotion</h4>
+                            <p class="font-xs content-color"></p>
+                        </div>
+                        <a href="shop.html" class="font-xs font-theme">ดูทั้งหมด</a>
+                    </div>
 
-        <!-- Promotion Start -->
-        <div class="product-page">
-        <section class="recently-viewed">
-            <div class="top-content">
-              <div>
-                <h4 class="title-color">Promotion</h4>
-                <p class="font-xs content-color"></p>
-              </div>
-              <a href="shop.html" class="font-xs font-theme">ดูทั้งหมด</a>
+                    <div class="product-slider">
+                        <div>
+                            <div class="product-card">
+                                <div class="img-wrap">
+                                    <a href="product.html"><img src="~/assets/images/product/10.png" class="img-fluid" alt="product" /> </a>
+                                </div>
+                                <div class="content-wrap">
+                                    <a href="product.html" class="font-sm title-color" tabindex="-1">ปุ๋ยสูตร 16-16-16 </a>
+                                    <span class="content-color font-xs">1 Kg</span>
+                                    <span class="title-color font-sm plus-item">
+                                        525.00
+                                        <span class="plus-minus">
+                                            <i class="sub" data-feather="minus"></i>
+                                            <input class="val" type="number" value="1" min="1" max="10" />
+                                            <i class="add" data-feather="plus"></i>
+                                        </span>
+                                        <span class="plus-theme"><i data-feather="plus"></i> </span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="product-card">
+                                <div class="img-wrap">
+                                    <a href="product.html"><img src="~/assets/images/product/11.png" class="img-fluid" alt="product" /> </a>
+                                </div>
+                                <div class="content-wrap">
+                                    <a href="product.html" class="font-sm title-color" tabindex="-1">ปุ๋ยสูตร 16-16-16 </a>
+                                    <span class="content-color font-xs">1 Kg</span>
+                                    <span class="title-color font-sm plus-item">
+                                        525.00
+                                        <span class="plus-minus">
+                                            <i class="sub" data-feather="minus"></i>
+                                            <input class="val" type="number" value="1" min="1" max="10" />
+                                            <i class="add" data-feather="plus"></i>
+                                        </span>
+                                        <span class="plus-theme"><i data-feather="plus"></i> </span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="product-card">
+                                <div class="img-wrap">
+                                    <a href="product.html"><img src="~/assets/images/product/11.png" class="img-fluid" alt="product" /> </a>
+                                </div>
+                                <div class="content-wrap">
+                                    <a href="product.html" class="font-sm title-color" tabindex="-1">ปุ๋ยสูตร 16-16-16 </a>
+                                    <span class="content-color font-xs">1 Kg</span>
+                                    <span class="title-color font-sm plus-item">
+                                        525.00
+                                        <span class="plus-minus">
+                                            <i class="sub" data-feather="minus"></i>
+                                            <input class="val" type="number" value="1" min="1" max="10" />
+                                            <i class="add" data-feather="plus"></i>
+                                        </span>
+                                        <span class="plus-theme"><i data-feather="plus"></i> </span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="product-card">
+                                <div class="img-wrap">
+                                    <a href="product.html"><img src="~/assets/images/product/12.png" class="img-fluid" alt="product" /> </a>
+                                </div>
+                                <div class="content-wrap">
+                                    <a href="product.html" class="font-sm title-color" tabindex="-1">ปุ๋ยสูตร 16-16-16 </a>
+                                    <span class="content-color font-xs">1 Kg</span>
+                                    <span class="title-color font-sm plus-item">
+                                        525.00
+                                        <span class="plus-minus">
+                                            <i class="sub" data-feather="minus"></i>
+                                            <input class="val" type="number" value="1" min="1" max="10" />
+                                            <i class="add" data-feather="plus"></i>
+                                        </span>
+                                        <span class="plus-theme"><i data-feather="plus"></i> </span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="product-card">
+                                <div class="img-wrap">
+                                    <a href="product.html"><img src="~/assets/images/product/13.png" class="img-fluid" alt="product" /> </a>
+                                </div>
+                                <div class="content-wrap">
+                                    <a href="product.html" class="font-sm title-color" tabindex="-1">ปุ๋ยสูตร 16-16-16 </a>
+                                    <span class="content-color font-xs">1 Kg</span>
+                                    <span class="title-color font-sm plus-item">
+                                        525.00
+                                        <span class="plus-minus">
+                                            <i class="sub" data-feather="minus"></i>
+                                            <input class="val" type="number" value="1" min="1" max="10" />
+                                            <i class="add" data-feather="plus"></i>
+                                        </span>
+                                        <span class="plus-theme"><i data-feather="plus"></i> </span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="product-card">
+                                <div class="img-wrap">
+                                    <a href="product.html"><img src="~/assets/images/product/9.png" class="img-fluid" alt="product" /> </a>
+                                </div>
+                                <div class="content-wrap">
+                                    <a href="product.html" class="font-sm title-color" tabindex="-1">ปุ๋ยสูตร 16-16-16 </a>
+                                    <span class="content-color font-xs">1 Kg</span>
+                                    <span class="title-color font-sm plus-item">
+                                        525.00
+                                        <span class="plus-minus">
+                                            <i class="sub" data-feather="minus"></i>
+                                            <input class="val" type="number" value="1" min="1" max="10" />
+                                            <i class="add" data-feather="plus"></i>
+                                        </span>
+                                        <span class="plus-theme"><i data-feather="plus"></i> </span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
-            <div class="product-slider slick-initialized slick-slider">
-          <div class="slick-list draggable" style="padding: 0px 50px;"><div class="slick-track" style="opacity: 1; width: 2880px; transform: translate3d(-540px, 0px, 0px);"><div class="slick-slide slick-cloned" data-slick-index="-4" id="" aria-hidden="true" style="width: 180px;" tabindex="-1">
-            <div class="product-card">
-              <div class="img-wrap">
-                <a href="product.html" tabindex="-1"><img src="@Url.Content("~/assets/images/product/11.png")" class="img-fluid" alt="product"> </a>
-              </div>
-              <div class="content-wrap">
-                <a href="product.html" class="font-sm title-color" tabindex="-1">ปุ๋ยสูตร 16-16-16 </a>
-                <span class="content-color font-xs">1 Kg</span>
-                <span class="title-color font-sm plus-item">525.00
-                  <span class="plus-minus">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-minus sub"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                    <input class="val" type="number" value="1" min="1" max="10" tabindex="-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus add"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                  </span>
-                  <span class="plus-theme"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> </span></span>
-              </div>
-            </div>
-          </div>
-          <div class="slick-slide slick-cloned" data-slick-index="-3" id="" aria-hidden="true" style="width: 180px;" tabindex="-1">
-            <div class="product-card">
-              <div class="img-wrap">
-                <a href="product.html" tabindex="-1"><img src="@Url.Content("~/assets/images/product/12.png")" class="img-fluid" alt="product"> </a>
-              </div>
-                                        <div class="content-wrap">
-                                            <a href="product.html" class="font-sm title-color" tabindex="-1">ปุ๋ยสูตร 16-16-16 </a>
-                                            <span class="content-color font-xs">1 Kg</span>
-                                            <span class="title-color font-sm plus-item">
-                                                525.00
-                  <span class="plus-minus">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-minus sub"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                    <input class="val" type="number" value="1" min="1" max="10" tabindex="-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus add"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                  </span>
-                  <span class="plus-theme"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> </span></span>
-              </div>
-            </div>
-          </div>
-          <div class="slick-slide slick-cloned" data-slick-index="-2" id="" aria-hidden="true" style="width: 180px;" tabindex="-1">
-            <div class="product-card">
-              <div class="img-wrap">
-                <a href="product.html" tabindex="-1"><img src="@Url.Content("~/assets/images/product/13.png")" class="img-fluid" alt="product"> </a>
-              </div>
-                                        <div class="content-wrap">
-                                            <a href="product.html" class="font-sm title-color" tabindex="-1">ปุ๋ยสูตร 16-16-16 </a>
-                                            <span class="content-color font-xs">1 Kg</span>
-                                            <span class="title-color font-sm plus-item">
-                                                525.00
-                  <span class="plus-minus">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-minus sub"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                    <input class="val" type="number" value="1" min="1" max="10" tabindex="-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus add"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                  </span>
-                  <span class="plus-theme"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> </span></span>
-              </div>
-            </div>
-          </div>
-          <div class="slick-slide slick-cloned slick-active" data-slick-index="-1" id="" aria-hidden="false" style="width: 180px;" tabindex="-1">
-            <div class="product-card">
-              <div class="img-wrap">
-                <a href="product.html" tabindex="0"><img src="@Url.Content("~/assets/images/product/9.png")" class="img-fluid" alt="product"> </a>
-              </div>
-                                        <div class="content-wrap">
-                                            <a href="product.html" class="font-sm title-color" tabindex="-1">ปุ๋ยสูตร 16-16-16 </a>
-                                            <span class="content-color font-xs">1 Kg</span>
-                                            <span class="title-color font-sm plus-item">
-                                                525.00
-                  <span class="plus-minus">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-minus sub"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                    <input class="val" type="number" value="1" min="1" max="10" tabindex="0">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus add"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                  </span>
-                  <span class="plus-theme"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> </span></span>
-              </div>
-            </div>
-          </div>
-          <div class="slick-slide slick-current slick-active slick-center" data-slick-index="0" aria-hidden="false" style="width: 180px;" tabindex="0">
-            <div class="product-card">
-              <div class="img-wrap">
-                <a href="product.html" tabindex="0"><img src="@Url.Content("~/assets/images/product/10.png")" class="img-fluid" alt="product"> </a>
-              </div>
-                                        <div class="content-wrap">
-                                            <a href="product.html" class="font-sm title-color" tabindex="-1">ปุ๋ยสูตร 16-16-16 </a>
-                                            <span class="content-color font-xs">1 Kg</span>
-                                            <span class="title-color font-sm plus-item">
-                                                525.00
-                  <span class="plus-minus">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-minus sub"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                    <input class="val" type="number" value="1" min="1" max="10" tabindex="0">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus add"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                  </span>
-                  <span class="plus-theme"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> </span></span>
-              </div>
-            </div>
-          </div>
-          <div class="slick-slide slick-active" data-slick-index="1" aria-hidden="false" style="width: 180px;" tabindex="0">
-            <div class="product-card">
-              <div class="img-wrap">
-                <a href="product.html" tabindex="0"><img src="@Url.Content("~/assets/images/product/11.png")" class="img-fluid" alt="product"> </a>
-              </div>
-                                        <div class="content-wrap">
-                                            <a href="product.html" class="font-sm title-color" tabindex="-1">ปุ๋ยสูตร 16-16-16 </a>
-                                            <span class="content-color font-xs">1 Kg</span>
-                                            <span class="title-color font-sm plus-item">
-                                                525.00
-                  <span class="plus-minus">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-minus sub"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                    <input class="val" type="number" value="1" min="1" max="10" tabindex="0">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus add"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                  </span>
-                  <span class="plus-theme"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> </span></span>
-              </div>
-            </div>
-          </div>
-          <div class="slick-slide slick-cloned" data-slick-index="11" id="" aria-hidden="true" style="width: 180px;" tabindex="-1">
-            <div class="product-card">
-              <div class="img-wrap">
-                <a href="product.html" tabindex="-1"><img src="@Url.Content("~/assets/images/product/9.png")" class="img-fluid" alt="product"> </a>
-              </div>
-              <div class="content-wrap">
-                <a href="product.html" class="font-sm title-color" tabindex="-1">ปุ๋ยสูตร 16-16-16 </a>
-                <span class="content-color font-xs">1 Kg</span>
-                <span class="title-color font-sm plus-item">525.00
-                  <span class="plus-minus">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-minus sub"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                    <input class="val" type="number" value="1" min="1" max="10" tabindex="-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus add"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                  </span>
-                  <span class="plus-theme"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> </span></span>
-              </div>
-            </div>
-          </div></div></div>
+            <!-- Promotion End-->
         </div>
-        </section>
-        </div>
-        <!-- Promotion End-->
+        <!-- Main End -->
     </div>
-    <!-- Main End -->
-</div>
-<!-- Skeleton loader End -->
+    <!-- Skeleton loader End -->
