@@ -1,4 +1,7 @@
-﻿@{
+﻿@using FarmUp.Dtos.Seller
+
+@model FarmUp.Dtos.Seller.TodoListFormDto
+@{
     ViewData["Title"] = "Register";
     Layout = "~/Views/Shared/_SellerPageLayout.cshtml";
 }
@@ -19,114 +22,79 @@
     </header>
     <!-- Header End -->
     <!-- Main Start -->
-    <div class="main-wrap order-detail mb-xxl">
-        <!-- Banner Start -->
-        <div class="section-p-b">
-            <div class="banner-box">
-                <div class="media">
-                    <div class="img"></div>
-                    <div class="media-body">
-                        <h2>รายการต้องทำประจำวัน</h2>
-                        <span class="font-sm">สภาพอากาศ : คาดว่าฝนตก 9:00-10:00</span>
+    <form method="post" asp-controller="Seller" asp-action="TodoList" enctype="multipart/form-data">
+        <div class="main-wrap order-detail mb-xxl">
+            <!-- Banner Start -->
+            <div class="section-p-b">
+                <div class="banner-box">
+                    <div class="media">
+                        <div class="img"></div>
+                        <div class="media-body">
+                            <h2>รายการต้องทำประจำวัน</h2>
+                            <span class="font-sm">สภาพอากาศ : คาดว่าฝนตก 9:00-10:00</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- Banner End -->
-        <!-- Item Section Start -->
-        <div class="item-section p-0">
-            <h3 class="font-theme font-md">กิจกรรมวันนี้ (21/10/65):</h3>
-
-            <div class="item-wrap">
-                <!-- Item Start -->
-                <div class="media">
-                    <div class="count">
-                        <input type="checkbox" />
-                    </div>
-                    <div class="media-body">
-                        <h4 class="title-color font-sm">รดน้ำ</h4>
-                    </div>
+            <!-- Banner End -->
+            <!-- Item Section Start -->
+            <div class="item-section p-0">
+                <h3 class="font-theme font-md">กิจกรรมวันนี้ (21/10/65):</h3>
+                <div class="item-wrap">
+                    <!-- Item Start -->
+                    @foreach (var todoListItem in (List<SelectListItem>)ViewData["selectTodoListValue"])
+                    {
+                        <div class="media">
+                            <div class="count">
+                                <input type="checkbox" id="@todoListItem.Value" name="todoList" value="@todoListItem.Value" />
+                            </div>
+                            <div class="media-body">
+                                <h4 class="title-color font-sm">@todoListItem.Text</h4>
+                            </div>
+                        </div>
+                    }
+                    <!-- Item End -->
                 </div>
-                <!-- Item End -->
-                <!-- Item Start -->
-                <div class="media">
-                    <div class="count">
-                        <input type="checkbox" />
-                    </div>
-                    <div class="media-body">
-                        <h4 class="title-color font-sm">ใส่ปุ๋ย</h4>
-                    </div>
-                </div>
-                <!-- Item End -->
-                <!-- Item Start -->
-                <div class="media">
-                    <div class="count">
-                        <input type="checkbox" />
-                    </div>
-                    <div class="media-body">
-                        <h4 class="title-color font-sm">ตรวจดูใบ และราก</h4>
-                    </div>
-                </div>
-                <!-- Item End -->
             </div>
-        </div>
-        <!-- Item Section End -->
-        <!-- Item Section Start -->
-        <div class="item-section p-0 pt-4">
-            <h3 class="font-theme font-md" style="color:orangered !important;">ปัญหาที่พบ:</h3>
-
-            <div class="item-wrap">
-                <!-- Item Start -->
-                <div class="media">
-                    <div class="count">
-                        <input type="checkbox" />
-                    </div>
-                    <div class="media-body">
-                        <h4 class="title-color font-sm">ตรวจพบรายการผิดปกติ</h4>
-                    </div>
+            <!-- Item Section End -->
+            <!-- Item Section Start -->
+            <div class="item-section p-0 pt-4">
+                <h3 class="font-theme font-md" style="color:orangered !important;">ปัญหาที่พบ:</h3>
+                <div class="item-wrap">
+                    @foreach (var ProbleListItem in (List<SelectListItem>)ViewData["selectProblemListValue"])
+                    {
+                        <!-- Item Start -->
+                        <div class="media">
+                            <div class="count">
+                                <input type="checkbox" id="@ProbleListItem.Value" name="problemList" value="@ProbleListItem.Value" />
+                            </div>
+                            <div class="media-body">
+                                <h4 class="title-color font-sm">@ProbleListItem.Text</h4>
+                            </div>
+                        </div>
+                        <!-- Item End -->
+                    }
                 </div>
-                <!-- Item End -->
-                <!-- Item Start -->
-                <div class="media">
-                    <div class="count">
-                        <input type="checkbox" />
-                    </div>
-                    <div class="media-body">
-                        <h4 class="title-color font-sm">ใบเหลือง</h4>
-                    </div>
-                </div>
-                <!-- Item End -->
-                <!-- Item Start -->
-                <div class="media">
-                    <div class="count">
-                        <input type="checkbox" />
-                    </div>
-                    <div class="media-body">
-                        <h4 class="title-color font-sm">รากมีปัญหา</h4>
-                    </div>
-                </div>
-                <!-- Item End -->
-                <!-- Item Start -->
-                <div class="media">
-                    <div class="count">
-                        <input type="checkbox" />
-                    </div>
-                    <div class="media-body">
-                        <h4 class="title-color font-sm">เจอแมลง</h4>
-                    </div>
-                </div>
-                <!-- Item End -->
             </div>
-        </div>
-        <!-- Item Section End -->
-        <!-- Item Section Start -->
-        <div class="item-section p-0 pt-4">
-            <h3 class="font-theme font-md" style="color:dodgerblue !important;">อัพโหลดรูป :</h3>
+            <!-- Item Section End -->
+            <!-- Item Section Start -->
+
+            <div class="item-section p-0 pt-4">
+                <h3 class="font-theme font-md" style="color:dodgerblue !important;">อัพโหลดรูป :</h3>
+
+            </div>
+            <div class="item-section p-0 pt-4">
+                <input type="file" name="imgFile" multiple>
+
+            </div>
+            <div class="item-section p-0 pt-4">
+                <input type="submit" value="บันทึก" class="btn btn-success" />
+
+            </div>
+            <!-- Item Section End -->
 
         </div>
-        <!-- Item Section End -->
-        
-    </div>
+    </form>
     <!-- Main End -->
 </div>
 <!-- Skeleton loader End -->
