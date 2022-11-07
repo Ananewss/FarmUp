@@ -1,4 +1,6 @@
-﻿@{
+﻿@model FarmUp.Dtos.Seller.WeatherForecastDtoList
+
+@{
     ViewData["Title"] = "Register";
     Layout = "~/Views/Shared/_SellerPageLayout.cshtml";
 }
@@ -26,7 +28,7 @@
                 <div class="media">
                     <div class="img"></div>
                     <div class="media-body">
-                        <h2>คาดการณ์สภาาพอากาศ : ชลบุรี</h2>
+                        <h2>คาดการณ์สภาาพอากาศ : @Model.Province</h2>
                         <span class="font-sm title-color fw-600">&nbsp;</span>
                     </div>
                 </div>
@@ -36,7 +38,19 @@
         <section class="offer-section pb-0">
             <div class="offer">
                 <div class="offer-wrap">
-                    <div class="product-list media">
+
+                    @foreach(var WeatherItem in Model.weatherForecastDtosList){
+                        <div class="product-list media">
+                            <img src="~/assets/images/weather/@WeatherItem.Icon" class="img-fluid" alt="offer">
+                            <div class="media-body">
+                                <span class="font-sm title-color fw-600"> @WeatherItem.DT.ToString("HH:mm") โอกาสเกิดฝน @WeatherItem.RainAmt%, อุณหภูมิ @WeatherItem.Temp°C</span>
+                                <span class="content-color font-sm">ความชื้น @WeatherItem.Humidity%, แรงลม @WeatherItem.Wind กม/ช</span>
+                                <span class="content-color font-sm">@WeatherItem.CloudyMsg, UV @WeatherItem.UV</span>
+                            </div>
+                        </div>
+                    }
+
+                    @*<div class="product-list media">
                         <img src="~/assets/images/weather/sun.png" class="img-fluid" alt="offer">
                         <div class="media-body">
                             <span class="font-sm title-color fw-600"> 0:00 โอกาสเกิดฝน 10%, อุณหภูมิ 26°C</span>
@@ -238,7 +252,7 @@
                             <span class="content-color font-sm">ความชื้น 20%, แรงลม 5 กม/ช</span>
                             <span class="content-color font-sm">เมฆมาก, UV 1/10</span>
                         </div>
-                    </div>
+                    </div>*@
                 </div>
             </div>
         </section>

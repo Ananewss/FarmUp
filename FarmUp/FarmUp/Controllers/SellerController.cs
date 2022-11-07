@@ -10,10 +10,13 @@ namespace FarmUp.Controllers
         private readonly ILogger<SellerController> _logger;
 
         private readonly TodoList _todolist;
-        public SellerController(ILogger<SellerController> logger,TodoList todoList)
+
+        private readonly WeatherForecastService _weatherForecastService;
+        public SellerController(ILogger<SellerController> logger,TodoList todoList, WeatherForecastService weatherForecastService)
         {
             _logger = logger;
             _todolist = todoList;
+            _weatherForecastService = weatherForecastService;
         }
 
         public async Task<ActionResult> TodoList()
@@ -37,9 +40,10 @@ namespace FarmUp.Controllers
             return View(todoListFormDto);
         }
 
-        public ActionResult WeatherForecast()
+        public async Task<ActionResult> WeatherForecast()
         {
-            return View();
+            var readWeatherData = await _weatherForecastService.GetWeatherForecastByLocation("", "", "");
+            return View(readWeatherData);
         }
 
         public ActionResult PlantMedic()

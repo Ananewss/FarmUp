@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<TodoList>();
+builder.Services.AddScoped<WeatherForecastService>();
 
 var app = builder.Build();
 
