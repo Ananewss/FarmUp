@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<setting>
+	<DbConnectionString>Persist Security Info=False;server=localhost;database=oneduriantest;uid=root;password=</DbConnectionString>
+	<DelayMin>120</DelayMin>
+</setting>
