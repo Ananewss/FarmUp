@@ -38,6 +38,9 @@ namespace WeatherRobot
             timer1.Interval = Int32.Parse(config["DelayMin"].ToString()) * 60 * 1000;
             timer1.Enabled = true;
 
+            timer2.Interval = Int32.Parse(config["DelayMinUrl"].ToString()) * 60 * 1000; 
+            timer2.Enabled = true;
+
             GetWeatherDayItem();
         }
 
@@ -298,7 +301,7 @@ namespace WeatherRobot
                 conn.Open();
 
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT * from ma_location";
+                cmd.CommandText = "SELECT * from ma_location WHERE loc_weather_url='' OR loc_weather_url IS NULL";
                 //cmd.Parameters.AddWithValue("@param", value);
 
                 var reader = cmd.ExecuteReader();
@@ -394,6 +397,11 @@ namespace WeatherRobot
                 LogStatus("Error UPDATE DB :" + error);
                 this.Close();
             }
+
+            if (locationList.Count > 0)
+            {
+                GetWeatherDayItem();
+            }
         }
 
         public static IWebElement WaitElement(IWebDriver driver, By by, int timeoutInSeconds, bool withcheckSendKey = false)
@@ -424,6 +432,16 @@ namespace WeatherRobot
         private void timer1_Tick(object sender, EventArgs e)
         {
             GetWeatherDayItem();
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            GetWeatherDayItem();
+        }
+
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            GetWeatherUrl();
         }
     }
 }

@@ -1,0 +1,50 @@
+﻿@model FarmUp.Dtos.Admin.BoardcastDtoList
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Admin Broadcast";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+@section Scripts
+{
+    <script type="text/javascript">
+        function SendMessage(){
+            var line = $("[name=lineid]").val();
+            var message = $("[name=message]").val();
+            {
+                $.post('@Url.Action("Test", "Admin")', JSON.stringify({
+                      messages: message,
+                      line: line
+                    })).done(function(result){
+                        if(result.statusCode == 200)
+                            alert("Success");
+                        else
+                            alert("Error");
+                    });
+            }
+        }
+    </script>
+}
+<div class="text-center">
+    <h1 class="display-4">Broadcast</h1>
+    <div>
+        <div>
+            Area : 
+            <select name="lineid">
+                <option value="All">All</option>
+                @foreach(var boardcastItem in Model.boardcastDtoList)
+                {
+                    <option value="@boardcastItem.usr_line_id">@boardcastItem.address</option>
+                }
+            </select>
+        </div>
+        <div>
+            Message :
+            <textarea maxlength="200" name="message"></textarea>
+        </div>
+        <div>
+            <button onclick="SendMessage()">Send</button>
+        </div>
+    </div>
+</div>

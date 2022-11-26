@@ -1,3 +1,4 @@
+using FarmUp.Services.Admin;
 using FarmUp.Services.Seller;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<TodoList>();
 builder.Services.AddScoped<WeatherForecastService>();
 builder.Services.AddScoped<TodayPriceService>();
+builder.Services.AddScoped<BoardcastService>();
 
 var app = builder.Build();
 
