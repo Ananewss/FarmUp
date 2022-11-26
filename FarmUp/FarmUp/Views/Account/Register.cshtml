@@ -1,4 +1,5 @@
-﻿@{
+﻿@model LoginModel
+@{
     ViewData["Title"] = "Register";
     Layout = "~/Views/Shared/_SellerLogin.cshtml";
 }
@@ -13,50 +14,88 @@
     <!-- Login Section Start -->
     <section class="login-section p-0">
         <!-- Login Form Start -->
-        <form action="~/Account/SendWelcomeMesage" class="custom-form">
-
-            <!-- Name Input start -->
+        @using(Html.BeginForm(new { @class="custom-form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(false,"",new { @class="text-danger" })
+            <!-- Get Line UserID-->
+            <div class="form-group">                
+                @Html.TextBoxFor( model=>model.usr_line_id,new { @id = "usr_line_id" ,@class = "form-control",@Type = "hidden"})
+            </div>
             <div class="input-box row">
-                <div class="col-3"><h4>ชื่อ - นามสกุล</h4></div>
+                <div class="col-3">
+                    <h4>
+                        @Html.LabelFor(model=>model.usr_firstname,new { @class = "control-label" })
+                    </h4>                    
+                </div>
                 <div class="col-9">
-                    <input type="text" placeholder="ชื่อ นามสกุล" required class="form-control" />
+                    @Html.EditorFor(model=>model.usr_firstname,new { @class = "form-control" })
                 </div>
             </div>
-            <!-- Name Input End -->
-            <!-- Phone Input start -->
             <div class="input-box row">
-                <div class="col-3"><h4>เบอร์โทร</h4></div>
+                <div class="col-3">
+                    <h4>
+                        @Html.LabelFor(model=>model.usr_lastname,new { @class = "control-label" })
+                    </h4>                    
+                </div>
                 <div class="col-9">
-                    <input type="text" placeholder="เบอร์โทร" required class="form-control" />
+                    @Html.EditorFor(model=>model.usr_lastname,new { @class = "form-control" })
                 </div>
             </div>
-            <!-- Phone Input End -->
-            <!-- Area Size Input start -->
             <div class="input-box row">
-                <div class="col-3"><h4>ขนาดพื้นที่</h4></div>
+                <div class="col-3">
+                    <h4>
+                        @Html.LabelFor(model=>model.usr_phone,new { @class = "control-label" })
+                    </h4>                    
+                </div>
                 <div class="col-9">
-                    <input type="text" placeholder="ขนาดพื้นที่" required class="form-control" />
+                    @Html.EditorFor(model=>model.usr_phone,new { @class = "form-contro" })
                 </div>
             </div>
-            <!-- Area Size Input End -->
-            <!-- Location Input start -->
             <div class="input-box row">
-                <div class="col-3"><h4>ที่อยู่ของสวน</h4></div>
+                <div class="col-3">
+                    <h4>
+                        @Html.LabelFor(model=>model.slr_farm_size,new { @class = "control-label" })
+                    </h4>                    
+                </div>
                 <div class="col-9">
-                    <input type="text" placeholder="ที่อยู่ของสวน" required class="form-control" />
+                    @Html.EditorFor(model=>model.slr_farm_size,new { @class = "form-control" })
                 </div>
             </div>
-            <!-- Location Input End -->
-            <!-- Password Input start -->
-            <!--div class="input-box">
-                <input type="password" placeholder="Password" required class="form-control" />
-                <i class="iconly-Hide icli showHidePassword"></i>
-            </div-->
-            <!-- Password Input End -->
-            <button type="submit" class="btn-solid">ลงทะเบียน</button>
-        </form>
+            <div class="input-box row">
+                <div class="col-3">
+                    <h4>
+                        @Html.LabelFor(model=>model.slr_farm_location,new { @class = "control-label" })
+                    </h4>                    
+                </div>
+                <div class="col-9">
+                    @Html.EditorFor(model=>model.slr_farm_location,new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn-solid" value="Signup">ลงทะเบียน</button>
+            </div>
+            
+        }
         <!-- Login Form End -->
     </section>
     <!-- Login Section End -->
+    <script>              
+        window.onload = function () {
+            const defaultLiffId = '1657681416-QJr0wxdE';
+            $(document).ready(function () {
+                liff.init({ liffId: defaultLiffId, withLoginOnExternalBrowser: true }).then(() => {
+                    liff.getProfile().then(function (profile) {
+                        console.log(profile);
+                        $("#usr_line_id").val(profile.userId)
+                    });
+            });
+            }).catch((err) => {
+                console.log(err.code, err.message);
+            })
+        }
+       
+    </script>
 </main>
 <!-- Main End -->
+

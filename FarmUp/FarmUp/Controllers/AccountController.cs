@@ -5,11 +5,18 @@ using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
 
+
+
 namespace FruitProject.Controllers
 {
     public class AccountController : Controller
     {
+        private IConfiguration Configuration;
 
+        public AccountController(IConfiguration _configuration)
+        {
+            Configuration = _configuration;
+        }
         public ActionResult SendWelcomeMesage()
         {
             //send Line message
@@ -21,6 +28,15 @@ namespace FruitProject.Controllers
 
         public ActionResult Register()
         {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Register(LoginModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                RegisterInformation(model);
+            }
             return View();
         }
 
@@ -45,26 +61,28 @@ namespace FruitProject.Controllers
         }
         public ActionResult RegisterInformation(LoginModel loginModel)
         {
-            var salt = RandomString(5);
-            var completePass = "!" + loginModel.Password + salt;
-
-            var hash = EncodeSHA1(completePass);
-
-            string connString = "datasource=localhost;port=3306;database=orchardmatching;username=root;password=";
+            string connString = this.Configuration.GetConnectionString("ConnectionStrings:onedurian");
             MySqlConnection conn = new MySqlConnection(connString);
+            //var salt = RandomString(5);
+            //var completePass = "!" + loginModel.Password + salt;
 
-            string sqlCommand = @"INSERT INTO ma_user(usr_phone,usr_password,usr_salt,usr_is_active)
-                VALUES(@usr_phone,@usr_password,@usr_salt,@usr_is_active);";
+            //var hash = EncodeSHA1(completePass);
 
-            conn.Open();
-            MySqlCommand comm = conn.CreateCommand();
-            comm.CommandText = sqlCommand;
-            comm.Parameters.AddWithValue("@usr_phone", loginModel.Phone);
-            comm.Parameters.AddWithValue("@usr_password", hash);
-            comm.Parameters.AddWithValue("@usr_salt", salt);
-            comm.Parameters.AddWithValue("@usr_is_active", "F");
-            comm.ExecuteNonQuery();
-            conn.Close();
+            //string connString = "datasource=localhost;port=3306;database=orchardmatching;username=root;password=";
+            //MySqlConnection conn = new MySqlConnection(connString);
+
+            //string sqlCommand = @"INSERT INTO ma_user(usr_phone,usr_password,usr_salt,usr_is_active)
+            //    VALUES(@usr_phone,@usr_password,@usr_salt,@usr_is_active);";
+
+            //conn.Open();
+            //MySqlCommand comm = conn.CreateCommand();
+            //comm.CommandText = sqlCommand;
+            //comm.Parameters.AddWithValue("@usr_phone", loginModel.usr_phone);
+            //comm.Parameters.AddWithValue("@usr_password", hash);
+            //comm.Parameters.AddWithValue("@usr_salt", salt);
+            //comm.Parameters.AddWithValue("@usr_is_active", "F");
+            //comm.ExecuteNonQuery();
+            //conn.Close();
 
             return View();
         }
