@@ -12,11 +12,14 @@ namespace FarmUp.Controllers
         private readonly TodoList _todolist;
 
         private readonly WeatherForecastService _weatherForecastService;
-        public SellerController(ILogger<SellerController> logger,TodoList todoList, WeatherForecastService weatherForecastService)
+
+        private readonly TodayPriceService _todayPriceService;
+        public SellerController(ILogger<SellerController> logger,TodoList todoList, WeatherForecastService weatherForecastService, TodayPriceService todayPriceService)
         {
             _logger = logger;
             _todolist = todoList;
             _weatherForecastService = weatherForecastService;
+            _todayPriceService = todayPriceService;
         }
 
         public async Task<ActionResult> TodoList()
@@ -48,7 +51,16 @@ namespace FarmUp.Controllers
 
         public ActionResult PlantMedic()
         {
+            //get line user Id
+            //check user is exist - redirect to register / render data this user
+
             return View();
+        }
+
+        public async Task<ActionResult> TodayPriceAsync()
+        {
+            var getValue = await _todayPriceService.GetTodayPrice();
+            return View(getValue);
         }
 
         public ActionResult TestJQWidget()

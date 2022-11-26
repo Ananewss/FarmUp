@@ -7,6 +7,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<TodoList>();
 builder.Services.AddScoped<WeatherForecastService>();
+builder.Services.AddScoped<TodayPriceService>();
 
 var app = builder.Build();
 

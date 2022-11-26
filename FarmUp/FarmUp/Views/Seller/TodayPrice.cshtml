@@ -1,0 +1,88 @@
+﻿@using FarmUp.Dtos.Seller
+
+@model FarmUp.Dtos.Seller.TodayPriceDtoList
+@{
+    ViewData["Title"] = "TodayPrice";
+    Layout = "~/Views/Shared/_SellerPageLayout.cshtml";
+}
+
+<!-- Skeleton loader Start -->
+<div>
+    <!-- Header Start -->
+    <header class="header">
+        <div class="logo-wrap">
+            <a href="index.html"><i class="iconly-Arrow-Left-Square icli"></i></a>
+            <h1 class="title-color font-md">ราคาวันนี้</h1>
+        </div>
+        <div class="avatar-wrap">
+            <a href="index.html">
+                <i class="iconly-Home icli"></i>
+            </a>
+        </div>
+    </header>
+    <!-- Header End -->
+    <!-- Main Start -->
+    <form method="post" asp-controller="Seller" asp-action="TodoList" enctype="multipart/form-data">
+        <div class="main-wrap order-detail mb-xxl">
+            <!-- Banner Start -->
+            <div class="section-p-b">
+                <div class="banner-box">
+                    <div class="media">
+                        <div class="img"></div>
+                        <div class="media-body">
+                            <h2>ราคาวันนี้</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Banner End -->
+
+
+            <div class="main-wrap order-history mb-xxl">
+                <!-- Catagories Tabs  Start -->
+                <ul class="nav nav-tab nav-pills custom-scroll-hidden">
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link active">ราคาวันนี้</button>
+                  </li>
+                  @*<li class="nav-item" role="presentation">
+                    <button class="nav-link">กราฟราคา</button>
+                  </li>*@
+                </ul>
+                <!-- Catagories Tabs  End -->
+
+                <!-- Tab Content Start -->
+                <div class="tab-content ratio2_1 section-p-tb" id="pills-tabContent-sk">
+                  <!-- Catagories Content Start -->
+                  <div class="tab-pane fade show active" id="catagories1-sk" role="tabpanel">
+
+                      
+                        @foreach(var todayPriceItem in Model.todayPriceDtosList)
+                        {
+                            <!-- Price Box Start -->
+                                <div class="order-box @todayPriceItem.additionalCss">
+                              <div class="media">
+                                <a href="javascript:void(0)" class="content-box">
+                                  <h2 class="font-sm title-color">@todayPriceItem.pdt_description เกรด @todayPriceItem.pdg_description</h2>
+                                  <p class="font-sm content-color">ราคาเฉลี่ย @todayPriceItem.tdp_price บาท/กก.</p>
+                                  <p class="font-xs content-color">ราคาเสูงสุด @todayPriceItem.tdp_price_max บาท/กก. (ล้ง @todayPriceItem.tdp_max_seller_name)</p>
+                                  <p class="font-xs content-color">ราคาต่ำสุด @todayPriceItem.tdp_price_min บาท/กก. (ล้ง @todayPriceItem.tdp_min_seller_name)</p>
+                                </a>
+                                <div class="media-body">
+                                  <div class="img"></div>
+                                </div>
+                              </div>
+                            </div>
+                            <!-- Price Box End -->
+                        }
+
+                  </div>
+                  <!-- Catagories Content End -->
+                </div>
+                <!-- Tab Content End -->
+              </div>
+
+        </div>
+    </form>
+    <!-- Main End -->
+</div>
+<!-- Skeleton loader End -->
