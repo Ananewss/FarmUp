@@ -34,7 +34,7 @@ namespace FarmUp.Services.Seller
             sbReadWeather.Append($"WHERE SubDistrict IN ('Khlung') ");
             sbReadWeather.Append($"AND District IN ('Khlung') ");
             sbReadWeather.Append($"AND Province IN ('Chanthaburi') ");
-            sbReadWeather.Append($"AND DATE(DT) IN (CURDATE(), CURDATE() + INTERVAL 1 DAY)");
+            sbReadWeather.Append($"AND DATE(DT) IN (CURDATE(), CURDATE() + INTERVAL 1 DAY) ");
             sbReadWeather.Append($"ORDER BY DT");
             _logger.LogInformation($"[WeatherForecastService][GetWeatherForecastByLocation][sbReadWeather] = {sbReadWeather.ToString()}");
             string strConn = _config.GetConnectionString($"onedurian");
@@ -62,7 +62,7 @@ namespace FarmUp.Services.Seller
                     weatherForecastDto.District = readData["District"].ToString() ?? "";
                     weatherForecastDto.Province = readData["Province"].ToString() ?? "";
 
-                    weatherForecastDto.Icon = (Int32.Parse(weatherForecastDto.RainAmt) >= 70) ? "rain.png" : (weatherForecastDto.DT.Hour > 18) ? "moon.png" : "sun.png";
+                    weatherForecastDto.Icon = (Int32.Parse(weatherForecastDto.RainAmt.Trim('%')) >= 30) ? "rain.png" : (weatherForecastDto.DT.Hour > 18 || weatherForecastDto.DT.Hour < 6) ? "moon.png" : "sun.png";
                     weatherForecastDto.CloudyMsg = (Int32.Parse(weatherForecastDto.CloudCover) >= 60) ? "เมฆมาก" : (Int32.Parse(weatherForecastDto.CloudCover) >= 30) ? "เมฆปานกลาง" : "เมฆน้อย";
 
                     weatherForecastDtoList.weatherForecastDtosList.Add(weatherForecastDto);

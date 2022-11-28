@@ -10,10 +10,18 @@ namespace FarmUp.Dtos.Seller
        
     }
 
+    //public class TodoListFormDto
+    //{
+    //    public string[]? todoList { get; set; }
+    //    public string[]? problemList { get; set; }
+    //    public List<IFormFile> imgProblem = new List<IFormFile>();
+    //}
+
     public class TodoListFormDto
     {
-        public string[]? todoList { get; set; }
-        public string[]? problemList { get; set; }
-        public List<IFormFile> imgProblem = new List<IFormFile>();
+        public string ActivityTag { get; set; } = String.Empty;
+        public string ActivityDetail { get; set; } = String.Empty;
+
+        public List<IFormFile> imgActivity = new List<IFormFile>();
     }
 }

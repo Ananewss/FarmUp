@@ -76,8 +76,7 @@
     <script type="text/javascript" src="~/jqwidgets/jqxscrollbar.js"></script>
     <script type="text/javascript" src="~/jqwidgets/jqxlistbox.js"></script>
     <script type="text/javascript" src="~/jqwidgets/jqxpanel.js"></script>
-    <script type="text/javascript" src="~/jqwidgets/jqxcheckbox.js"></script>
-    <!-- BOOTSTRAP JS -->
+    <script type="text/javascript" src="~/jqwidgets/jqxcheckbox.js"></script>    <!-- BOOTSTRAP JS -->
     <script src="~/assets/plugins/bootstrap/js/popper.min.js"></script>
     <script src="~/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
 

@@ -1,6 +1,5 @@
 using FarmUp.Services.Admin;
 using FarmUp.Services.Seller;
-using FarmUp.Services.Seller.Todolist;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +7,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<TodoListService>();
-builder.Services.AddScoped<SellerActivityService>();
 builder.Services.AddScoped<WeatherForecastService>();
 builder.Services.AddScoped<TodayPriceService>();
 builder.Services.AddScoped<BoardcastService>();

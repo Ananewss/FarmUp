@@ -7,14 +7,14 @@ using System.Text;
 
 namespace FarmUp.Services.Seller
 {
-    public class TodoList
+    public class TodoListService
     {
         private readonly IConfiguration _configuration;
         MySqlConnection conn = new MySqlConnection();
 
-        private readonly ILogger<TodoList> _logger;
+        private readonly ILogger<TodoListService> _logger;
 
-        public TodoList(ILogger<TodoList> logger, IConfiguration configuration)
+        public TodoListService(ILogger<TodoListService> logger, IConfiguration configuration)
         {
             _logger = logger;
             _configuration = configuration;

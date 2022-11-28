@@ -34,6 +34,7 @@
                         <div class="img"></div>
                         <div class="media-body">
                             <h2>รายการต้องทำประจำวัน</h2>
+                            <span class="font-sm">สภาพอากาศ : คาดว่าฝนตก 9:00-10:00</span>
                         </div>
                     </div>
                 </div>
@@ -114,6 +115,7 @@
     <!-- Main End -->
 </div>
 <!-- Skeleton loader End -->
+
 @section Scripts {
     <script>
         $(document).ready(function () {

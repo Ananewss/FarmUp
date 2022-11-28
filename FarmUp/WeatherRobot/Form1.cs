@@ -149,6 +149,7 @@ namespace WeatherRobot
                         var humidity = data.Descendants().FirstOrDefault(x => (string)x.Attribute("data-testid") == "HumiditySection").Descendants().FirstOrDefault(x => (string)x.Attribute("data-testid") == "PercentageValue").Value;
                         var uv = data.Descendants().FirstOrDefault(x => (string)x.Attribute("data-testid") == "uvIndexSection").Descendants().FirstOrDefault(x => (string)x.Attribute("data-testid") == "UVIndexValue").Value;
                         var cloudCover = data.Descendants().FirstOrDefault(x => (string)x.Attribute("data-testid") == "CloudCoverSection").Descendants().FirstOrDefault(x => (string)x.Attribute("data-testid") == "PercentageValue").Value;
+                        //var rainAmt = data.Descendants().FirstOrDefault(x => (string)x.Attribute("data-testid") == "Precip").Descendants().FirstOrDefault(x => (string)x.Attribute("data-testid") == "PercentageValue").Value;
                         var rainAmt = data.Descendants().FirstOrDefault(x => (string)x.Attribute("data-testid") == "AccumulationSection").Descendants().FirstOrDefault(x => (string)x.Attribute("data-testid") == "AccumulationValue").Value;
 
                         percentRain = percentRain.Replace("%", "");
@@ -163,7 +164,7 @@ namespace WeatherRobot
                             Humidity = humidity,
                             UV = uv,
                             CloudCover = cloudCover,
-                            RainAmt = rainAmt,
+                            RainAmt = percentRain,
                             SubDistrict = subDistrict,
                             District = district,
                             Province = province,
