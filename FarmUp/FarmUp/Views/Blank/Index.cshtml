@@ -1,0 +1,23 @@
+﻿<script>              
+        window.onload = function () {
+
+            const defaultLiffId = '1657681416-QJr0wxdE';
+            $(document).ready(function () {
+                liff.init({ liffId: defaultLiffId, withLoginOnExternalBrowser: true }).then(() => {
+                    liff.getProfile().then(function (profile) {
+                        console.log(profile);
+                        var lineUserID = profile.userId;
+                        debugger;
+                    });
+            });
+            }).catch((err) => {
+                console.log(err.code, err.message);
+            })
+        }
+        
+        function getSearchParams(k){
+            var p={};
+            location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(s,k,v){p[k]=v})
+            return k?p[k]:p;
+        }
+</script>
