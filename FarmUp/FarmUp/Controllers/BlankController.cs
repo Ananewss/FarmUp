@@ -13,15 +13,25 @@ namespace FarmUp.Controllers
         }
 
         [HttpPost]
-        public async Task<HttpResponseMessage> GetLIFF(int? id)
+        public String GetLIFF(int? id)
         {
             var content = Request.Form.FirstOrDefault().Key;
             {
                 var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(content);
-                var message = dict["messages"];
-                var data1 = dict["data1"];
+                var lineUserId = dict["lineUserId"];
+                var refer = (dict.ContainsKey("ref"))? dict["ref"] : "";
 
-                return null;
+                HttpContext.Session.SetString("lineUserId", lineUserId);
+                //HttpContext.Session.GetString("lineUserId")
+
+                //if (refer != null)
+                //{
+                //    if (refer.Equals("WeatherForecast"))
+                //        //RedirectToAction("WeatherForecast","Seller");
+                //        Redirect("/Seller/WeatherForecast");
+                //}
+
+                return refer.Replace("-","/");
             }
         }
     }

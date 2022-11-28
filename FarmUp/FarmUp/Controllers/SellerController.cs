@@ -110,7 +110,8 @@ namespace FarmUp.Controllers
 
         public async Task<ActionResult> WeatherForecast()
         {
-            var readWeatherData = await _weatherForecastService.GetWeatherForecastByLocation("", "", "");
+            var lineUerId = HttpContext.Session.GetString("lineUserId");
+            var readWeatherData = await _weatherForecastService.GetWeatherForecastByLocation(lineUerId);
             return View(readWeatherData);
         }
 

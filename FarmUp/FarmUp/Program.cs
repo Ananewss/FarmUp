@@ -13,6 +13,13 @@ builder.Services.AddScoped<WeatherForecastService>();
 builder.Services.AddScoped<TodayPriceService>();
 builder.Services.AddScoped<BoardcastService>();
 
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.Cookie.IsEssential = true;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,6 +36,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",

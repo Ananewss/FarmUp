@@ -1,39 +1,34 @@
-﻿<!doctype html>
-<html lang="en" dir="ltr">
-
+﻿<!DOCTYPE html>
+<!-- Html Start -->
+<html lang="en">
+<!-- Head Start -->
 <head>
-
-    <!-- META DATA -->
-    <meta charset="UTF-8">
-    <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="Sash – Bootstrap 5  Admin & Dashboard Template">
-    <meta name="author" content="Spruko Technologies Private Limited">
-    <meta name="keywords" content="admin,admin dashboard,admin panel,admin template,bootstrap,clean,dashboard,flat,jquery,modern,responsive,premium admin templates,responsive admin,ui,ui kit.">
-
-    <!-- FAVICON -->
-    <link rel="shortcut icon" type="image/x-icon" href="~/assets/images/brand/favicon.ico" />
-
-    <!-- TITLE -->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="FarmUp" />
+    <meta name="keywords" content="FarmUp" />
+    <meta name="author" content="FarmUp" />
+    <link rel="manifest" href="/manifest.json" />
     <title>@ViewData["Title"] - One Durian</title>
+    <link rel="icon" href="/assets/images/favicon.png" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="/assets/images/favicon.png" />
+    <meta name="theme-color" content="#0baf9a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="FarmUp" />
+    <meta name="msapplication-TileImage" content="/assets/images/favicon.png" />
+    <meta name="msapplication-TileColor" content="#FFFFFF" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <!-- BOOTSTRAP CSS -->
-    <link id="style" href="~/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/vendors/bootstrap.css" />
 
-    <!-- STYLE CSS -->
-    <link href="~/assets/css/style.css" rel="stylesheet" />
-    <link href="~/assets/css/dark-style.css" rel="stylesheet" />
-    <link href="~/assets/css/transparent-style.css" rel="stylesheet">
-    <link href="~/assets/css/skin-modes.css" rel="stylesheet" />
+    <!-- Iconly Icon css -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/iconly.css" />
 
-    <!--- FONT-ICONS CSS -->
-    <link href="~/assets/css/icons.css" rel="stylesheet" />
-
-    <!-- COLOR SKIN CSS -->
-    <link id="theme" rel="stylesheet" type="text/css" media="all" href="~/assets/colors/color1.css" />
-
-    <link rel="stylesheet" href="~/assets/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/FruitProject.styles.css" asp-append-version="true" />
+    <!-- Style css -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/style.css" />
 
     <!-- jqWidget -->
     <link rel="stylesheet" href="@Url.Content("~/jqwidgets/styles/jqx.base.css")" type="text/css" />
@@ -41,66 +36,40 @@
 
     <!-- font awesome -->
     <link rel="stylesheet" type="text/css" href="@Url.Content("~/awesome/css/all.css")" />
-
 </head>
-
-<body class="app sidebar-mini ltr login-img">
-
-    <!-- BACKGROUND-IMAGE -->
-    <div class="">
-
-        <!-- GLOABAL LOADER -->
-        <div id="global-loader">
-            <img src="~/assets/loader/ajax-loader.gif" class="loader-img" alt="Loader">
-        </div>
-        <!-- /GLOABAL LOADER -->
-        <!-- PAGE -->
-        <div class="page">
-            <div class="">
-                <main role="main" class="pb-3">
-                    @RenderBody()
-                </main>
-                <!-- CONTAINER CLOSED -->
-            </div>
-        </div>
-        <!-- End PAGE -->
-
+<!-- Head End -->
+<!-- Body Start -->
+<body>
+    <div class="bg-pattern-wrap ratio2_1">
+        <img src="~/assets/loader/ajax-loader.gif" class="loader-img" alt="Loader">
     </div>
-    <!-- BACKGROUND-IMAGE CLOSED -->
-    <!-- JQUERY JS -->
-    <script src="~/assets/js/jquery.min.js"></script>
-    @*<script type="text/javascript" src="../../jqwidgets/jqxcombobox.js"></script>*@
-    <script type="text/javascript" src="~/jqwidgets/jqxcombobox.js"></script>
-    <script type="text/javascript" src="~/jqwidgets/jqxcore.js"></script>
-    <script type="text/javascript" src="~/jqwidgets/jqxbuttons.js"></script>
-    <script type="text/javascript" src="~/jqwidgets/jqxscrollbar.js"></script>
-    <script type="text/javascript" src="~/jqwidgets/jqxlistbox.js"></script>
-    <script type="text/javascript" src="~/jqwidgets/jqxpanel.js"></script>
-    <script type="text/javascript" src="~/jqwidgets/jqxcheckbox.js"></script>
-    <!-- BOOTSTRAP JS -->
-    <script src="~/assets/plugins/bootstrap/js/popper.min.js"></script>
-    <script src="~/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
 
-    <!-- SHOW PASSWORD JS -->
-    <script src="~/assets/js/show-password.min.js"></script>
+    @RenderBody()
 
-    <!-- GENERATE OTP JS -->
-    <script src="~/assets/js/generate-otp.js"></script>
+    <!-- jquery 3.6.0 -->
+    <script src="/assets/js/jquery-3.6.0.min.js"></script>
 
-    <!-- Perfect SCROLLBAR JS-->
-    <script src="~/assets/plugins/p-scroll/perfect-scrollbar.js"></script>
+    <!-- Bootstrap Js -->
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Color Theme js -->
-    <script src="~/assets/js/themeColors.js"></script>
+    <!-- Feather Icon -->
+    <script src="/assets/js/feather.min.js"></script>
 
-    <!-- CUSTOM JS -->
-    <script src="~/assets/js/custom.js"></script>
+    <!-- Theme Setting js -->
+    <script src="/assets/js/theme-setting.js"></script>
+
+    <!-- Script js -->
+    <script src="/assets/js/script.js"></script>
 
     <!-- jqWidget -->
     <script src="@Url.Content("~/jqwidgets/jqxcore.js")"></script>
 
+    <!-- Line Script-->
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>  
+    
+
     @await RenderSectionAsync("Scripts", required: false)
-
 </body>
-
+<!-- Body End -->
 </html>
+<!-- Html End -->

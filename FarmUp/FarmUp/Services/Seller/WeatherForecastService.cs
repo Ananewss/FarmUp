@@ -16,36 +16,45 @@ namespace FarmUp.Services.Seller
             _config = config;
         }
 
-        public async Task<WeatherForecastDtoList> GetWeatherForecastByLocation(string subdistrict,string district,string province)
+        public async Task<WeatherForecastDtoList> GetWeatherForecastByLocation(string lineUserId)
         {
             WeatherForecastDtoList weatherForecastDtoList = new WeatherForecastDtoList();
-            StringBuilder sbReadWeather = new StringBuilder();
-
-            /*
-                SELECT * FROM tr_weather_day
-                WHERE SubDistrict IN ('บ้านนา')
-                AND District IN ('แกลง')
-                AND Province IN ('ระยอง')
-                AND DATE(Created_at) IN ('2022-11-06')
-                AND isActive = 'Y'
-                ORDER BY Created_at
-             */
-            sbReadWeather.Append($"SELECT * FROM tr_weather_day ");
-            sbReadWeather.Append($"WHERE SubDistrict IN ('Khlung') ");
-            sbReadWeather.Append($"AND District IN ('Khlung') ");
-            sbReadWeather.Append($"AND Province IN ('Chanthaburi') ");
-            sbReadWeather.Append($"AND DATE(DT) IN (CURDATE(), CURDATE() + INTERVAL 1 DAY) ");
-            sbReadWeather.Append($"ORDER BY DT");
-            _logger.LogInformation($"[WeatherForecastService][GetWeatherForecastByLocation][sbReadWeather] = {sbReadWeather.ToString()}");
             string strConn = _config.GetConnectionString($"onedurian");
 
             MySqlConnection mSqlConn = new MySqlConnection(strConn);
             try
             {
-                
-                MySqlCommand mCmd = new MySqlCommand(sbReadWeather.ToString(), mSqlConn);
-
                 await mSqlConn.OpenAsync();
+
+                MySqlCommand usrCmd = new MySqlCommand(@"SELECT slr.slr_district,slr.slr_province,slr.slr_country
+                                                        FROM ma_user
+                                                        LEFT JOIN ma_seller slr on ma_user.usr_id = slr.slr_usr_id
+                                                        WHERE usr_line_id = @lineUserId",mSqlConn);
+                usrCmd.Parameters.AddWithValue("@lineUserId", lineUserId);
+
+                String District = "";
+                String Province = "";
+                var readDataUsr = await usrCmd.ExecuteReaderAsync();
+                while (await readDataUsr.ReadAsync())
+                {
+                    District = readDataUsr["slr_district"].ToString() ?? "";
+                    Province = readDataUsr["slr_province"].ToString() ?? "";
+                }
+                readDataUsr.Close();
+                readDataUsr.Dispose();
+
+                StringBuilder sbReadWeather = new StringBuilder();
+                sbReadWeather.Append($"SELECT * FROM tr_weather_day ");
+                sbReadWeather.Append($"WHERE District IN (@District) ");
+                sbReadWeather.Append($"AND Province IN (@Province) ");
+                sbReadWeather.Append($"AND DATE(DT) IN (CURDATE(), CURDATE() + INTERVAL 1 DAY) ");
+                sbReadWeather.Append($"ORDER BY DT");
+                _logger.LogInformation($"[WeatherForecastService][GetWeatherForecastByLocation][sbReadWeather] = {sbReadWeather.ToString()}");
+
+                MySqlCommand mCmd = new MySqlCommand(sbReadWeather.ToString(), mSqlConn);
+                mCmd.Parameters.AddWithValue("@District",District);
+                mCmd.Parameters.AddWithValue("@Province", Province);
+
                 var readData = await mCmd.ExecuteReaderAsync();
                 while (await readData.ReadAsync())
                 {
@@ -71,7 +80,9 @@ namespace FarmUp.Services.Seller
                     weatherForecastDtoList.District = readData["District"].ToString() ?? "";
                     weatherForecastDtoList.Province = readData["Province"].ToString() ?? "";
                 }
-                
+                readData.Close();
+                readData.Dispose();
+
             }
             catch(Exception ex)
             {
