@@ -1,8 +1,4 @@
-﻿@{
-    ViewData["Title"] = "Loading";
-}
-<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-<script>              
+﻿<script>              
         window.onload = function () {
 
             //const defaultLiffId = '1657681416-QJr0wxdE';
@@ -10,7 +6,8 @@
             //    liff.init({ liffId: defaultLiffId, withLoginOnExternalBrowser: true }).then(() => {
             //        liff.getProfile().then(function (profile) {
             //            console.log(profile);
-            //            var lineUserID = profile.userId;
+            //            var lineUserId = profile.userId;
+            //            console.log(lineUserId);
                         var lineUserId = "U3703db3fafe12f81f36c3d7ad2c18739";
                         var ref = getSearchParams("ref");
                         
@@ -30,10 +27,13 @@
             //    console.log(err.code, err.message);
             //})
         }
-        
+
+
+
         function getSearchParams(k){
             var p={};
             location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(s,k,v){p[k]=v})
             return k?p[k]:p;
         }
-</script>
+       
+    </script>

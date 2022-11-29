@@ -35,7 +35,7 @@ namespace FarmUp.Services.Seller
                 String District = "";
                 String Province = "";
                 var readDataUsr = await usrCmd.ExecuteReaderAsync();
-                while (await readDataUsr.ReadAsync())
+                if (await readDataUsr.ReadAsync())
                 {
                     District = readDataUsr["slr_district"].ToString() ?? "";
                     Province = readDataUsr["slr_province"].ToString() ?? "";
