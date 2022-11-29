@@ -12,16 +12,13 @@
     <p class="font-sm content-color">ผู้ช่วยออนไลน์ส่วนตัวของเกษตรกรไทย</p>
 
     <!-- Login Section Start -->
-    <section class="login-section p-0">
+    <section class="login-section p-0 custom-form">
         <!-- Login Form Start -->
-        @using(Html.BeginForm(new { @class="custom-form" }))
+        @using (Html.BeginForm("Register","Account"))
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(false,"",new { @class="text-danger" })
             <!-- Get Line UserID-->
-            <div class="form-group">                
-                @Html.TextBoxFor( model=>model.usr_line_id,new { @id = "usr_line_id" ,@class = "form-control",@Type = "hidden"})
-            </div>
             <div class="input-box row">
                 <div class="col-3">
                     <h4>
@@ -55,6 +52,16 @@
             <div class="input-box row">
                 <div class="col-3">
                     <h4>
+                        @Html.LabelFor(model=>model.slr_farm_name,new { @class = "control-label" })
+                    </h4>
+                </div>
+                <div class="col-9">
+                    @Html.EditorFor(model=>model.slr_farm_name,new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="input-box row">
+                <div class="col-3">
+                    <h4>
                         @Html.LabelFor(model=>model.slr_farm_size,new { @class = "control-label" })
                     </h4>                    
                 </div>
@@ -69,9 +76,37 @@
                     </h4>                    
                 </div>
                 <div class="col-9">
-                    @Html.EditorFor(model=>model.slr_farm_location,new { @class = "form-control" })
+                    @Html.EditorFor(model=>model.slr_farm_location,new { id = "slr_farm_location" ,@class = "form-control" })
+                    <button type="button" class="btn-solid" onclick="GetLocation()">Get Location</button>
                 </div>
             </div>
+            <div class="form-group">
+                @Html.TextBoxFor( model=>model.usr_latlong,new { id = "usr_latlong" ,@class = "form-control",@Type = "hidden"})
+            </div>
+            <div class="form-group">
+                @Html.TextBoxFor( model=>model.slr_province,new { id = "slr_province" ,@class = "form-control",@Type = "hidden"})
+            </div>
+
+            <div class="form-group">
+                @Html.TextBoxFor( model=>model.slr_district,new { id = "slr_district" ,@class = "form-control",@Type = "hidden"})
+            </div>
+
+            <div class="form-group">
+                @Html.TextBoxFor( model=>model.slr_country,new { id = "slr_country" ,@class = "form-control",@Type = "hidden"})
+            </div>
+
+            <div class="form-group">
+                @Html.TextBoxFor( model=>model.slr_district_th,new { id = "slr_district_th" ,@class = "form-control",@Type = "hidden"})
+            </div>
+
+            <div class="form-group">
+                @Html.TextBoxFor( model=>model.slr_province_th,new { id = "slr_province_th" ,@class = "form-control",@Type = "hidden"})
+            </div>
+
+            <div class="form-group">
+                @Html.TextBoxFor( model=>model.slr_country_th,new { id = "slr_country_th" ,@class = "form-control",@Type = "hidden"})
+            </div>
+            
             <div class="form-group">
                 <button type="submit" class="btn-solid" value="Signup">ลงทะเบียน</button>
             </div>
@@ -80,22 +115,42 @@
         <!-- Login Form End -->
     </section>
     <!-- Login Section End -->
-    <script>              
-        window.onload = function () {
-            const defaultLiffId = '1657681416-QJr0wxdE';
-            $(document).ready(function () {
-                liff.init({ liffId: defaultLiffId, withLoginOnExternalBrowser: true }).then(() => {
-                    liff.getProfile().then(function (profile) {
-                        console.log(profile);
-                        $("#usr_line_id").val(profile.userId)
-                    });
+
+    <script>
+
+        function GetLocation() {
+            navigator.geolocation.getCurrentPosition(function (location) {
+                var latitude = (location.coords.latitude);
+                var longitude = (location.coords.longitude)
+                console.log("location " + latitude + "," + longitude);
+                $.ajax({
+                    url: 'https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + latitude + '&longitude=' + longitude + '&localityLanguage=en',
+                    success: function (data) {
+                        document.getElementById("usr_latlong").value = data.latitude + "," + data.longitude;
+                        document.getElementById("slr_province").value = data.city;
+                        document.getElementById("slr_district").value = data.locality;
+                        document.getElementById("slr_country").value = data.countryName;
+                        //document.getElementById("slr_farm_location").value = data.locality + "," + data.city + "," + data.countryName;
+                        //alert(data.latitude + "," + data.longitude);
+                        //alert(data.locality + "," + data.city + "," + data.countryName);
+                        /*or you could iterate the components for only the city and state*/
+                    }
+                });
+                $.ajax({
+                    url: 'https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + latitude + '&longitude=' + longitude + '&localityLanguage=th',
+                    success: function (data) {                        
+                        document.getElementById("slr_province_th").value = data.city;
+                        document.getElementById("slr_district_th").value = data.locality;
+                        document.getElementById("slr_country_th").value = data.countryName;
+                        document.getElementById("slr_farm_location").value = data.locality + "," + data.city + "," + data.countryName;
+                        /*or you could iterate the components for only the city and state*/
+                    }
+                });
+                //alert(location.coords.latitude + "," + location.coords.longitude);
             });
-            }).catch((err) => {
-                console.log(err.code, err.message);
-            })
         }
-       
     </script>
+
 </main>
 <!-- Main End -->
 
