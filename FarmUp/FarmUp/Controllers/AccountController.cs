@@ -63,26 +63,35 @@ namespace FruitProject.Controllers
         {
             string connString = this.Configuration.GetConnectionString("ConnectionStrings:onedurian");
             MySqlConnection conn = new MySqlConnection(connString);
-            //var salt = RandomString(5);
+            var salt = RandomString(5);
             //var completePass = "!" + loginModel.Password + salt;
+
+
 
             //var hash = EncodeSHA1(completePass);
 
             //string connString = "datasource=localhost;port=3306;database=orchardmatching;username=root;password=";
             //MySqlConnection conn = new MySqlConnection(connString);
 
-            //string sqlCommand = @"INSERT INTO ma_user(usr_phone,usr_password,usr_salt,usr_is_active)
-            //    VALUES(@usr_phone,@usr_password,@usr_salt,@usr_is_active);";
+            string sqlCommand = @"INSERT INTO ma_user(usr_firstname,usr_lastname,usr_fullname,usr_phone,usr_salt,usr_line_id,usr_latlong,usr_is_active,created_at,updated_at,updated_by)
+                VALUES(@usr_firstname,@usr_lastname,@usr_fullname,@usr_phone,@usr_salt,@usr_line_id,@usr_latlong,@usr_is_active,@created_at,@updated_at,@updated_by);";
 
-            //conn.Open();
-            //MySqlCommand comm = conn.CreateCommand();
-            //comm.CommandText = sqlCommand;
-            //comm.Parameters.AddWithValue("@usr_phone", loginModel.usr_phone);
-            //comm.Parameters.AddWithValue("@usr_password", hash);
-            //comm.Parameters.AddWithValue("@usr_salt", salt);
-            //comm.Parameters.AddWithValue("@usr_is_active", "F");
-            //comm.ExecuteNonQuery();
-            //conn.Close();
+            conn.Open();
+            MySqlCommand comm = conn.CreateCommand();
+            comm.CommandText = sqlCommand;
+            comm.Parameters.AddWithValue("@usr_firstname", loginModel.usr_firstname);
+            comm.Parameters.AddWithValue("@usr_lastname", loginModel.usr_lastname);
+            comm.Parameters.AddWithValue("@usr_fullname", loginModel.usr_firstname + " " + loginModel.usr_lastname);
+            comm.Parameters.AddWithValue("@usr_phone", loginModel.usr_phone);
+            comm.Parameters.AddWithValue("@usr_salt", salt);
+            comm.Parameters.AddWithValue("@usr_line_id", loginModel.usr_line_id);
+            comm.Parameters.AddWithValue("@usr_latlong", loginModel.slr_farm_location);
+            comm.Parameters.AddWithValue("@usr_is_active", "T");
+            comm.Parameters.AddWithValue("@created_at", DateTime.Now);
+            comm.Parameters.AddWithValue("@updated_at", DateTime.Now);
+            comm.Parameters.AddWithValue("@updated_by", "Syatem");
+            comm.ExecuteNonQuery();
+            conn.Close();
 
             return View();
         }
