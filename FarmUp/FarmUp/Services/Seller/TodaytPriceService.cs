@@ -23,9 +23,9 @@ namespace FarmUp.Services.Seller
 
             sbReadTodayPrice.Append($"SELECT t1.tdp_date,ROUND(AVG(t1.tdp_price),2) as average,t1.tdp_pdg_id, t1.tdp_pdt_id, pdt_description, pdg_description ");
             sbReadTodayPrice.Append($",(SELECT t.tdp_price FROM tr_today_price t WHERE t.tdp_date = CURDATE() AND t.tdp_pdg_id = t1.tdp_pdg_id AND t.tdp_pdt_id = t1.tdp_pdt_id ORDER BY t.tdp_price DESC LIMIT 0,1) max_val ");
-            sbReadTodayPrice.Append($",(SELECT t.tdp_seller_name FROM tr_today_price t WHERE t.tdp_date = CURDATE() AND t.tdp_pdg_id = t1.tdp_pdg_id AND t.tdp_pdt_id = t1.tdp_pdt_id ORDER BY t.tdp_price DESC LIMIT 0,1) max_name ");
+            sbReadTodayPrice.Append($",(SELECT t.tdp_buyer_name FROM tr_today_price t WHERE t.tdp_date = CURDATE() AND t.tdp_pdg_id = t1.tdp_pdg_id AND t.tdp_pdt_id = t1.tdp_pdt_id ORDER BY t.tdp_price DESC LIMIT 0,1) max_name ");
             sbReadTodayPrice.Append($",(SELECT t.tdp_price FROM tr_today_price t WHERE t.tdp_date = CURDATE() AND t.tdp_pdg_id = t1.tdp_pdg_id AND t.tdp_pdt_id = t1.tdp_pdt_id ORDER BY t.tdp_price ASC LIMIT 0,1) min_val ");
-            sbReadTodayPrice.Append($",(SELECT t.tdp_seller_name FROM tr_today_price t WHERE t.tdp_date = CURDATE() AND t.tdp_pdg_id = t1.tdp_pdg_id AND t.tdp_pdt_id = t1.tdp_pdt_id ORDER BY t.tdp_price ASC LIMIT 0,1) min_name ");
+            sbReadTodayPrice.Append($",(SELECT t.tdp_buyer_name FROM tr_today_price t WHERE t.tdp_date = CURDATE() AND t.tdp_pdg_id = t1.tdp_pdg_id AND t.tdp_pdt_id = t1.tdp_pdt_id ORDER BY t.tdp_price ASC LIMIT 0,1) min_name ");
             sbReadTodayPrice.Append($"FROM tr_today_price t1 ");
             sbReadTodayPrice.Append($"LEFT JOIN ma_productgrade ON t1.tdp_pdg_id = pdg_id ");
             sbReadTodayPrice.Append($"LEFT JOIN ma_producttype ON t1.tdp_pdt_id = pdt_id ");

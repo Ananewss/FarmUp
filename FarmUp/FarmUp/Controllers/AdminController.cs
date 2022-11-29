@@ -19,10 +19,12 @@ namespace FruitProject.Controllers
         private IConfiguration _config;
         private readonly ILogger<AdminController> _logger;
         private readonly BoardcastService _boardcastService;
-        public AdminController(IConfiguration config, ILogger<AdminController> logger, BoardcastService boardcastService)
+        private readonly AdminTodayPriceService _adminTodayPriceService;
+        public AdminController(IConfiguration config, ILogger<AdminController> logger, BoardcastService boardcastService, AdminTodayPriceService adminTodayPriceService)
         {
             _logger = logger;
             _boardcastService = boardcastService;
+            _adminTodayPriceService = adminTodayPriceService;
             _config = config;
         }
 
@@ -34,6 +36,12 @@ namespace FruitProject.Controllers
         public async Task<ActionResult> BroadcastAsync()
         {
             var getValue = await _boardcastService.GetBoardcastUser();
+            return View(getValue);
+        }
+
+        public async Task<ActionResult> TodayPrice()
+        {
+            var getValue = await _adminTodayPriceService.GetProductList();
             return View(getValue);
         }
 
@@ -64,7 +72,7 @@ namespace FruitProject.Controllers
                     var splited = line.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                     HttpResponseMessage rs = null;
                     HttpResponseMessage error = null;
-                    foreach(var lineUserId in splited)
+                    foreach (var lineUserId in splited)
                     {
                         var message1 = new Message("text", message);
                         var root = new Root();
@@ -83,7 +91,7 @@ namespace FruitProject.Controllers
             }
         }
 
-        private async Task<HttpResponseMessage> SendLineMessageAsync(String url,String json)
+        private async Task<HttpResponseMessage> SendLineMessageAsync(String url, String json)
         {
             var accessToken = _config["lineBearer"];
             var client = new HttpClient();
@@ -98,6 +106,20 @@ namespace FruitProject.Controllers
             );
 
             return await client.SendAsync(request);
+        }
+
+        [HttpPost]
+        public async Task<bool> AddTodayPriceAsync(int? id)
+        {
+            var content = Request.Form.FirstOrDefault().Key;
+            {
+                var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(content);
+
+                var rs = await _adminTodayPriceService.InsertTodayPriceAsync(dict);
+
+                return rs;
+            }
+            return true;
         }
     }
 }

@@ -12,6 +12,7 @@ builder.Services.AddScoped<SellerActivityService>();
 builder.Services.AddScoped<WeatherForecastService>();
 builder.Services.AddScoped<TodayPriceService>();
 builder.Services.AddScoped<BoardcastService>();
+builder.Services.AddScoped<AdminTodayPriceService>();
 
 
 builder.Services.AddDistributedMemoryCache();
