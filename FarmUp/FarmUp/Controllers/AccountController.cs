@@ -33,11 +33,17 @@ namespace FruitProject.Controllers
         [HttpPost]
         public ActionResult Register(LoginModel model)
         {
+            string result = "";
             if (ModelState.IsValid)
             {
-                RegisterInformation(model);
+                result = RegisterInformation(model);
             }
-          
+
+            if (result == "RegisterSuccess")
+            {
+                return View("RegisterSuccess");
+            }
+
             return View();
         }
 
@@ -60,7 +66,7 @@ namespace FruitProject.Controllers
                 return hash;
             }
         }
-        public ActionResult RegisterInformation(LoginModel loginModel)
+        public string RegisterInformation(LoginModel loginModel)
         {
             var lineUerId = HttpContext.Session.GetString("lineUserId");
             Console.WriteLine(lineUerId);
@@ -117,7 +123,7 @@ namespace FruitProject.Controllers
 
             conn.Close();
 
-            return View("RegisterSuccess");
+            return "RegisterSuccess";
         }
 
         public ActionResult RegisterMap()
