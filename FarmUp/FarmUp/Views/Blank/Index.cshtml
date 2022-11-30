@@ -1,14 +1,14 @@
 ﻿<script>              
         window.onload = function () {
 
-            //const defaultLiffId = '1657681416-QJr0wxdE';
-            //$(document).ready(function () {
-            //    liff.init({ liffId: defaultLiffId, withLoginOnExternalBrowser: true }).then(() => {
-            //        liff.getProfile().then(function (profile) {
-            //            console.log(profile);
-            //            var lineUserId = profile.userId;
-            //            console.log(lineUserId);
-                        var lineUserId = "U3703db3fafe12f81f36c3d7ad2c18739";
+            const defaultLiffId = '1657681416-QJr0wxdE';
+            $(document).ready(function () {
+                liff.init({ liffId: defaultLiffId, withLoginOnExternalBrowser: true }).then(() => {
+                    liff.getProfile().then(function (profile) {
+                        console.log(profile);
+                        var lineUserId = profile.userId;
+                        console.log(lineUserId);
+                        //var lineUserId = "U3703db3fafe12f81f36c3d7ad2c18739";
                         var ref = getSearchParams("ref");
                         
                         //https://localhost:44335/?ref=Seller-WeatherForecast
@@ -21,11 +21,11 @@
                                         window.location = result;
                                 });
                         }
-            //        });
-            //});
-            //}).catch((err) => {
-            //    console.log(err.code, err.message);
-            //})
+                    });
+            });
+            }).catch((err) => {
+                console.log(err.code, err.message);
+            })
         }
 
 

@@ -38,7 +38,7 @@ namespace FruitProject.Controllers
                 RegisterInformation(model);
             }
           
-            return View("RegisterSuccess");
+            return View();
         }
 
         static Random random = new Random();
@@ -63,13 +63,14 @@ namespace FruitProject.Controllers
         public ActionResult RegisterInformation(LoginModel loginModel)
         {
             var lineUerId = HttpContext.Session.GetString("lineUserId");
+            Console.WriteLine(lineUerId);
             //var lineUerId = "test";
             string connString = Configuration.GetConnectionString($"onedurian");
             loginModel.usr_line_id = lineUerId;
             MySqlConnection conn = new MySqlConnection(connString);
             var salt = RandomString(5);
             //var completePass = "!" + loginModel.Password + salt;
-
+            Console.WriteLine(connString);
 
 
             //var hash = EncodeSHA1(completePass);
@@ -116,7 +117,7 @@ namespace FruitProject.Controllers
 
             conn.Close();
 
-            return View();
+            return View("RegisterSuccess");
         }
 
         public ActionResult RegisterMap()

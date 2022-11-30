@@ -6,7 +6,7 @@ namespace FruitProject.Models
     public class LoginModel
     {
         
-        public string usr_line_id { get; set; } = string.Empty;
+        public string? usr_line_id { get; set; }
 
         [Required]
         [Display(Name = "ชื่อ")]
@@ -32,19 +32,19 @@ namespace FruitProject.Models
         [Display(Name = "ชื่อสวน")]
         public string slr_farm_name { get; set; }
 
-        public string usr_latlong { get; set; } = string.Empty;
+        public string? usr_latlong { get; set; }
 
-        public string slr_province { get; set; } = string.Empty;
+        public string? slr_province { get; set; }
 
-        public string slr_district { get; set; } = string.Empty;
+        public string? slr_district { get; set; }
 
-        public string slr_country { get; set; } = string.Empty;
+        public string? slr_country { get; set; }
 
-        public string slr_district_th { get; set; } = string.Empty;
+        public string? slr_district_th { get; set; }
 
-        public string slr_province_th { get; set; } = string.Empty;
+        public string? slr_province_th { get; set; }
 
-        public string slr_country_th { get; set; } = string.Empty;
+        public string? slr_country_th { get; set; }
 
 
 

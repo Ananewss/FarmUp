@@ -17,7 +17,7 @@
         @using (Html.BeginForm("Register","Account"))
         {
             @Html.AntiForgeryToken()
-            @Html.ValidationSummary(false,"",new { @class="text-danger" })
+            @Html.ValidationSummary(true,"",new { @class="text-danger" })
             <!-- Get Line UserID-->
             <div class="input-box row">
                 <div class="col-3">
@@ -80,7 +80,7 @@
                     <button type="button" class="btn-solid" onclick="GetLocation()">Get Location</button>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group">                
                 @Html.TextBoxFor( model=>model.usr_latlong,new { id = "usr_latlong" ,@class = "form-control",@Type = "hidden"})
             </div>
             <div class="form-group">
