@@ -19,6 +19,16 @@
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true,"",new { @class="text-danger" })
             <!-- Get Line UserID-->
+            <div class="input-box row" style="display:none;">
+                <div class="col-3">
+                    <h4>
+                        @Html.LabelFor(model=>model.usr_line_id,new { @class = "control-label" })
+                    </h4>                    
+                </div>
+                <div class="col-9">
+                    @Html.EditorFor(model=>model.usr_line_id,new { @class = "form-control" })
+                </div>
+            </div>
             <div class="input-box row">
                 <div class="col-3">
                     <h4>
@@ -127,8 +137,8 @@
                     url: 'https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + latitude + '&longitude=' + longitude + '&localityLanguage=en',
                     success: function (data) {
                         document.getElementById("usr_latlong").value = data.latitude + "," + data.longitude;
-                        document.getElementById("slr_province").value = data.city;
-                        document.getElementById("slr_district").value = data.locality;
+                        document.getElementById("slr_province").value = data.principalSubdivision.trim("Changwat ");
+                        document.getElementById("slr_district").value = data.city;
                         document.getElementById("slr_country").value = data.countryName;
                         //document.getElementById("slr_farm_location").value = data.locality + "," + data.city + "," + data.countryName;
                         //alert(data.latitude + "," + data.longitude);
@@ -139,8 +149,8 @@
                 $.ajax({
                     url: 'https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + latitude + '&longitude=' + longitude + '&localityLanguage=th',
                     success: function (data) {                        
-                        document.getElementById("slr_province_th").value = data.city;
-                        document.getElementById("slr_district_th").value = data.locality;
+                        document.getElementById("slr_province_th").value = data.principalSubdivision;
+                        document.getElementById("slr_district_th").value = data.city;
                         document.getElementById("slr_country_th").value = data.countryName;
                         document.getElementById("slr_farm_location").value = data.locality + "," + data.city + "," + data.countryName;
                         /*or you could iterate the components for only the city and state*/
@@ -148,6 +158,13 @@
                 });
                 //alert(location.coords.latitude + "," + location.coords.longitude);
             });
+        }
+
+        window.onload = function () {
+            if($("#usr_line_id").val() == ""){
+                debugger
+               window.location.href="/Blank/";
+            }
         }
     </script>
 

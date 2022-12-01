@@ -53,7 +53,7 @@ namespace FarmUp.Controllers
                     var readData = mCmd.ExecuteReader();
                     if (!readData.Read())
                     {
-                        refer = "Account-Register";
+                        refer = "-Account-Register";
                     }
                     readData.Close();
 

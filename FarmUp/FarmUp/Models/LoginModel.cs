@@ -5,7 +5,8 @@ namespace FruitProject.Models
 {
     public class LoginModel
     {
-        
+
+        [Display(Name = "line_user_id")]
         public string? usr_line_id { get; set; }
 
         [Required]
