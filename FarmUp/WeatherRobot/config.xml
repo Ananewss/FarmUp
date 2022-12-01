@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <setting>
 	<DbConnectionString>Persist Security Info=False;server=localhost;database=oneduriantest;uid=onedurian;password=onedurian</DbConnectionString>
-	<DelayMin>120</DelayMin>
+	<DelayMin>180</DelayMin>
 	<DelayMinUrl>2</DelayMinUrl>
 </setting>

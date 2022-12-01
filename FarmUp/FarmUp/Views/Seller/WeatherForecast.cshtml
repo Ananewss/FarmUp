@@ -1,14 +1,14 @@
 ﻿@model FarmUp.Dtos.Seller.WeatherForecastDtoList
 
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "สภาพอากาศวันนี้";
     Layout = "~/Views/Shared/_SellerPageLayout.cshtml";
 }
 
 <!-- Skeleton loader Start -->
 <div>
     <!-- Header Start -->
-    <header class="header">
+    @*<header class="header">
         <div class="logo-wrap">
             <a href="index.html"><i class="iconly-Arrow-Left-Square icli"></i></a>
             <h1 class="title-color font-md">คาดการณ์สภาาพอากาศ</h1>
@@ -18,7 +18,7 @@
                 <i class="iconly-Home icli"></i>
             </a>
         </div>
-    </header>
+    </header>*@
     <!-- Header End -->
     <!-- Main Start -->
     <div class="main-wrap order-detail mb-xxl">
@@ -28,7 +28,7 @@
                 <div class="media">
                     <div class="img"></div>
                     <div class="media-body">
-                        <h2>คาดการณ์สภาาพอากาศ : @Model.Province</h2>
+                        <h2>คาดการณ์สภาาพอากาศ : @Model.District, @Model.Province</h2>
                         <span class="font-sm title-color fw-600">&nbsp;</span>
                     </div>
                 </div>
@@ -38,16 +38,39 @@
         <section class="offer-section pb-0">
             <div class="offer">
                 <div class="offer-wrap">
-
-                    @foreach(var WeatherItem in Model.weatherForecastDtosList){
+                    
+                    @{ var isPrintToday = false; }
+                    @if(Model.weatherForecastDtosList.Count == 0)
+                    {
                         <div class="product-list media">
-                            <img src="~/assets/images/weather/@WeatherItem.Icon" class="img-fluid" alt="offer">
-                            <div class="media-body">
-                                <span class="font-sm title-color fw-600"> @WeatherItem.DT.ToString("HH:mm") โอกาสเกิดฝน @WeatherItem.RainAmt%, อุณหภูมิ @WeatherItem.Temp°C</span>
-                                <span class="content-color font-sm">ความชื้น @WeatherItem.Humidity%, แรงลม @WeatherItem.Wind</span>
-                                <span class="content-color font-sm">@WeatherItem.CloudyMsg, UV @WeatherItem.UV</span>
-                            </div>
+                        <div class="media-body">
+                            <span class="font-sm title-color fw-600"> ระบบกำลังตรวจสอบที่อยู่ของคุณ โปรดรอประมาณ 10 นาทีเพื่อใช้ในการตรวจสอบ</span>
                         </div>
+                        </div>
+                    }
+                    else
+                    {
+                        @foreach(var WeatherItem in Model.weatherForecastDtosList){
+                            if (WeatherItem.DT < DateTime.Now.AddHours(-1) || WeatherItem.DT > DateTime.Now.AddDays(1).AddHours(1))
+                                continue;
+                            @if (!isPrintToday)
+                            {
+                                isPrintToday = true;
+                                <h3 style="padding: 10px;">วันนี้</h3>
+                            }
+                            else if(WeatherItem.DT.ToString("MM-dd HH").Equals(DateTime.Now.AddDays(1).ToString("MM-dd 00")))
+                            {
+                                <h3 style="padding: 20px 10px 5px 10px;">พรุ่งนี้</h3>
+                            }
+                            <div class="product-list media">
+                                <img src="~/assets/images/weather/@WeatherItem.Icon" class="img-fluid" alt="offer">
+                                <div class="media-body">
+                                    <span class="font-sm title-color fw-600"> @WeatherItem.DT.ToString("HH:mm") โอกาสเกิดฝน @WeatherItem.RainAmt%, อุณหภูมิ @WeatherItem.Temp°C</span>
+                                    <span class="content-color font-sm">ความชื้น @WeatherItem.Humidity%, แรงลม @WeatherItem.Wind</span>
+                                    <span class="content-color font-sm">@WeatherItem.CloudyMsg, UV @WeatherItem.UV</span>
+                                </div>
+                            </div>
+                        }
                     }
 
                     @*<div class="product-list media">

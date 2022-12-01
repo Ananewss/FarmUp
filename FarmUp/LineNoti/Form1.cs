@@ -27,6 +27,7 @@ namespace LineNoti
         {
             config = Util.XmlReader.Read("config.xml");
 
+            //10 mins
             timer1.Interval = 10 * 60 * 1000;
             timer1.Enabled = true;
 
@@ -66,6 +67,28 @@ namespace LineNoti
             {
                 GenMessage(true);
             }
+            else if(now.Hour == 2)
+            {
+                ClearDatabaseTrash();
+            }
+        }
+
+        private void ClearDatabaseTrash()
+        {
+            var connstr = config["DbConnectionString"].ToString();
+            var conn = new MySql.Data.MySqlClient.MySqlConnection(connstr);
+
+            try
+            {
+                conn.Open();
+
+                {
+                    MySqlCommand cmd = new MySqlCommand(@"DELETE FROM tr_weather_day WHERE DT < DATE_SUB(CURDATE(), INTERVAL 2 DAY)", conn);
+                    cmd.ExecuteNonQuery();
+                }
+                conn.Close();
+            }
+            catch { }
         }
 
         private void GenMessage(bool sendLine)
@@ -83,7 +106,8 @@ namespace LineNoti
                     cmd.CommandText = @"SELECT slr.*, usr.usr_line_id
                         FROM ma_seller slr
                         LEFT JOIN ma_user usr ON slr.slr_usr_id = usr.usr_id
-                        WHERE slr_dt_weather_noti IS NULL OR DATE_FORMAT(slr_dt_weather_noti, '%Y-%m-%d %H') <> DATE_FORMAT(NOW(), '%Y-%m-%d %H')";
+                        WHERE slr_dt_weather_noti IS NULL OR DATE_FORMAT(slr_dt_weather_noti, '%Y-%m-%d %H') <> DATE_FORMAT(NOW(), '%Y-%m-%d %H') AND usr.usr_line_id IS NOT NULL AND usr.usr_line_id <> ''
+                        ORDER BY slr_district,slr_province,slr_country";
 
                     var reader = cmd.ExecuteReader();
                     while (reader.Read())
