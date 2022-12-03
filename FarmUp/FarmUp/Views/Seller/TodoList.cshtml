@@ -2,7 +2,7 @@
 
 @*@model FarmUp.Dtos.Seller.TodoListFormDto*@
 
-@model  FarmUp.Dtos.Seller.Todolist.SellerActivityDto
+@model  FarmUp.Dtos.Seller.SellerTodoListDtoList
 
 @{
     ViewData["Title"] = "Register";
@@ -25,7 +25,6 @@
     </header>
     <!-- Header End -->
     <!-- Main Start -->
-    <form method="post" asp-controller="Seller" asp-action="TodoList" enctype="multipart/form-data">
         <div class="main-wrap order-detail mb-xxl">
             <!-- Banner Start -->
             <div class="section-p-b">
@@ -33,7 +32,7 @@
                     <div class="media">
                         <div class="img"></div>
                         <div class="media-body">
-                            <h2>รายการต้องทำประจำวัน</h2>
+                            <h2>กิจกรรมประจำวัน</h2>
                         </div>
                     </div>
                 </div>
@@ -41,75 +40,57 @@
             <!-- Banner End -->
             <!-- Item Section Start -->
             <div class="item-section p-0">
-                <h3 class="font-theme font-md">กิจกรรมวันนี้ (21/10/65):</h3>
-                <div class="item-wrap">
-                    <input type="button" id="btnAddActivityRow" value="เพิ่มกิจกรรม" class="btn btn-primary">
-                </div>
-                <div class="item-wrap" id="ActivityContainer">
-                    <!-- Item Start -->
-                    <!-- Item End -->
-                    <!-- Item Start -->
-                    
-                    <div class="media">
-                        <div class="count">
-                            
-                              <input class="form-control" type="file" name="imgFile" multiple>
+                <h3 class="font-theme font-md">กิจกรรมวันนี้ (@DateTime.Now.ToString("dd/MM/yy")):</h3>
+
+                <input type="file" id="browse" name="fileupload" style="display: none" onChange="handlechange();" accept="image/*" capture="camera" />
+                <input type="button" value="รูปสวนอัพเดตวันนี้" id="fakeBrowse" class="btn btn-success" onclick="browseclick();" style="margin: 20px 0;"/>
+
+                @foreach(var todoList in Model.todayListDtosList)
+                {
+                    <div class="row itemList simple">
+                        <div class="col-6">
+                            <image src="/@todoList.ImageUrl.Replace('\\','/')" style="width:100%"></image>
                         </div>
-                        <div class="count">
-                            <select asp-for="ActTopic[0]" class="form-select form-select-sm" name="actTopic" aria-label=".form-select-sm example">
-                                <option selected>Open this select menu</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                            </select>
-                        </div>
-                        <div class="count">
-                            <textarea asp-for="ActDesc[0]" class="form-control" name="ActDesc" aria-label="With textarea"></textarea>
-                        </div>
-                        <div class="media-body">
-                            <h4 class="title-color font-sm">รายละเอียด</h4>
+                        <div class="col-6" style="padding:0 10px;">
+                            <input type="hidden" name="imgUrl" value="@todoList.ImageUrl" />
+                            <div><h4>หัวข้อ</h4></div>
+                            <div><div style="margin-top: 5px;" name="jqxComboBox"></div></div>
+                            <div><h4>รายละเอียด</h4></div>
+                            <div><textarea name="desc" maxlength="500" style="width:100%;padding: 5px;">@todoList.ActDesc</textarea></div>
+                            <div>
+                                <input type="button" value="บันทึก" class="btn btn-success" style="margin: 5px 0 0 0;" onclick="SaveAct(this)" />
+                            </div>
                         </div>
                     </div>
-                    <!-- Item End -->
-                </div>
-            </div>
-            <div class="item-section p-0 pt-4">
-                @*<h3 class="font-theme font-md" style="color:orangered !important;">ปัญหาที่พบ:</h3>
-                <div class="item-wrap">
-                    @foreach (var ProbleListItem in (List<SelectListItem>)ViewData["selectProblemListValue"])
-                    {
-                        <!-- Item Start -->
-                        <div class="media">
-                            <div class="count">
-                                <input type="checkbox" id="@ProbleListItem.Value" name="problemList" value="@ProbleListItem.Value" />
+                    <hr/>
+                }
+                
+                <input type="file" id="browseE" name="fileupload" style="display: none" onChange="handlechangeE();" accept="image/*" capture="camera" />
+                <input type="button" value="ข้อสังเกตปรือปัญหาที่พบ" id="fakeBrowseE" class="btn btn-success" onclick="browseclickE();" style="margin: 20px 0;"/>
+
+                @foreach (var todoList in Model.todayAlarmDtosList)
+                {
+                        <div class="row itemList alarm">
+                            <div class="col-6">
+                                <image src="/@todoList.ImageUrl.Replace('\\','/')" style="width:100%"></image>
                             </div>
-                            <div class="media-body">
-                                <h4 class="title-color font-sm">@ProbleListItem.Text</h4>
+                            <div class="col-6" style="padding:0 10px;">
+                                <input type="hidden" name="imgUrl" value="@todoList.ImageUrl" />
+                                <div><h4>หัวข้อ</h4></div>
+                                <div><div style="margin-top: 5px;" name="jqxComboBox"></div></div>
+                                <div><h4>รายละเอียด</h4></div>
+                                <div><textarea name="desc" maxlength="500" style="width:100%;padding: 5px;">@todoList.ActDesc</textarea></div>
+                                <div>
+                                    <input type="button" value="บันทึก" class="btn btn-success" style="margin: 5px 0 0 0;" onclick="SaveAct(this)" />
+                                </div>
                             </div>
                         </div>
-                        <!-- Item End -->
-                    }
-                </div>
-            </div>
-            <!-- Item Section End -->
-            <!-- Item Section Start -->
-
-            <div class="item-section p-0 pt-4">
-                <h3 class="font-theme font-md" style="color:dodgerblue !important;">อัพโหลดรูป :</h3>
-
-            </div>
-            <div class="item-section p-0 pt-4">
-                <input type="file" name="imgFile" multiple>
-
-            </div>*@
-            <div class="item-section p-0 pt-4">
-                <input type="submit" value="บันทึก" class="btn btn-success" />
-
+                        <hr/>
+                }
             </div>
             <!-- Item Section End -->
 
         </div>
-    </form>
 
     <!-- Main End -->
 </div>
@@ -117,14 +98,130 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
+            var titleList = [];
+            @foreach(var act in Model.titleActivity)
+            {
+                <text>titleList.push('@act');</text>
+            }
             
-            $("#btnAddActivityRow").click(
-                function () {
-                    console.log("[btnAddActivityRow][click]");
-                    //$("#ActivityContainer").append("<p>Appended itemdata</p>");
-                    $("#ActivityContainer").append('<div class="media"><div class="count"><input type="file" multiple></div><div class="count"><input type="checkbox" value=""/></div><div class="media-body"><h4 class="title-color font-sm"> todo </h4></div></div>');
-                });
+            // Create a jqxComboBox
+            $("[name=jqxComboBox]").each(function(){
+                $(this).jqxComboBox({source: titleList, multiSelect: true, height: 28,showCloseButtons: true});
+            })
+
+            @foreach(var todoList in Model.todayListDtosList)
+            {
+                String[] list = todoList.ActTopic.Split(',',StringSplitOptions.RemoveEmptyEntries);
+                foreach(var l in list)
+                {
+                    var url = todoList.ImageUrl.Replace("OneDurianUpload\\", "");
+                    <text>$("[value*='@url']").parents(".itemList:first").find("div[name=jqxComboBox]").jqxComboBox('selectItem', '@l');</text>
+                }
+            }
+            @foreach(var todoList in Model.todayAlarmDtosList)
+            {
+                String[] list = todoList.ActTopic.Split(',',StringSplitOptions.RemoveEmptyEntries);
+                foreach(var l in list)
+                {
+                    var url = todoList.ImageUrl.Replace("OneDurianUpload\\", "");
+                    <text>$("[value*='@url']").parents(".itemList:first").find("div[name=jqxComboBox]").jqxComboBox('selectItem', '@l');</text>
+                }
+            }
         });
+
+        function browseclick(){
+            if($(".simple").length == 4){
+                alert("อัพโหลดภาพสวนวันนี้ได้สูงสุด 4 ภาพ");
+                return;
+            }
+            var fileinput = document.getElementById("browse");
+            fileinput.click(); 
+        }
+        function handlechange()
+        {
+            var files = $("#browse")[0].files;
+            var fd = new FormData();
+            if(files.length > 0 ){
+                fd.append('file',files[0]);
+                fd.append('datatype','normalAct');
+                $.ajax({
+                    url:'@Url.Action("UploadFile", "Seller")',
+                    type:'post',
+                    data:fd,
+                    contentType: false,
+                    processData: false,
+                    success:function(response){
+				        if(response.status == 200)
+                        {
+                            alert("อัพโหลดรูปสำเร็จ");
+                            location.reload();
+                        }
+                    }
+                });
+            }
+        }
+        function browseclickE(){
+            if($(".alarm").length == 6){
+                alert("ข้อสังเกตปรือปัญหาที่พบ 6 ภาพ");
+                return;
+            }
+            var fileinput = document.getElementById("browseE");
+            fileinput.click(); 
+        }
+        function handlechangeE()
+        {
+            var files = $("#browseE")[0].files;
+            var fd = new FormData();
+            if(files.length > 0 ){
+                fd.append('file',files[0]);
+                fd.append('datatype','alarmAct');
+                $.ajax({
+                    url:'@Url.Action("UploadFile", "Seller")',
+                    type:'post',
+                    data:fd,
+                    contentType: false,
+                    processData: false,
+                    success:function(response){
+				        if(response.status == 200)
+                        {
+                            alert("อัพโหลดรูปสำเร็จ");
+                            location.reload();
+                        }
+                    }
+                });
+            }
+        }
+        function SaveAct(el){
+            var dom = $(el);
+            var area = dom.parents(".itemList:first");
+            var title = area.find("input[name=jqxComboBox]").val();
+            var desc= area.find("[name=desc]").val();
+            var imgUrl = area.find("[name=imgUrl]").val();
+            var fd = new FormData();
+            fd.append('title',title);
+            fd.append('desc',desc);
+            fd.append('imgUrl',imgUrl);
+            $.ajax({
+                url:'@Url.Action("UpdateDesc", "Seller")',
+                type:'post',
+                data:fd,
+                contentType: false,
+                processData: false,
+                success:function(response){
+			      //if(response.status == 200)
+                    {
+                        alert("อัพโหลดรูปสำเร็จ");
+                        location.reload();
+                    }
+                }
+            });
+        }
     </script>
     @*<script type="text/javascript" src="~/scripts/main.js"></script>*@
+    <script type="text/javascript" src="~/jqwidgets/jqxbuttons.js"></script>
+    <script type="text/javascript" src="~/jqwidgets/jqxscrollbar.js"></script>
+    <script type="text/javascript" src="~/jqwidgets/jqxlistbox.js"></script>
+    <script type="text/javascript" src="~/jqwidgets/jqxcombobox.js"></script>
+    <script type="text/javascript" src="~/jqwidgets/jqxpanel.js"></script>
+    <script type="text/javascript" src="~/jqwidgets/jqxcheckbox.js"></script>
 }

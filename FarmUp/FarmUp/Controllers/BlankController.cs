@@ -1,6 +1,7 @@
 ﻿using FarmUp.Dtos.Admin;
 using FarmUp.Services.Admin;
 using FruitProject.Controllers;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
@@ -54,6 +55,10 @@ namespace FarmUp.Controllers
                     if (!readData.Read())
                     {
                         refer = "-Account-Register";
+                    }
+                    else
+                    {
+                        HttpContext.Session.SetString("userId", readData["usr_id"].ToString());
                     }
                     readData.Close();
 

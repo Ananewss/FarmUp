@@ -97,64 +97,38 @@ namespace FarmUp.Services.Seller
 
         //Use this for Save Activity Transection
         //27-11-65
-        public async Task<ResponseMSG> AddActivityAndProblem(SellerActivityDto sellerActivityDto, List<IFormFile> imgFiles)
+        public async Task<ResponseMSG> AddActivityAndProblem(String userId,String ImagePath, String datatype)
         {
             ResponseMSG responseMSG = new ResponseMSG();
             string strConn = _configuration.GetConnectionString($"onedurian");
 
-            /*
-                INSERT INTO tr_activity(ActId,ImgUrl,ActDesc,ActTopic,Created_by,updated_by)
-                VALUES(UNHEX(CONCAT(REPLACE(UUID(), '-', ''))),'yello2.png','โคนต้นเน่า','โรค|แมลง','1','1')
-             */
-
             StringBuilder sbAddActiviry = new StringBuilder();
-            sbAddActiviry.Append($"INSERT INTO tr_activity(ActId,ImgUrl,ActDesc,ActTopic,Created_by,updated_by) ");
-            sbAddActiviry.Append($"VALUES(UNHEX(CONCAT(REPLACE(UUID(),'-',''))),@ImgUrl,@ActDesc,@ActTopic,@Created_by,@updated_by) ");
+            sbAddActiviry.Append($"INSERT INTO tr_activity(ActId,usr_id,ImgUrl,datatype,Created_by,updated_by) ");
+            sbAddActiviry.Append($"VALUES(UNHEX(CONCAT(REPLACE(UUID(),'-',''))),@usr_id,@ImgUrl,@datatype,@Created_by,@updated_by) ");
 
             MySqlConnection mysqlConn = new MySqlConnection(strConn);
             await mysqlConn.OpenAsync();
-            MySqlTransaction tr = mysqlConn.BeginTransaction();
             try
-            {
-                //foreach (var ActivityItem in sellerActivityDto.sellerActivityTrObjs)
-                //{
-                //    using (MySqlCommand mysqlCmd = new MySqlCommand(sbAddActiviry.ToString(), mysqlConn))
-                //    {
-                //        mysqlCmd.Parameters.Clear();
-                //        //mysqlCmd.Parameters.Add(new MySqlParameter("@ImgUrl", MySqlDbType.VarChar, 255)).Value = ActivityItem.ImgUrl;
-                //        mysqlCmd.Parameters.Add(new MySqlParameter("@ActDesc", MySqlDbType.VarChar, 500)).Value = ActivityItem.ActDesc;
-                //        mysqlCmd.Parameters.Add(new MySqlParameter("@ActTopic", MySqlDbType.VarChar, 500)).Value = ActivityItem.ActTopic;
-                //        mysqlCmd.Parameters.Add(new MySqlParameter("@Created_by", MySqlDbType.VarChar, 50)).Value = sellerActivityDto.UserId;
-                //        mysqlCmd.Parameters.Add(new MySqlParameter("@updated_by", MySqlDbType.VarChar, 50)).Value = sellerActivityDto.UserId;
-                //        await mysqlCmd.ExecuteNonQueryAsync();
-                //        await mysqlCmd.DisposeAsync();
-                //    }
-                //}
-
-                for (int i =0;i< sellerActivityDto.ActDesc.Length;i++)
+            {   using (MySqlCommand mysqlCmd = new MySqlCommand(sbAddActiviry.ToString(), mysqlConn))
                 {
-                    using (MySqlCommand mysqlCmd = new MySqlCommand(sbAddActiviry.ToString(), mysqlConn))
-                    {
-                        mysqlCmd.Parameters.Clear();
-                        //mysqlCmd.Parameters.Add(new MySqlParameter("@ImgUrl", MySqlDbType.VarChar, 255)).Value = ActivityItem.ImgUrl;
-                        mysqlCmd.Parameters.Add(new MySqlParameter("@ImgUrl", MySqlDbType.VarChar, 255)).Value = $"yello{i.ToString()}.png";
-                        mysqlCmd.Parameters.Add(new MySqlParameter("@ActDesc", MySqlDbType.VarChar, 500)).Value = sellerActivityDto.ActDesc[i];
-                        mysqlCmd.Parameters.Add(new MySqlParameter("@ActTopic", MySqlDbType.VarChar, 500)).Value = sellerActivityDto.ActTopic[i];
-                        mysqlCmd.Parameters.Add(new MySqlParameter("@Created_by", MySqlDbType.VarChar, 50)).Value = sellerActivityDto.UserId;
-                        mysqlCmd.Parameters.Add(new MySqlParameter("@updated_by", MySqlDbType.VarChar, 50)).Value = sellerActivityDto.UserId;
-                        await mysqlCmd.ExecuteNonQueryAsync();
-                        await mysqlCmd.DisposeAsync();
-                    }
+                    mysqlCmd.Parameters.Clear();
+                    //mysqlCmd.Parameters.Add(new MySqlParameter("@ImgUrl", MySqlDbType.VarChar, 255)).Value = ActivityItem.ImgUrl;
+                    mysqlCmd.Parameters.AddWithValue("@usr_id", userId);
+                    mysqlCmd.Parameters.AddWithValue("@ImgUrl", ImagePath);
+                    mysqlCmd.Parameters.AddWithValue("@datatype", datatype);
+                    mysqlCmd.Parameters.AddWithValue("@Created_by", userId);
+                    mysqlCmd.Parameters.AddWithValue("@updated_by", userId);
+                    await mysqlCmd.ExecuteNonQueryAsync();
+                    await mysqlCmd.DisposeAsync();
                 }
+                
                 responseMSG.Status = 200;
                 responseMSG.Result = $"Add data success";
-                await tr.CommitAsync();
             }
             catch (Exception ex)
             {
                 responseMSG.Status = 400;
                 responseMSG.Result = $"Add data fail. = {ex.Message.ToString()}";
-                await tr.RollbackAsync();
             }
             finally
             {
@@ -294,6 +268,106 @@ namespace FarmUp.Services.Seller
 
 
             return await Task.FromResult(todolistSelectObjList);
+        }
+
+        internal async Task<SellerTodoListDtoList> GetTodoListByUser(string? userId)
+        {
+            SellerTodoListDtoList sellerTodaoListDtoList = new SellerTodoListDtoList();
+            string strConn = _configuration.GetConnectionString($"onedurian");
+
+            MySqlConnection mSqlConn = new MySqlConnection(strConn);
+            mSqlConn.Open();
+            try
+            {
+                {
+                    MySqlCommand cmd = new MySqlCommand(@"SELECT *
+                        FROM tr_activity
+                        WHERE usr_id = @usr_id
+                        AND DATE(created_at) = CURDATE()
+                        AND deleted_at IS NULL
+                        ORDER BY created_at DESC", mSqlConn);
+                    cmd.Parameters.AddWithValue("@usr_id", userId);
+
+
+                    var readData = cmd.ExecuteReader();
+                    while (readData.Read())
+                    {
+                        SellerTodoListDto todoList = new SellerTodoListDto();
+                        todoList.ImageUrl = readData["ImgUrl"].ToString();
+                        todoList.ActDesc = (readData["ActDesc"] != null) ? readData["ActDesc"].ToString() : "";
+                        todoList.ActTopic = (readData["ActTopic"] != null) ? readData["ActTopic"].ToString() : "";
+
+                        if (readData["datatype"].ToString().Equals("normalAct"))
+                            sellerTodaoListDtoList.todayListDtosList.Add(todoList);
+                        else
+                            sellerTodaoListDtoList.todayAlarmDtosList.Add(todoList);
+                    }
+                    readData.Close();
+                    readData.Dispose();
+                }
+
+                {
+                    MySqlCommand cmd = new MySqlCommand(@"SELECT ActDesc
+                        FROM ma_activity
+                        WHERE deleted_at IS NULL
+                        ORDER BY ActDesc", mSqlConn);
+
+
+                    var readData = cmd.ExecuteReader();
+                    while (readData.Read())
+                    {
+                        sellerTodaoListDtoList.titleActivity.Add(readData["ActDesc"].ToString());
+                    }
+                    readData.Close();
+                    readData.Dispose();
+                }
+
+            }
+            catch (Exception ex) { }
+            mSqlConn.Close();
+
+            return await Task.FromResult(sellerTodaoListDtoList);
+        }
+
+        internal ResponseMSG UpdateActivity(string title, string desc, string imgUrl)
+        {
+            ResponseMSG responseMSG = new ResponseMSG();
+            string strConn = _configuration.GetConnectionString($"onedurian");
+
+            MySqlConnection mysqlConn = new MySqlConnection(strConn);
+            mysqlConn.Open();
+            try
+            {
+                using (MySqlCommand mysqlCmd = new MySqlCommand(@"UPDATE tr_activity SET ActDesc=@ActDesc, ActTopic=@ActTopic WHERE ImgUrl=@ImgUrl", mysqlConn))
+                {
+                    mysqlCmd.Parameters.Clear();
+                    //mysqlCmd.Parameters.Add(new MySqlParameter("@ImgUrl", MySqlDbType.VarChar, 255)).Value = ActivityItem.ImgUrl;
+                    mysqlCmd.Parameters.AddWithValue("@ActTopic", System.Net.WebUtility.HtmlDecode(title));
+                    mysqlCmd.Parameters.AddWithValue("@ActDesc", System.Net.WebUtility.HtmlDecode(desc));
+                    mysqlCmd.Parameters.AddWithValue("@ImgUrl", imgUrl);
+                    mysqlCmd.ExecuteNonQuery();
+                    mysqlCmd.Dispose();
+                }
+
+                responseMSG.Status = 200;
+                responseMSG.Result = $"Add data success";
+            }
+            catch (Exception ex)
+            {
+                responseMSG.Status = 400;
+                responseMSG.Result = $"Add data fail. = {ex.Message.ToString()}";
+            }
+            finally
+            {
+                if (mysqlConn != null)
+                {
+                    if (mysqlConn.State == ConnectionState.Open)
+                    {
+                        mysqlConn.Close();
+                    }
+                }
+            }
+            return responseMSG;
         }
     }
 }
