@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using System.IO;
+using FarmUp.Models;
 
 namespace FarmUp.Controllers
 {
@@ -28,7 +30,8 @@ namespace FarmUp.Controllers
 
         private readonly TodayPriceService _todayPriceService;
 
-        public SellerController(IWebHostEnvironment webHostEnvironment,IConfiguration config, ILogger<SellerController> logger,TodoListService todoListService, WeatherForecastService weatherForecastService, TodayPriceService todayPriceService, SellerActivityService SellerActService)
+
+        public SellerController(IWebHostEnvironment webHostEnvironment, IConfiguration config, ILogger<SellerController> logger, TodoListService todoListService, WeatherForecastService weatherForecastService, TodayPriceService todayPriceService, SellerActivityService SellerActService)
         {
             _webHostEnvironment = webHostEnvironment;
             _config = config;
@@ -74,7 +77,7 @@ namespace FarmUp.Controllers
         {
             var readActivitySelectList = await _todolistSrvice.ReadActivitylistSelectListObj();
 
-            var transToArray = readActivitySelectList.activitylistSelectObjs.Select(md=>md.ActDesc).ToArray();
+            var transToArray = readActivitySelectList.activitylistSelectObjs.Select(md => md.ActDesc).ToArray();
             return Ok(transToArray);
         }
 
@@ -132,9 +135,57 @@ namespace FarmUp.Controllers
             return View(readWeatherData);
         }
 
+        
         public ActionResult PlantMedic()
         {
+            //var lineUerId = HttpContext.Session.GetString("lineUserId");
+            var lineUerId = "U94e949cf46d567c79fc649ab079fab90";
+
+
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult sendQuestion(QuestionModel questionModel)
+        {
+            //var lineUerId = HttpContext.Session.GetString("lineUserId");
+            var lineUerId = "U94e949cf46d567c79fc649ab079fab90";
+
+            string strConn = _config.GetConnectionString($"onedurian");
+            MySqlConnection mSqlConn = new MySqlConnection(strConn);
+            int usr_id = 0;
+            try
+            {
+                mSqlConn.Open();
+                MySqlCommand usrCmd = new MySqlCommand(@"SELECT usr_id
+                                                        FROM ma_user
+                                                        WHERE usr_line_id = @lineUserId", mSqlConn);
+                usrCmd.Parameters.AddWithValue("@lineUserId", lineUerId);
+                var readData = usrCmd.ExecuteReader();
+                if (readData != null)
+                {
+                    readData.Read();
+                    usr_id = Convert.ToInt32(readData["usr_id"].ToString());
+                    readData.Close();
+                }
+                mSqlConn.Close();
+            }
+            catch (Exception ex)
+            {
+                usr_id = 0;
+                mSqlConn.Close();
+            }
+
+            questionModel.usr_id = usr_id;
+            MySqlCommand insertCMD = new MySqlCommand(@"INSERT INTO tr_question(q_from_usr_id,question)
+                                                        VALUES (@usr_id,@question);", mSqlConn);
+            insertCMD.Parameters.AddWithValue("@usr_id", questionModel.usr_id);
+            insertCMD.Parameters.AddWithValue("@question", questionModel.question);
+            mSqlConn.Open();
+            insertCMD.ExecuteNonQuery();
+            mSqlConn.Close();       
+            ModelState.Clear();
+            return View("PlantMedic");
         }
 
         public async Task<ActionResult> TodayPriceAsync()

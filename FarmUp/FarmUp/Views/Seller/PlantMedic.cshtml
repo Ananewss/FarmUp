@@ -1,4 +1,5 @@
-﻿@{
+﻿@model FarmUp.Models.QuestionModel
+@{
     ViewData["Title"] = "Register";
     Layout = "~/Views/Shared/_SellerPageLayout.cshtml";
 }
@@ -22,7 +23,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             var quotes = [];
-            $('#jqxTextArea').jqxTextArea({ placeHolder: 'สอบถามปัญหาต่างๆ', height: 90, width: 300, minLength: 1, source: quotes });
+            $('#jqxTextArea').jqxTextArea({  height: 90, width: 300, minLength: 1, source: quotes });
 
             $(".product-slider").slick({
                 dots: false,
@@ -90,15 +91,20 @@
             </div>
 
             <!-- Item Section Start -->
+        @using (Html.BeginForm("sendQuestion", "Seller", FormMethod.Post))
+            {
             <div class="item-section p-0 pt-4  section-p-tb">
                 <h3 class="font-theme font-md" style="color:orangered !important;">สอบถามปัญหาต่างๆ :</h3>
 
                 <div class="item-wrap">
-                    <textarea id="jqxTextArea"></textarea>
+                @Html.TextAreaFor(model=>model.question,new { @id="jqxTextArea"})
+                    @*<textarea id="jqxTextArea"></textarea>*@
                 </div>
 
-                <button type="submit" class="btn-solid">ส่ง</button>
+                <button type="submit" class="btn-solid" onclick="" value="submit">ส่ง</button>    
+
             </div>
+            }
             <!-- Item Section End -->
             <!-- Tab Content Start -->
             <div class="tab-content ratio2_1" id="pills-tabContent">
@@ -208,6 +214,24 @@
                             </div>
                         </div>
                         <!-- Accordion End -->
+                        <!-- Accordion Satart -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading6">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse6" aria-expanded="false" aria-controls="collapse6">
+                                    กลเม็ดการขายให้ได้ราคาดี
+                                </button>
+                            </h2>
+                            <div id="collapse6" class="accordion-collapse collapse" aria-labelledby="heading6" data-bs-parent="#accordionExample-1">
+                                <div class="accordion-body">
+                                    <p class="content-color font-xs">
+                                        No, we don’t have a physical store location at the moment. We accept only orders through our online shop and we’re shipping all orders. Please visit our shipping section for more
+                                        details.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Accordion End -->
+
                     </div>
                 </div>
                 <!-- Catagories Content End -->
@@ -538,6 +562,7 @@
                             </div>
                         </div>
                         <!-- Accordion End -->
+
                     </div>
                 </div>
                 <!-- Catagories Content End -->
@@ -688,3 +713,4 @@
         <!-- Main End -->
     </div>
     <!-- Skeleton loader End -->
+    
