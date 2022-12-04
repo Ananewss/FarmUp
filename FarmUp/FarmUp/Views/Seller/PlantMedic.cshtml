@@ -1,8 +1,13 @@
-﻿@model FarmUp.Models.QuestionModel
+﻿
+@model FarmUp.Models.AnswerList
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "PlantMedic";
     Layout = "~/Views/Shared/_SellerPageLayout.cshtml";
 }
+@{
+
+}
+
 @section Scripts
     {
     @*<script src="@Url.Content("~/scripts/jquery-1.12.4.min.js")"></script>*@
@@ -96,12 +101,11 @@
             <div class="item-section p-0 pt-4  section-p-tb">
                 <h3 class="font-theme font-md" style="color:orangered !important;">สอบถามปัญหาต่างๆ :</h3>
 
-                <div class="item-wrap">
-                @Html.TextAreaFor(model=>model.question,new { @id="jqxTextArea"})
-                    @*<textarea id="jqxTextArea"></textarea>*@
+                <div class="item-wrap">                
+                    <textarea id="jqxTextArea"></textarea>
                 </div>
 
-                <button type="submit" class="btn-solid" onclick="" value="submit">ส่ง</button>    
+                <button type="submit" class="btn-solid" onclick="submitQuestion()" value="submit">ส่ง</button>
 
             </div>
             }
@@ -214,23 +218,27 @@
                             </div>
                         </div>
                         <!-- Accordion End -->
-                        <!-- Accordion Satart -->
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="heading6">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse6" aria-expanded="false" aria-controls="collapse6">
-                                    กลเม็ดการขายให้ได้ราคาดี
-                                </button>
-                            </h2>
-                            <div id="collapse6" class="accordion-collapse collapse" aria-labelledby="heading6" data-bs-parent="#accordionExample-1">
-                                <div class="accordion-body">
-                                    <p class="content-color font-xs">
-                                        No, we don’t have a physical store location at the moment. We accept only orders through our online shop and we’re shipping all orders. Please visit our shipping section for more
-                                        details.
-                                    </p>
+                        @foreach (var answer in Model.AnswersModelList)
+                        {
+                            <!-- Accordion Satart -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading6">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse6" aria-expanded="false" aria-controls="collapse6">
+                                        @answer.ans_question
+                                    </button>
+                                </h2>
+                                <div id="collapse6" class="accordion-collapse collapse" aria-labelledby="heading6" data-bs-parent="#accordionExample-1">
+                                    <div class="accordion-body">
+                                        <p class="content-color font-xs">
+                                            @answer.ans_answer
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- Accordion End -->
+                            <!-- Accordion End -->
+                        }
+                    
+                    
 
                     </div>
                 </div>
@@ -713,4 +721,25 @@
         <!-- Main End -->
     </div>
     <!-- Skeleton loader End -->
+    <script>
+        function submitQuestion(){
+        var data = new FormData()
+        data.append('question': $('#jqxTextArea').val());
+        console.log(data)
+        $.ajax({
+            url: '@Url.Action("sendQuestion", "Seller")',
+            type: 'post',
+            data: data,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                //if(response.status == 200)
+                {
+                    alert("ส่งคำถามสำเร็จ");
+                    location.reload();
+                }
+            }
+        });
+        }
+    </script>
     
