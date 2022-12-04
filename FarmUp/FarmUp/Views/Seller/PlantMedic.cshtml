@@ -101,11 +101,11 @@
             <div class="item-section p-0 pt-4  section-p-tb">
                 <h3 class="font-theme font-md" style="color:orangered !important;">สอบถามปัญหาต่างๆ :</h3>
 
-                <div class="item-wrap">                
-                    <textarea id="jqxTextArea"></textarea>
+                <div class="item-wrap">
+                    <textarea id="jqxTextArea" name="Question"></textarea>
                 </div>
 
-                <button type="submit" class="btn-solid" onclick="submitQuestion()" value="submit">ส่ง</button>
+                <button type="submit" class="btn-solid" value="submit">ส่ง</button>
 
             </div>
             }
@@ -133,6 +133,7 @@
                             </div>
                         </div>
                         <!-- Accordion End -->
+
                         <!-- Accordion Satart -->
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="heading2">
@@ -217,6 +218,9 @@
                                 </div>
                             </div>
                         </div>
+
+                    @if (Model.AnswersModelList.Count != 0)
+                    {
                         <!-- Accordion End -->
                         @foreach (var answer in Model.AnswersModelList)
                         {
@@ -237,6 +241,8 @@
                             </div>
                             <!-- Accordion End -->
                         }
+                    }       
+                        
                     
                     
 
@@ -723,13 +729,11 @@
     <!-- Skeleton loader End -->
     <script>
         function submitQuestion(){
-        var data = new FormData()
-        data.append('question': $('#jqxTextArea').val());
-        console.log(data)
+        var data = $('#jqxTextArea').val();
         $.ajax({
             url: '@Url.Action("sendQuestion", "Seller")',
             type: 'post',
-            data: data,
+            data: { 'Question' : data },
             contentType: false,
             processData: false,
             success: function (response) {

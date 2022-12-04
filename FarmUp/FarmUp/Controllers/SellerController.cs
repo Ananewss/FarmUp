@@ -139,14 +139,14 @@ namespace FarmUp.Controllers
         
         public ActionResult PlantMedic()
         {
-            //var lineUerId = HttpContext.Session.GetString("lineUserId");
+            var lineUerId = HttpContext.Session.GetString("lineUserId");
             
-            var lineUerId = "U94e949cf46d567c79fc649ab079fab90";
+            //var lineUerId = "U94e949cf46d567c79fc649ab079fab90";
 
             var answerList = GetAnswerList(lineUerId);
             //ViewBag.answerList = answerList;
             //ViewData["AnswerList"] = answerList;
-            return View(answerList);
+            return View("PlantMedic", answerList);
         }
 
         public AnswerList GetAnswerList(string lineID)
@@ -214,10 +214,10 @@ namespace FarmUp.Controllers
         }
 
         [HttpPost]
-        public ActionResult sendQuestion(string question)
+        public ActionResult sendQuestion(string Question)
         {
-            //var lineUerId = HttpContext.Session.GetString("lineUserId");
-            var lineUerId = "U94e949cf46d567c79fc649ab079fab90";
+            var lineUerId = HttpContext.Session.GetString("lineUserId");
+            //var lineUerId = "U94e949cf46d567c79fc649ab079fab90";
 
             string strConn = _config.GetConnectionString($"onedurian");
             MySqlConnection mSqlConn = new MySqlConnection(strConn);
@@ -248,12 +248,13 @@ namespace FarmUp.Controllers
             MySqlCommand insertCMD = new MySqlCommand(@"INSERT INTO tr_question(q_from_usr_id,question)
                                                         VALUES (@usr_id,@question);", mSqlConn);
             insertCMD.Parameters.AddWithValue("@usr_id", q_usr_ID);
-            insertCMD.Parameters.AddWithValue("@question", question);
+            insertCMD.Parameters.AddWithValue("@question", Question);
             mSqlConn.Open();
             insertCMD.ExecuteNonQuery();
-            mSqlConn.Close();       
-            ModelState.Clear();
-            return View("PlantMedic");
+            mSqlConn.Close();
+
+            var answer = GetAnswerList(lineUerId);
+            return View("PlantMedic",answer);
         }
 
         public async Task<ActionResult> TodayPriceAsync()
