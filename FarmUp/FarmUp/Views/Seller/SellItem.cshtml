@@ -1,0 +1,60 @@
+﻿@using FarmUp.Dtos.Seller
+
+@*@model FarmUp.Dtos.Seller.TodoListFormDto*@
+
+@model  FarmUp.Dtos.Seller.SellerTodoListDtoList
+
+@{
+    ViewData["Title"] = "Todo List";
+    Layout = "~/Views/Shared/_SellerPageLayout.cshtml";
+}
+
+<!-- Skeleton loader Start -->
+<div>
+    <!-- Header Start -->
+    <header class="header">
+        <div class="logo-wrap">
+            <a href="index.html"><i class="iconly-Arrow-Left-Square icli"></i></a>
+            <h1 class="title-color font-md">รายการต้องทำ</h1>
+        </div>
+        <div class="avatar-wrap">
+            <a href="index.html">
+                <i class="iconly-Home icli"></i>
+            </a>
+        </div>
+    </header>
+    <!-- Header End -->
+    <!-- Main Start -->
+        <div class="main-wrap order-detail mb-xxl">
+            <!-- Banner Start -->
+            <div class="section-p-b">
+                <div class="banner-box">
+                    <div class="media">
+                        <div class="img"></div>
+                        <div class="media-body">
+                            <h2>กิจกรรมประจำวัน</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Banner End -->
+            <!-- Item Section Start -->
+            <div class="item-section p-0">
+                <h3 class="font-theme font-md">กิจกรรมวันนี้ (@DateTime.Now.ToString("dd/MM/yy")):</h3>
+
+                <input type="button" value="ลงขายทุเรียน" class="btn btn-success" style="margin: 20px 0;"/>
+            </div>
+            <!-- Item Section End -->
+
+        </div>
+
+    <!-- Main End -->
+</div>
+<!-- Skeleton loader End -->
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            
+        });
+    </script>
+}

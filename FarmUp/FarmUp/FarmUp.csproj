@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <Folder Include="Views\Buyer\" />
+    <Folder Include="wwwroot\OneDurianAds\" />
   </ItemGroup>
 
   <ItemGroup>

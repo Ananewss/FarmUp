@@ -15,6 +15,7 @@
     <script src="@Url.Content("~/jqwidgets/jqxbuttons.js")"></script>
     <script src="@Url.Content("~/jqwidgets/jqxscrollbar.js")"></script>
     <script src="@Url.Content("~/jqwidgets/jqxtextarea.js")"></script>
+    <script src="@Url.Content("~/jqwidgets/jqxwindow.js")"></script>
 
     <!-- Slick css -->
     <link rel="stylesheet" type="text/css" href="@Url.Content("~/assets/css/vendors/slick.css")" />
@@ -60,6 +61,25 @@
                 ],
             });
         });
+
+
+            function submitQuestion(){
+                var data = $('#jqxTextArea').val();
+                $.ajax({
+                    url: '@Url.Action("sendQuestion", "Seller")',
+                    type: 'post',
+                    data: { 'Question' : data },
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        //if(response.status == 200)
+                        {
+                            alert("ส่งคำถามสำเร็จ");
+                            location.reload();
+                        }
+                    }
+                });
+            }
     </script>
 }
 
@@ -187,6 +207,9 @@
                 <!-- Catagories Content End -->
             </div>
             <!-- Tab Content End -->
+            
+            @if (Model.AdsModelList.Count != 0)
+            {
             <!-- Promotion Start -->
             <div class="product-page">
                 <section class="recently-viewed">
@@ -199,117 +222,41 @@
                     </div>
 
                     <div class="product-slider">
-                        <div>
-                            <div class="product-card">
-                                <div class="img-wrap">
-                                    <a href="product.html"><img src="~/assets/images/product/10.png" class="img-fluid" alt="product" /> </a>
-                                </div>
-                                <div class="content-wrap">
-                                    <a href="product.html" class="font-sm title-color" tabindex="-1">ปุ๋ยสูตร 16-16-16 </a>
-                                    <span class="title-color font-sm plus-item">
-                                        525.00
-                                    </span>
+                        
+                        @foreach (var ads in Model.AdsModelList)
+                        {
+                            <div>
+                                <div class="product-card">
+                                    <div class="img-wrap">
+                                        <a href="#">
+                                            <img src="~/@ads.imgUrl" class="img-fluid" alt="product" />
+                                        </a>
+                                    </div>
+                                    <div class="content-wrap">
+                                        <a href="#" class="font-sm title-color" tabindex="-1">@ads.title</a>
+                                        <span class="title-color font-sm plus-item">
+                                            @ads.price
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        }
 
-                        <div>
-                            <div class="product-card">
-                                <div class="img-wrap">
-                                    <a href="product.html"><img src="~/assets/images/product/11.png" class="img-fluid" alt="product" /> </a>
-                                </div>
-                                <div class="content-wrap">
-                                    <a href="product.html" class="font-sm title-color" tabindex="-1">ปุ๋ยสูตร 16-16-16 </a>
-                                    <span class="title-color font-sm plus-item">
-                                        525.00
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="product-card">
-                                <div class="img-wrap">
-                                    <a href="product.html"><img src="~/assets/images/product/11.png" class="img-fluid" alt="product" /> </a>
-                                </div>
-                                <div class="content-wrap">
-                                    <a href="product.html" class="font-sm title-color" tabindex="-1">ปุ๋ยสูตร 16-16-16 </a>
-                                    <span class="title-color font-sm plus-item">
-                                        525.00
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="product-card">
-                                <div class="img-wrap">
-                                    <a href="product.html"><img src="~/assets/images/product/12.png" class="img-fluid" alt="product" /> </a>
-                                </div>
-                                <div class="content-wrap">
-                                    <a href="product.html" class="font-sm title-color" tabindex="-1">ปุ๋ยสูตร 16-16-16 </a>
-                                    <span class="title-color font-sm plus-item">
-                                        525.00
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="product-card">
-                                <div class="img-wrap">
-                                    <a href="product.html"><img src="~/assets/images/product/13.png" class="img-fluid" alt="product" /> </a>
-                                </div>
-                                <div class="content-wrap">
-                                    <a href="product.html" class="font-sm title-color" tabindex="-1">ปุ๋ยสูตร 16-16-16 </a>
-                                    <span class="title-color font-sm plus-item">
-                                        525.00
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="product-card">
-                                <div class="img-wrap">
-                                    <a href="product.html"><img src="~/assets/images/product/9.png" class="img-fluid" alt="product" /> </a>
-                                </div>
-                                <div class="content-wrap">
-                                    <a href="product.html" class="font-sm title-color" tabindex="-1">ปุ๋ยสูตร 16-16-16 </a>
-                                    <span class="title-color font-sm plus-item">
-                                        525.00
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </section>
             </div>
+            @*<div style="width: 100%; height: 650px; margin-top: 50px;" id="mainDemoContainer">
+                <div id="window">
+                        <img src="/OneDurianAds/ads2.jpg"  alt="product" />
+                </div>
+            </div>*@
             <!-- Promotion End-->
+            }
         </div>
         <!-- Main End -->
     </div>
     <!-- Skeleton loader End -->
-    <script>
-        function submitQuestion(){
-        var data = $('#jqxTextArea').val();
-        $.ajax({
-            url: '@Url.Action("sendQuestion", "Seller")',
-            type: 'post',
-            data: { 'Question' : data },
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                //if(response.status == 200)
-                {
-                    alert("ส่งคำถามสำเร็จ");
-                    location.reload();
-                }
-            }
-        });
-        }
-    </script>
+    
     <style>
         .accordion-item{padding-left:15px;}
     </style>
-    

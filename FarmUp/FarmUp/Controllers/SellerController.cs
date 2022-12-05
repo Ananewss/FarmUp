@@ -166,6 +166,7 @@ namespace FarmUp.Controllers
                                                         FROM
 	                                                        tr_question
                                                         WHERE tr_question.q_from_usr_id = @user_id
+                                                            AND deleted_at IS NULL
                                                         ORDER BY created_at DESC", mSqlConn);
                     usrCmd.Parameters.AddWithValue("@user_id", user_id);
 
@@ -197,8 +198,8 @@ namespace FarmUp.Controllers
                                                         FROM
 	                                                        tr_question
                                                         WHERE question_order IS NOT NULL
+                                                            AND deleted_at IS NULL
                                                         ORDER BY question_order", mSqlConn);
-                    usrCmd.Parameters.AddWithValue("@user_id", user_id);
 
                     var reader = usrCmd.ExecuteReader();
                     if (reader.HasRows)
@@ -213,6 +214,33 @@ namespace FarmUp.Controllers
                             model.ans_from = (String.IsNullOrWhiteSpace(reader["answer_from"].ToString())) ? "" : reader["answer"].ToString();
 
                             answerList.AnswersModelExtraList.Add(model);
+
+                        }
+                        reader.Close();
+                    }
+                }
+                {
+                    MySqlCommand usrCmd = new MySqlCommand(@"SELECT
+	                                                        imgUrl,
+                                                            title,
+                                                            price
+                                                        FROM
+	                                                        tr_advertisement
+                                                        WHERE deleted_at IS NULL
+                                                        ORDER BY ads_order", mSqlConn);
+
+                    var reader = usrCmd.ExecuteReader();
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            AdsModel model = new AdsModel();
+                            //model.q_ID = reader.GetInt32(0);
+                            model.imgUrl = reader["imgUrl"].ToString();
+                            model.title = reader["title"].ToString();
+                            model.price = (Decimal)reader["price"];
+
+                            answerList.AdsModelList.Add(model);
 
                         }
                         reader.Close();
@@ -302,6 +330,11 @@ namespace FarmUp.Controllers
 
             var resultData = _todolistSrvice.UpdateActivity(title, desc, imgUrl);
             return resultData;
+        }
+
+        public ActionResult SellItem()
+        {
+            return View();
         }
 
         public ActionResult TestJQWidget()
