@@ -139,17 +139,16 @@ namespace FarmUp.Controllers
         
         public ActionResult PlantMedic()
         {
-            var lineUerId = HttpContext.Session.GetString("lineUserId");
-            
-            //var lineUerId = "U94e949cf46d567c79fc649ab079fab90";
+            //var lineUerId = HttpContext.Session.GetString("lineUserId");
+            var userId = HttpContext.Session.GetString("userId");
 
-            var answerList = GetAnswerList(lineUerId);
+            var answerList = GetAnswerList(userId);
             //ViewBag.answerList = answerList;
             //ViewData["AnswerList"] = answerList;
             return View("PlantMedic", answerList);
         }
 
-        public AnswerList GetAnswerList(string lineID)
+        public AnswerList GetAnswerList(string user_id)
         {
             string strConn = _config.GetConnectionString($"onedurian");
             MySqlConnection mSqlConn = new MySqlConnection(strConn);
@@ -157,51 +156,67 @@ namespace FarmUp.Controllers
             try
             {
                 mSqlConn.Open();
-                MySqlCommand usrCmd = new MySqlCommand(@"SELECT
+                {
+                    MySqlCommand usrCmd = new MySqlCommand(@"SELECT
 	                                                        tr_question.question_id, 
 	                                                        tr_question.q_from_usr_id, 
 	                                                        tr_question.question, 
 	                                                        tr_question.answer, 
 	                                                        tr_question.answer_from
-                                                         FROM
+                                                        FROM
 	                                                        tr_question
-	                                                     LEFT JOIN ma_user ON tr_question.q_from_usr_id = ma_user.usr_id
-                                                         WHERE
-	                                                        ma_user.usr_line_id = @lineUserId", mSqlConn);
-                usrCmd.Parameters.AddWithValue("@lineUserId", lineID);
+                                                        WHERE tr_question.q_from_usr_id = @user_id
+                                                        ORDER BY created_at DESC", mSqlConn);
+                    usrCmd.Parameters.AddWithValue("@user_id", user_id);
 
-                var reader = usrCmd.ExecuteReader();
-                if (reader.HasRows)
-                {
-                    while (reader.Read())
+                    var reader = usrCmd.ExecuteReader();
+                    if (reader.HasRows)
                     {
-                        AnswersModel model = new AnswersModel();
-                        model.q_ID = reader.GetInt32(0);
-                        model.q_usr_ID = reader.GetInt32(1);
-                        model.ans_question = reader.GetString(2);
-                        try
+                        while (reader.Read())
                         {
-                            model.ans_answer = reader.GetString(3);
-                        }
-                        catch
-                        {
-                            model.ans_answer = "[[กรุณารอคำตอบจากผู้เชี่ยวชาญ]]";
+                            AnswersModel model = new AnswersModel();
+                            //model.q_ID = reader.GetInt32(0);
+                            model.q_usr_ID = (int)reader["q_from_usr_id"];
+                            model.ans_question = reader["question"].ToString();
+                            model.ans_answer = (String.IsNullOrWhiteSpace(reader["answer"].ToString())) ? "[[กรุณารอคำตอบจากผู้เชี่ยวชาญ]]" : reader["answer"].ToString();
+                            model.ans_from = (String.IsNullOrWhiteSpace(reader["answer_from"].ToString())) ? "" : reader["answer"].ToString();
+
+                            answerList.AnswersModelList.Add(model);
 
                         }
-                        try
-                        {
-                            model.ans_from = reader.GetString(4);
-                        }
-                        catch
-                        {
-                            model.ans_from = "";
-
-                        }
-
-                        answerList.AnswersModelList.Add(model);
-
+                        reader.Close();
                     }
-                    reader.Close();
+                }
+                {
+                    MySqlCommand usrCmd = new MySqlCommand(@"SELECT
+	                                                        tr_question.question_id, 
+	                                                        tr_question.q_from_usr_id, 
+	                                                        tr_question.question, 
+	                                                        tr_question.answer, 
+	                                                        tr_question.answer_from
+                                                        FROM
+	                                                        tr_question
+                                                        WHERE question_order IS NOT NULL
+                                                        ORDER BY question_order", mSqlConn);
+                    usrCmd.Parameters.AddWithValue("@user_id", user_id);
+
+                    var reader = usrCmd.ExecuteReader();
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            AnswersModel model = new AnswersModel();
+                            //model.q_ID = reader.GetInt32(0);
+                            model.q_usr_ID = (int)reader["q_from_usr_id"];
+                            model.ans_question = reader["question"].ToString();
+                            model.ans_answer = (String.IsNullOrWhiteSpace(reader["answer"].ToString())) ? "[[กรุณารอคำตอบจากผู้เชี่ยวชาญ]]" : reader["answer"].ToString();
+                            model.ans_from = (String.IsNullOrWhiteSpace(reader["answer_from"].ToString())) ? "" : reader["answer"].ToString();
+
+                            answerList.AnswersModelExtraList.Add(model);
+
+                        }
+                        reader.Close();
+                    }
                 }
                 mSqlConn.Close();   
 
@@ -216,44 +231,21 @@ namespace FarmUp.Controllers
         [HttpPost]
         public ActionResult sendQuestion(string Question)
         {
-            var lineUerId = HttpContext.Session.GetString("lineUserId");
-            //var lineUerId = "U94e949cf46d567c79fc649ab079fab90";
+            //var lineUerId = HttpContext.Session.GetString("lineUserId");
+            var userId = HttpContext.Session.GetString("userId");
 
             string strConn = _config.GetConnectionString($"onedurian");
             MySqlConnection mSqlConn = new MySqlConnection(strConn);
-            int usr_id = 0;
-            try
-            {
-                mSqlConn.Open();
-                MySqlCommand usrCmd = new MySqlCommand(@"SELECT usr_id
-                                                        FROM ma_user
-                                                        WHERE usr_line_id = @lineUserId", mSqlConn);
-                usrCmd.Parameters.AddWithValue("@lineUserId", lineUerId);
-                var readData = usrCmd.ExecuteReader();
-                if (readData != null)
-                {
-                    readData.Read();
-                    usr_id = Convert.ToInt32(readData["usr_id"].ToString());
-                    readData.Close();
-                }
-                mSqlConn.Close();
-            }
-            catch (Exception ex)
-            {
-                usr_id = 0;
-                mSqlConn.Close();
-            }
 
-            var q_usr_ID = usr_id;
-            MySqlCommand insertCMD = new MySqlCommand(@"INSERT INTO tr_question(q_from_usr_id,question)
-                                                        VALUES (@usr_id,@question);", mSqlConn);
-            insertCMD.Parameters.AddWithValue("@usr_id", q_usr_ID);
+            MySqlCommand insertCMD = new MySqlCommand(@"INSERT INTO tr_question(question_id,q_from_usr_id,question)
+                                                        VALUES (UNHEX(CONCAT(REPLACE(UUID(), '-', ''))),@usr_id,@question);", mSqlConn);
+            insertCMD.Parameters.AddWithValue("@usr_id", userId);
             insertCMD.Parameters.AddWithValue("@question", Question);
             mSqlConn.Open();
             insertCMD.ExecuteNonQuery();
             mSqlConn.Close();
 
-            var answer = GetAnswerList(lineUerId);
+            var answer = GetAnswerList(userId);
             return View("PlantMedic",answer);
         }
 

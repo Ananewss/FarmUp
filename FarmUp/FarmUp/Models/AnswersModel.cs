@@ -13,6 +13,7 @@
     public class AnswerList
     {
         public List<AnswersModel> AnswersModelList { get; set; } = new List<AnswersModel>();
+        public List<AnswersModel> AnswersModelExtraList { get; set; } = new List<AnswersModel>();
     }
     
 }
