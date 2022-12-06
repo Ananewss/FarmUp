@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using System.IO;
 using FarmUp.Models;
 using System.Dynamic;
+using Ubiety.Dns.Core;
 
 namespace FarmUp.Controllers
 {
@@ -332,9 +333,105 @@ namespace FarmUp.Controllers
             return resultData;
         }
 
+        [HttpPost]
+        public ResponseMSG AddSellItem(int? id)
+        {
+
+            var userId = HttpContext.Session.GetString("userId");
+            
+            var productype = Request.Form["productype"].ToString();
+            var productgrade = Request.Form["productgrade"].ToString();
+            var productgradetitle = Request.Form["productgradetitle"].ToString();
+            var price = Request.Form["price"].ToString();
+            var volume = Request.Form["volume"].ToString();
+            var dtpicker = Request.Form["dtpicker"].ToString();
+
+            string strConn = _config.GetConnectionString($"onedurian");
+            MySqlConnection mSqlConn = new MySqlConnection(strConn);
+
+            MySqlCommand insertCMD = new MySqlCommand(@"INSERT INTO tr_product(prd_id,prd_usr_id,prd_pdt_desc,prd_pdg_id,prd_pdg_desc,prd_amount,prd_price_per_unit,prd_harvest_time,updated_by)
+                                                        VALUES (UNHEX(CONCAT(REPLACE(UUID(), '-', ''))),@prd_usr_id,@prd_pdt_desc,@prd_pdg_id,@prd_pdg_desc,@prd_amount,@prd_price_per_unit,@prd_harvest_time,@updated_by);", mSqlConn);
+            insertCMD.Parameters.AddWithValue("@prd_usr_id", userId);
+            insertCMD.Parameters.AddWithValue("@prd_pdt_desc", productype);
+            insertCMD.Parameters.AddWithValue("@prd_pdg_id", productgrade);
+            insertCMD.Parameters.AddWithValue("@prd_pdg_desc", productgradetitle);
+            insertCMD.Parameters.AddWithValue("@prd_amount", volume);
+            insertCMD.Parameters.AddWithValue("@prd_price_per_unit", price);
+            insertCMD.Parameters.AddWithValue("@prd_harvest_time", dtpicker);
+            insertCMD.Parameters.AddWithValue("@updated_by", userId);
+            mSqlConn.Open();
+            insertCMD.ExecuteNonQuery();
+            mSqlConn.Close();
+
+            ResponseMSG responseMSG = new ResponseMSG();
+            responseMSG.Status = 200;
+            responseMSG.Result = $"Success";
+
+            return responseMSG;
+        }
+
         public ActionResult SellItem()
         {
-            return View();
+            string strConn = _config.GetConnectionString($"onedurian");
+            MySqlConnection mSqlConn = new MySqlConnection(strConn);
+            SellItemDtoList answerList = new SellItemDtoList();
+            try
+            {
+                mSqlConn.Open();
+                {
+                    MySqlCommand usrCmd = new MySqlCommand(@"SELECT *
+                                                        FROM ma_productgrade
+                                                        WHERE deleted_at IS NULL ", mSqlConn);
+
+                    var reader = usrCmd.ExecuteReader();
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            SellItemGradeDto model = new SellItemGradeDto();
+                            //model.q_ID = reader.GetInt32(0);
+                            model.pdg_id = reader["pdg_id"].ToString();
+                            model.pdg_description = reader["pdg_description"].ToString();
+
+                            answerList.sellItemGradeDtoList.Add(model);
+
+                        }
+                        reader.Close();
+                    }
+                }
+                {
+                    MySqlCommand usrCmd = new MySqlCommand(@"SELECT *
+                                                        FROM tr_product
+                                                        WHERE deleted_at IS NULL ", mSqlConn);
+
+                    var reader = usrCmd.ExecuteReader();
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            SellItem model = new SellItem();
+                            //model.q_ID = reader.GetInt32(0);
+                            model.prd_datetime = (DateTime) reader["prd_datetime"];
+                            model.prd_pdt_desc = reader["prd_pdt_desc"].ToString();
+                            model.prd_pdg_id = (int)reader["prd_pdg_id"];
+                            model.prd_pdg_desc = reader["prd_pdg_desc"].ToString();
+                            model.prd_amount = (Decimal)reader["prd_amount"];
+                            model.prd_price_per_unit = (Decimal)reader["prd_price_per_unit"];
+                            model.prd_harvest_time = (DateTime)reader["prd_harvest_time"];
+                            answerList.sellItemList.Add(model);
+
+                        }
+                        reader.Close();
+                    }
+                }
+                mSqlConn.Close();
+
+            }
+            catch (Exception)
+            {
+                mSqlConn.Close();
+            }
+            return View(answerList);
         }
 
         public ActionResult TestJQWidget()

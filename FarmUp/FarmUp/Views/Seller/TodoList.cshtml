@@ -14,11 +14,11 @@
     <!-- Header Start -->
     <header class="header">
         <div class="logo-wrap">
-            <a href="index.html"><i class="iconly-Arrow-Left-Square icli"></i></a>
-            <h1 class="title-color font-md">รายการต้องทำ</h1>
+            <a href="index.html" style="visibility:hidden"><i class="iconly-Arrow-Left-Square icli"></i></a>
+            <h1 class="title-color font-md" style="visibility:hidden">รายการต้องทำ</h1>
         </div>
         <div class="avatar-wrap">
-            <a href="index.html">
+            <a href="index.html" style="visibility:hidden">
                 <i class="iconly-Home icli"></i>
             </a>
         </div>
@@ -41,51 +41,53 @@
             <!-- Item Section Start -->
             <div class="item-section p-0">
                 <h3 class="font-theme font-md">กิจกรรมวันนี้ (@DateTime.Now.ToString("dd/MM/yy")):</h3>
-
+                @{int ic = 0;}
                 <input type="file" id="browse" name="fileupload" style="display: none" onChange="handlechange();" accept="image/*" capture="camera" />
-                <input type="button" value="รูปสวนอัพเดตวันนี้" id="fakeBrowse" class="btn btn-success" onclick="browseclick();" style="margin: 20px 0;"/>
+                <input type="button" value="รูปสวนอัพเดตวันนี้" id="fakeBrowse" class="btn btn-success" onclick="browseclick();" style="margin: 20px 0;display:none"/>
 
                 @foreach(var todoList in Model.todayListDtosList)
                 {
                     <div class="row itemList simple">
-                        <div class="col-6">
-                            <image src="/@todoList.ImageUrl.Replace('\\','/')" style="width:100%"></image>
-                        </div>
                         <div class="col-6" style="padding:0 10px;">
                             <input type="hidden" name="imgUrl" value="@todoList.ImageUrl" />
-                            <div><h4>หัวข้อ</h4></div>
-                            <div><div style="margin-top: 5px;" name="jqxComboBox"></div></div>
+                            <div style="margin-top: 5px;"><h4>หัวข้อ</h4></div>
+                            <div><div name="jqxComboBox" id="jqxComboBox-@ic"></div></div>
                             <div><h4>รายละเอียด</h4></div>
                             <div><textarea name="desc" maxlength="500" style="width:100%;padding: 5px;">@todoList.ActDesc</textarea></div>
                             <div>
                                 <input type="button" value="บันทึก" class="btn btn-success" style="margin: 5px 0 0 0;" onclick="SaveAct(this)" />
                             </div>
                         </div>
+                        <div class="col-6">
+                            <image src="/@todoList.ImageUrl.Replace('\\','/')" style="width:100%"></image>
+                        </div>
                     </div>
                     <hr/>
+                    ic++;
                 }
-                
+                <hr/>
                 <input type="file" id="browseE" name="fileupload" style="display: none" onChange="handlechangeE();" accept="image/*" capture="camera" />
-                <input type="button" value="ข้อสังเกตปรือปัญหาที่พบ" id="fakeBrowseE" class="btn btn-success" onclick="browseclickE();" style="margin: 20px 0;"/>
-
+                <input type="button" value="ข้อสังเกตหรือปัญหาที่พบ" id="fakeBrowseE" class="btn btn-success" onclick="browseclickE();" style="margin: 20px 0;"/>
+                
                 @foreach (var todoList in Model.todayAlarmDtosList)
                 {
                         <div class="row itemList alarm">
-                            <div class="col-6">
-                                <image src="/@todoList.ImageUrl.Replace('\\','/')" style="width:100%"></image>
-                            </div>
                             <div class="col-6" style="padding:0 10px;">
                                 <input type="hidden" name="imgUrl" value="@todoList.ImageUrl" />
-                                <div><h4>หัวข้อ</h4></div>
-                                <div><div style="margin-top: 5px;" name="jqxComboBox"></div></div>
+                                <div style="margin-bottom: 5px;"><h4>หัวข้อ</h4></div>
+                                <div><div name="jqxComboBox" id="jqxComboBox-@ic"></div></div>
                                 <div><h4>รายละเอียด</h4></div>
                                 <div><textarea name="desc" maxlength="500" style="width:100%;padding: 5px;">@todoList.ActDesc</textarea></div>
                                 <div>
                                     <input type="button" value="บันทึก" class="btn btn-success" style="margin: 5px 0 0 0;" onclick="SaveAct(this)" />
                                 </div>
-                            </div>
+                                </div>
+                                <div class="col-6">
+                                    <image src="/@todoList.ImageUrl.Replace('\\','/')" style="width:100%"></image>
+                                </div>
                         </div>
-                        <hr/>
+                    <hr/>
+                    ic++;
                 }
             </div>
             <!-- Item Section End -->
@@ -105,9 +107,13 @@
             }
             
             // Create a jqxComboBox
-            $("[name=jqxComboBox]").each(function(){
-                $(this).jqxComboBox({source: titleList, multiSelect: true, height: 28,showCloseButtons: true});
-            })
+            @for(int i = 0; i < (Model.todayAlarmDtosList.Count + Model.todayListDtosList.Count); i++)
+            {
+            <text>$("#jqxComboBox-@i").jqxComboBox({source: titleList, multiSelect: true, height: 28,showCloseButtons: true});</text>
+            }
+            //$("[name=jqxComboBox]").each(function(){
+            //    $(this).jqxComboBox({source: titleList, multiSelect: true, height: 28,showCloseButtons: true});
+            //})
 
             @foreach(var todoList in Model.todayListDtosList)
             {
@@ -217,6 +223,11 @@
             });
         }
     </script>
+    <style>
+        .jqx-listbox-container{
+            left:15px !important;
+        }
+    </style>
     @*<script type="text/javascript" src="~/scripts/main.js"></script>*@
     <script type="text/javascript" src="~/jqwidgets/jqxbuttons.js"></script>
     <script type="text/javascript" src="~/jqwidgets/jqxscrollbar.js"></script>

@@ -1,0 +1,131 @@
+﻿@model FarmUp.Dtos.Admin.ProductDtoList
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Admin Todaay Price";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).on('keydown', 'input[pattern]', function(e){
+          var input = $(this);
+          var oldVal = input.val();
+          var regex = new RegExp(input.attr('pattern'), 'g');
+
+          setTimeout(function(){
+            var newVal = input.val();
+            if(!regex.test(newVal)){
+              input.val(oldVal); 
+            }
+          }, 1);
+        });
+        function AddPrice(){
+            var pdt = $("[name=pdt]").val();
+            var pdg = $("[name=pdg]").val();
+            var buyername = $("[name=buyername]").val().trim();
+                var price = $("[name=price]").val().trim();
+            if(buyername=="") { alert("กรุณาใส่ชื่อล้ง"); return; }
+            if(price=="") { alert("กรุณาใส่ราคา"); return; }
+            {
+                $.post('@Url.Action("AddTodayPrice", "Admin")', JSON.stringify({
+                      pdt: pdt,
+                      pdg: pdg,
+                      buyername: buyername,
+                      price:price
+                    })).done(function(result){
+                        if(result){
+                            alert("Success");
+                                location.reload();
+                        }
+                        else
+                            alert("Error");
+                    });
+            }
+        }
+    </script>
+}
+<div class="text-center">
+    <h1 class="display-4">Today Price</h1>
+    <div>
+        <div>
+            สายพันธุ์ : 
+            <select name="pdt">
+                @foreach(var pdt in Model.productTypeDtoList)
+                {
+                    <option value="@pdt.pdt_id">@pdt.pdt_description</option>
+                }
+            </select>
+        </div>
+        <div>
+            เกรด :
+            <select name="pdg">
+                @foreach(var pdg in Model.productGradeDtoList)
+                {
+                    <option value="@pdg.pdg_id">@pdg.pdg_description</option>
+                }
+            </select>
+        </div>
+        <div>
+            ล้ง :
+            <input type="text" value="" name="buyername" //>
+        </div>
+        </div>
+        <div>
+            ราคา :
+            <input type="text" value="" name="price" pattern="^\d*(\.\d{0,2})?$" //>
+        </div>
+        <div>
+            <button onclick="AddPrice()">Send</button>
+        </div>
+    </div>
+</div>
+
+<hr/>
+
+<div>
+    <h2>รายการราคาวันนี้</h2>
+    <table>
+        <tr>
+            <th>สายพันธ์</th>
+            <th>เกรด</th>
+            <th>ล้ง</th>
+            <th>ราคา</th>
+        </tr>
+        @foreach(var tdp in Model.adminTodayPriceDtoList)
+        {
+            <tr>
+                <td>@tdp.pdt_description</td>
+                <td>@tdp.pdg_description</td>
+                <td>@tdp.buyer_name</td>
+                <td>@tdp.price</td>
+            </tr>
+        }
+    </table>
+</div>
+<style>
+    table { 
+	width: 750px; 
+	border-collapse: collapse; 
+	margin:50px auto;
+	}
+
+/* Zebra striping */
+tr:nth-of-type(odd) { 
+	background: #eee; 
+	}
+
+th { 
+	background: silver; 
+	color: white; 
+	font-weight: bold; 
+	}
+
+td, th { 
+	padding: 10px; 
+	border: 1px solid #ccc; 
+	text-align: left; 
+	font-size: 18px;
+	}
+</style>

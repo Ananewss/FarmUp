@@ -1,12 +1,76 @@
 ﻿@using FarmUp.Dtos.Seller
 
-@*@model FarmUp.Dtos.Seller.TodoListFormDto*@
-
-@model  FarmUp.Dtos.Seller.SellerTodoListDtoList
+@model  FarmUp.Dtos.Seller.SellItemDtoList
 
 @{
-    ViewData["Title"] = "Todo List";
+    ViewData["Title"] = "Sell Item";
     Layout = "~/Views/Shared/_SellerPageLayout.cshtml";
+}
+@section Scripts {
+
+    <script type="text/javascript" src="~/jqwidgets/jqxdatetimeinput.js"></script>
+    <script type="text/javascript" src="~/jqwidgets/jqxcalendar.js"></script>
+    <script type="text/javascript" src="~/jqwidgets/globalization/globalize.js"></script>
+    <script type="text/javascript" src="~/jqwidgets/globalization/globalize.culture.th-TH.js"></script>
+    <script>
+        
+        $(document).ready(function () {
+            $("[name=dtpicker]").jqxDateTimeInput({ culture: 'th-TH', width: '250px', height: '25px'});
+        });
+
+            $(document).on('keydown', 'input[pattern]', function(e){
+              var input = $(this);
+              var oldVal = input.val();
+              var regex = new RegExp(input.attr('pattern'), 'g');
+
+              setTimeout(function(){
+                var newVal = input.val();
+                if(!regex.test(newVal)){
+                  input.val(oldVal); 
+                }
+              }, 1);
+            });
+
+        function SellItem(){
+            var productype = $("[name=productype]").val();
+            var productgrade = $("[name=productgrade]").val();
+            var productgradetitle = $("[name=productgrade] :selected").text();
+            var price = $("[name=price]").val();
+            var volume = $("input[name=volume]").val();
+            var dt= $("[name=dtpicker]").jqxDateTimeInput('getDate');
+            var dtpicker = dt.getFullYear() + "-" + dt.getMonth() + "-" + dt.getDate();
+
+            var pas = true;
+            if(productype=="") { pas = false; alert("กรุณากรอกชื่อสายพันธุ์"); }
+            if(price=="") { pas = false; alert("กรุณากรอกราคา"); }
+            if(volume=="") { pas = false; alert("กรุณากรอกปริมาณ"); }
+            
+            if(!pas)
+                return;
+
+            var fd = new FormData();
+            fd.append('productype',productype);
+            fd.append('productgrade',productgrade);
+            fd.append('productgradetitle',productgradetitle);
+            fd.append('price',price);
+            fd.append('volume',volume);
+            fd.append('dtpicker',dtpicker);
+            $.ajax({
+                url:'@Url.Action("AddSellItem", "Seller")',
+                type:'post',
+                data:fd,
+                contentType: false,
+                processData: false,
+                success:function(response){
+			        if(response.status == 200)
+                    {
+                        alert("บันทึกสำเร็จ");
+                        location.reload();
+                    }
+                }
+            });
+        }
+    </script>
 }
 
 <!-- Skeleton loader Start -->
@@ -14,11 +78,11 @@
     <!-- Header Start -->
     <header class="header">
         <div class="logo-wrap">
-            <a href="index.html"><i class="iconly-Arrow-Left-Square icli"></i></a>
-            <h1 class="title-color font-md">รายการต้องทำ</h1>
+            <a href="index.html" style="visibility:hidden"><i class="iconly-Arrow-Left-Square icli"></i></a>
+            <h1 class="title-color font-md" style="visibility:hidden">รายการต้องทำ</h1>
         </div>
         <div class="avatar-wrap">
-            <a href="index.html">
+            <a href="index.html" style="visibility:hidden">
                 <i class="iconly-Home icli"></i>
             </a>
         </div>
@@ -32,29 +96,71 @@
                     <div class="media">
                         <div class="img"></div>
                         <div class="media-body">
-                            <h2>กิจกรรมประจำวัน</h2>
+                            <h2>ลงประกาศขายทุเรียน</h2>
                         </div>
                     </div>
                 </div>
             </div>
             <!-- Banner End -->
             <!-- Item Section Start -->
-            <div class="item-section p-0">
-                <h3 class="font-theme font-md">กิจกรรมวันนี้ (@DateTime.Now.ToString("dd/MM/yy")):</h3>
-
-                <input type="button" value="ลงขายทุเรียน" class="btn btn-success" style="margin: 20px 0;"/>
+            <div class="item-section p-0 custom-form">
+                <h3 class="font-theme font-md" style="padding:10px 0;">ลงประกาศขายทุเรียน</h3>
+                <div class="input-box row">
+                    <div class="col-4"><label class="control-label">ชื่อสายพันธุ์</label></div>
+                    <div class="col-8"><input type="text" class="text-box single-line" name="productype" /></div>
+                </div>
+                <div class="input-box row">
+                    <div class="col-4"><label class="control-label">เกรด</label></div>
+                    <div class="col-8">
+                    @if(Model.sellItemGradeDtoList.Count > 0)
+                    {
+                        <select name="productgrade">
+                        @foreach(var grade in Model.sellItemGradeDtoList)
+                        {
+                            <option value="@grade.pdg_id">@grade.pdg_description</option>
+                        }
+                        </select>
+                    }
+                    </div>
+                </div>
+                <div class="input-box row">
+                    <div class="col-4"><label class="control-label">ราคาที่ต้องการ /กก.</label></div>
+                    <div class="col-8"><input type="text" class="text-box single-line" name="price" pattern="^\d*(\.\d{0,2})?$" /></div>
+                </div>
+                <div class="input-box row">
+                    <div class="col-4"><label class="control-label">ปริมาณ (ตัน)</label></div>
+                    <div class="col-8"><input type="text" class="text-box single-line" name="volume" pattern="^\d*(\.\d{0,2})?$" /></div>
+                </div>
+                <div class="input-box row">
+                    <div class="col-4"><label class="control-label">วันที่คาดว่าจะตัดได้</label></div>
+                    <div class="col-8"><input type="text" class="text-box single-line" name="dtpicker" /</div>
+                </div>
+                <input type="button" value="ลงขายทุเรียน" class="btn btn-success" style="margin: 20px 0;" onclick="SellItem();"/>
             </div>
             <!-- Item Section End -->
-
+            <hr/>
+            <div>
+                
+                @foreach(var item in Model.sellItemList)
+                {
+                    <!-- Price Box Start -->
+                      <div class="order-box bg2-light" style="padding: 15px;margin-bottom: 10px;">
+                      <div class="media">
+                        <a href="javascript:void(0)" class="content-box">
+                              <h2 class="font-sm title-color" style="margin-bottom: 2px;">สายพันธุ์ @item.prd_pdt_desc (เกรด @item.prd_pdg_desc)</h2>
+                          <p class="font-sm content-color" style="margin-bottom: 2px;">ราคาที่ต้องการ @item.prd_price_per_unit</p>
+                          <p class="font-sm content-color" style="margin-bottom: 2px;">จำนวน @item.prd_amount</p>
+                          <p class="font-sm content-color" style="margin-bottom: 2px;">วันเก็บเกี่ยว @item.prd_harvest_time.ToString("d/M/yy")</p>
+                        </a>
+                        <div class="media-body">
+                          <div class="img"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Price Box End -->
+                }
+            </div>
         </div>
 
     <!-- Main End -->
 </div>
-<!-- Skeleton loader End -->
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            
-        });
-    </script>
-}
