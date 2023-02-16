@@ -23,7 +23,19 @@ namespace FarmUp.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            if (HttpContext.Session.GetString("lineUserId") != null && Request.QueryString.HasValue)
+            {
+                    var refstr = Request.Query["ref"];
+                    if(String.IsNullOrEmpty(refstr))
+                        return View();
+                    else
+                    {
+                        var r = refstr.ToString().Split('-');
+                        return RedirectToAction(r[1], r[0]);
+                    }
+            }
+            else
+                return View();
         }
 
         [HttpPost]

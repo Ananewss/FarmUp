@@ -63,11 +63,10 @@
                                 <h3 style="padding: 20px 10px 5px 10px;">พรุ่งนี้</h3>
                             }
                             <div class="product-list media">
-                                <img src="~/assets/images/weather/@WeatherItem.Icon" class="img-fluid" alt="offer">
+                                <img src="~/assets/images/weather/@WeatherItem.Icon" class="img-fluid" alt="offer" style="width:60px">
                                 <div class="media-body">
-                                    <span class="font-sm title-color fw-600"> @WeatherItem.DT.ToString("HH:mm") โอกาสเกิดฝน @WeatherItem.RainAmt%, อุณหภูมิ @WeatherItem.Temp°C</span>
+                                    <span class="font-sm title-color fw-600"> @WeatherItem.DT.ToString("HH:mm") คาดว่า @WeatherItem.DisplayTitle, อุณหภูมิ @WeatherItem.Temp°C</span>
                                     <span class="content-color font-sm">ความชื้น @WeatherItem.Humidity%, แรงลม @WeatherItem.Wind</span>
-                                    <span class="content-color font-sm">@WeatherItem.CloudyMsg, UV @WeatherItem.UV</span>
                                 </div>
                             </div>
                         }

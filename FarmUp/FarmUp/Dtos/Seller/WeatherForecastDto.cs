@@ -16,7 +16,8 @@
         public string District { get; set; } = string.Empty;
         public string Province { get; set; } = string.Empty;
         public string Country { get; set; } = string.Empty;
-
+        public string DisplayTitle { get; set; } = string.Empty;
+        public string Title { get; set; } = string.Empty;
     }
 
     public class WeatherForecastDtoList

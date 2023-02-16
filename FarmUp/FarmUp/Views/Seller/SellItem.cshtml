@@ -140,6 +140,25 @@
             <!-- Item Section End -->
             <hr/>
             <div>
+            @{
+                decimal totalAmount = 0;
+                decimal allTotal = 0;
+                foreach(var item in Model.sellItemList)
+                {
+                    totalAmount += item.prd_amount;
+                    allTotal += (item.prd_amount * item.prd_price_per_unit);
+                }
+            }
+                <div class="order-box bg2-light" style="padding: 15px;margin-bottom: 10px;">
+                      <div class="media">
+                        <a href="javascript:void(0)" class="content-box">
+                          <p class="font-sm content-color" style="margin-bottom: 2px;">ยอดเงินรวม @allTotal</p>
+                          <p class="font-sm content-color" style="margin-bottom: 2px;">จำนวนรวม @totalAmount</p>
+                        </a>
+                      </div>
+                </div>
+            </div>
+            <div>
                 
                 @foreach(var item in Model.sellItemList)
                 {

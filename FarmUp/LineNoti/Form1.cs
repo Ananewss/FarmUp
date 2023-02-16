@@ -63,7 +63,10 @@ namespace LineNoti
         {
             DateTime now = DateTime.Now;
 
-            if(now.Hour == 4 || now.Hour == 13)
+            if((now.Hour == 5 && now.Minute >= 25) ||
+                (now.Hour == 11 && now.Minute >= 25) ||
+                (now.Hour == 17 && now.Minute >= 25) ||
+                (now.Hour == 23 && now.Minute >= 25))
             {
                 GenMessage(true);
             }
@@ -122,6 +125,10 @@ namespace LineNoti
                     }
                     reader.Close();
                 }
+
+                bool isCloudy = false;
+                bool isRain = false;
+                bool isHeavyRain = false;
                 {
                     foreach (var loc in listLoc)
                     {
@@ -143,10 +150,14 @@ namespace LineNoti
                         var reader = cmd.ExecuteReader();
                         bool rainStart = false;
                         RainFromTo current = null;
+
                         while (reader.Read())
                         {
-                            if (Int32.Parse(reader["rainAmt"].ToString()) >= 30)
+                            var title = reader["Title"].ToString().ToLower();
+                            //if (Int32.Parse(reader["rainAmt"].ToString()) >= 30)
+                            if (title.IndexOf("rain") >= 0)
                             {
+                                isRain = true;
                                 if (!rainStart)
                                 {
                                     rainStart = true;
@@ -167,6 +178,13 @@ namespace LineNoti
                                     current = null;
                                 }
                             }
+
+
+                            if (title.IndexOf("cloudy") >= 0)
+                                isCloudy = true;
+
+                            if (title.IndexOf("heavy rain") >= 0)
+                                isHeavyRain = true;
                         }
                         if (current != null)
                         {
@@ -193,14 +211,149 @@ namespace LineNoti
                                 if (!String.IsNullOrEmpty(fromto.to))
                                     loc.Message += "-" + fromto.to;
                             }
-                            loc.Message += " โปรดรักษาสุขภาพและดูแลสวนทุเรียนด้วยค่ะ";
                         }
+                    }
+
+                    //select picture
+                    var message = "อากาศวันนี้แจ่มใส";
+                    var img = "clearskyPic.jpg";
+                    if (isHeavyRain)
+                    {
+                        img = "stormPic.jpg";
+                        message = "อากาศวันนี้ฝนตกหนัก";
+                    }
+                    else if (isRain)
+                    {
+                        img = "rainPic.jpg";
+                        message = "อากาศวันนี้ฝนตก";
+                    }
+                    else if (isCloudy)
+                    {
+                        img = "cloudPic.jpg";
+                        message = "อากาศวันนี้เมฆ";
                     }
 
                     if(sendLine)
                         //Send Line
                         foreach (var loc in listLoc)
                         {
+                            var FullTemplate = @"{
+  ""to"": ""==to=="",
+  ""messages"": [
+    {
+      ""type"": ""flex"",
+      ""altText"": """+ message + @""",
+      ""contents"": {
+        ""type"": ""bubble"",
+        ""header"": {
+          ""type"": ""box"",
+          ""layout"": ""vertical"",
+          ""contents"": [
+            {
+              ""type"": ""box"",
+              ""layout"": ""horizontal"",
+              ""contents"": [
+                {
+                  ""type"": ""box"",
+                  ""layout"": ""vertical"",
+                  ""contents"": [
+                    {
+                      ""type"": ""image"",
+                      ""url"": ""https://queenbeautynetwork.com/images/"+ img + @""",
+                      ""size"": ""full"",
+                      ""aspectMode"": ""cover"",
+                      ""aspectRatio"": ""150:98"",
+                      ""gravity"": ""center""
+                    }
+                  ],
+                  ""flex"": 1
+                }
+              ]
+            }
+          ],
+          ""paddingAll"": ""0px""
+        },
+        ""body"": {
+          ""type"": ""box"",
+          ""layout"": ""vertical"",
+          ""contents"": [
+            {
+              ""type"": ""box"",
+              ""layout"": ""vertical"",
+              ""contents"": [
+                {
+                  ""type"": ""box"",
+                  ""layout"": ""vertical"",
+                  ""contents"": [
+                    {
+                      ""type"": ""text"",
+                      ""contents"": [],
+                      ""size"": ""xl"",
+                      ""wrap"": true,
+                      ""text"": ""==Location=="",
+                      ""color"": ""#ffffff"",
+                      ""weight"": ""bold""
+                    },
+                    {
+                      ""type"": ""text"",
+                      ""text"": ""==Date=="",
+                      ""color"": ""#ffffffcc"",
+                      ""size"": ""sm""
+                    }
+                  ],
+                  ""spacing"": ""sm""
+                },
+                {
+                  ""type"": ""box"",
+                  ""layout"": ""vertical"",
+                  ""contents"": [
+                    {
+                      ""type"": ""box"",
+                      ""layout"": ""vertical"",
+                      ""contents"": [
+                        {
+                          ""type"": ""text"",
+                          ""contents"": [],
+                          ""size"": ""sm"",
+                          ""wrap"": true,
+                          ""margin"": ""lg"",
+                          ""color"": ""#ffffffde"",
+                          ""text"": ""==WeatherMessage==""
+                        }
+                      ]
+                    }
+                  ],
+                  ""paddingAll"": ""13px"",
+                  ""backgroundColor"": ""#ffffff1A"",
+                  ""cornerRadius"": ""2px"",
+                  ""margin"": ""xl""
+                }
+              ]
+            },
+            {
+              ""type"": ""button"",
+              ""action"": {
+                ""type"": ""uri"",
+                ""label"": ""ดูรายละเอียด"",
+                ""uri"": ""https://queenbeautynetwork.com/?ref=Seller-WeatherForecast""
+              },
+              ""color"": ""#ffffff"",
+              ""style"": ""secondary"",
+              ""margin"": ""10px""
+            }
+          ],
+          ""paddingAll"": ""20px"",
+          ""backgroundColor"": ""#464F69""
+        }
+      }
+    }
+  ]
+}";
+
+                            FullTemplate = FullTemplate.Replace("==to==", loc.lineUserId.Trim());
+                            FullTemplate = FullTemplate.Replace("==Location==", loc.District);
+                            FullTemplate = FullTemplate.Replace("==Date==", DateTime.Now.ToString("dd/MM/yyyy"));
+                            FullTemplate = FullTemplate.Replace("==WeatherMessage==", loc.Message);
 
                             var message1 = new Message("text", loc.Message);
                             var root = new Root();
@@ -208,7 +361,8 @@ namespace LineNoti
                             root.addMessage(message1);
 
                             // To serialize
-                            var json = JsonConvert.SerializeObject(root);
+                            var json2 = JsonConvert.SerializeObject(root);
+                            var json = FullTemplate;
 
                             var accessToken = @"gv13S11fDZ2XtAMcz6r3Ar/e9eLjEMAoCB8Ak473flX13fjS6pzfwRyUgF1xziOCxN97Wz4o4j6fcDBi8wutEtv3rUhwg22JX3g0y07/kgyz5nIe9kazcXIZTrgg981vgDlFXVIqdlCxqtvVaoZF1AdB04t89/1O/w1cDnyilFU=";
                             var client = new HttpClient();
@@ -250,7 +404,7 @@ namespace LineNoti
 
         private void button1_Click(object sender, EventArgs e)
         {
-            GenMessage(false);
+            GenMessage(true);
         }
     }
 }

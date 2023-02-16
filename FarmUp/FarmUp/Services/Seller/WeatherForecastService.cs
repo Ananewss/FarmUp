@@ -71,8 +71,46 @@ namespace FarmUp.Services.Seller
                     weatherForecastDto.District = readData["District"].ToString() ?? "";
                     weatherForecastDto.Province = readData["Province"].ToString() ?? "";
 
-                    weatherForecastDto.Icon = (Int32.Parse(weatherForecastDto.RainAmt.Trim('%')) >= 30) ? "rain.png" : (weatherForecastDto.DT.Hour > 18 || weatherForecastDto.DT.Hour < 6) ? "moon.png" : "sun.png";
+                    var icon = readData["Title"].ToString().ToLower().Replace(" ", "").Trim();
+                    icon += (weatherForecastDto.DT.Hour > 18 || weatherForecastDto.DT.Hour < 6)? "_night.png" : "_day.png";
+                    weatherForecastDto.Icon = icon;
                     weatherForecastDto.CloudyMsg = (Int32.Parse(weatherForecastDto.CloudCover) >= 60) ? "เมฆมาก" : (Int32.Parse(weatherForecastDto.CloudCover) >= 30) ? "เมฆปานกลาง" : "เมฆน้อย";
+                    weatherForecastDto.Title = readData["Title"].ToString() ?? "";
+                    switch (weatherForecastDto.Title.ToLower())
+                    {
+                        case "clear sky": weatherForecastDto.DisplayTitle = "ท้องฟ้าแจ่มใส"; break;
+                        case "cloudy": weatherForecastDto.DisplayTitle = "มีเมฆมาก"; break;
+                        case "fair": weatherForecastDto.DisplayTitle = "มีเมฆเล็กน้อย"; break;
+                        case "fog": weatherForecastDto.DisplayTitle = "มีหมอก"; break;
+                        case "heavy rain": weatherForecastDto.DisplayTitle = "ฝนตกหนัก"; break;
+                        case "heavy rain and thunder": weatherForecastDto.DisplayTitle = "ฝนตกหนัก"; break;
+                        case "heavy rain showers": weatherForecastDto.DisplayTitle = "ฝนตกหนัก"; break;
+                        case "heavy rain showers and thunder": weatherForecastDto.DisplayTitle = "ฝนตกหนัก"; break;
+                        case "heavy sleet": weatherForecastDto.DisplayTitle = "มีลูกเห็บ"; break;
+                        case "heavy sleet and thunder": weatherForecastDto.DisplayTitle = "มีลูกเห็บ"; break;
+                        case "Heavy sleet showers": weatherForecastDto.DisplayTitle = "มีลูกเห็บ"; break;
+                        case "Heavy sleet showers and thunder": weatherForecastDto.DisplayTitle = "มีลูกเห็บ"; break;
+                        case "light rain": weatherForecastDto.DisplayTitle = "ฝนตกเล็กน้อย"; break;
+                        case "light rain and thunder": weatherForecastDto.DisplayTitle = "ฝนตกเล็กน้อย"; break;
+                        case "light rain showers": weatherForecastDto.DisplayTitle = "ฝนตกเล็กน้อย"; break;
+                        case "light rain showers and thunder": weatherForecastDto.DisplayTitle = "ฝนตกเล็กน้อย"; break;
+                        case "light sleet": weatherForecastDto.DisplayTitle = "มีลูกเห็บ"; break;
+                        case "light sleet and thunder": weatherForecastDto.DisplayTitle = "มีลูกเห็บ"; break;
+                        case "light sleet showers": weatherForecastDto.DisplayTitle = "มีลูกเห็บ"; break;
+                        case "light sleet showers and thunder": weatherForecastDto.DisplayTitle = "มีลูกเห็บ"; break;
+                        case "light snow showers and thunder": weatherForecastDto.DisplayTitle = "มีลูกเห็บ"; break;
+                        case "partly cloudy": weatherForecastDto.DisplayTitle = "มีเมฆปานกลาง"; break;
+                        case "rain": weatherForecastDto.DisplayTitle = "ฝนตก"; break;
+                        case "rain and thunder": weatherForecastDto.DisplayTitle = "ฝนตก"; break;
+                        case "rain showers": weatherForecastDto.DisplayTitle = "ฝนตก"; break;
+                        case "rain showers and thunder": weatherForecastDto.DisplayTitle = "ฝนตก"; break;
+                        case "sleet": weatherForecastDto.DisplayTitle = "มีลูกเห็บ"; break;
+                        case "sleet and thunder": weatherForecastDto.DisplayTitle = "มีลูกเห็บ"; break;
+                        case "sleet showers": weatherForecastDto.DisplayTitle = "มีลูกเห็บ"; break;
+                        case "sleet showers and thunder": weatherForecastDto.DisplayTitle = "มีลูกเห็บ"; break;
+                        default:
+                            weatherForecastDto.DisplayTitle = weatherForecastDto.Title; break;
+                    }
 
                     weatherForecastDtoList.weatherForecastDtosList.Add(weatherForecastDto);
 

@@ -32,7 +32,7 @@
                     <div class="media">
                         <div class="img"></div>
                         <div class="media-body">
-                            <h2>กิจกรรมประจำวัน</h2>
+                            <h2>กิจกรรมวันนี้ (@DateTime.Now.ToString("dd/MM/yy"))</h2>
                         </div>
                     </div>
                 </div>
@@ -40,7 +40,7 @@
             <!-- Banner End -->
             <!-- Item Section Start -->
             <div class="item-section p-0">
-                <h3 class="font-theme font-md">กิจกรรมวันนี้ (@DateTime.Now.ToString("dd/MM/yy")):</h3>
+                <h3 class="font-theme font-md" style="display:none;">กิจกรรมวันนี้ (@DateTime.Now.ToString("dd/MM/yy")):</h3>
                 @{int ic = 0;}
                 <input type="file" id="browse" name="fileupload" style="display: none" onChange="handlechange();" accept="image/*" capture="camera" />
                 <input type="button" value="รูปสวนอัพเดตวันนี้" id="fakeBrowse" class="btn btn-success" onclick="browseclick();" style="margin: 20px 0;display:none"/>

@@ -60,6 +60,11 @@ namespace FarmUp.Controllers
             //return View();
         }
 
+        public ActionResult TakePhoto()
+        {
+            return View();
+        }
+
         //[HttpPost]
         //public async Task<ActionResult> TodoList(TodoListFormDto todoListFormDtoParam,List<IFormFile> imgFile)
         //{
