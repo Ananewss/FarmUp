@@ -1,0 +1,254 @@
+﻿@model FarmUp.Models.Response.BuyItemResponse;
+@{
+    ViewData["Title"] = "Buyer";
+    Layout = "~/Views/Shared/_BuyerPageLayout.cshtml";
+}
+@{
+    var ModelData = Model;
+     
+
+}
+@section Scripts {
+    <script type="text/javascript" src="~/jqwidgets/jqxdatetimeinput.js"></script>
+    <script type="text/javascript" src="~/jqwidgets/jqxcalendar.js"></script>
+    <script type="text/javascript" src="~/jqwidgets/globalization/globalize.js"></script>
+    <script type="text/javascript" src="~/jqwidgets/globalization/globalize.culture.th-TH.js"></script>
+@*    <script src="sweetalert2.all.min.js"></script>*@
+    <script src="@Url.Content("~/js/Buyer/BuyerItemPage.js")?v=@Html.Raw(Guid.NewGuid())"></script>
+}
+
+@section pageScriptLoaded
+{
+
+    BuyerItemPage.init();
+
+}
+<!-- Skeleton loader Start -->
+<div>
+    <!-- Header Start -->
+    <header class="header">
+        <div class="logo-wrap">
+            <a href="index.html" style="visibility:hidden"><i class="iconly-Arrow-Left-Square icli"></i></a>
+            <h1 class="title-color font-md" style="visibility:hidden">รายการต้องทำ</h1>
+        </div>
+        <div class="avatar-wrap">
+            <a href="index.html" style="visibility:hidden">
+                <i class="iconly-Home icli"></i>
+            </a>
+        </div>
+    </header>
+    <!-- Header End -->
+    <!-- Main Start -->
+    <div class="main-wrap order-detail mb-xxl">
+        <!-- Banner Start -->
+        <div class="section-p-b">
+            <div class="banner-box">
+                <div class="media">
+                    <div class="img"></div>
+                    <div class="media-body">
+                        <h2>ลงประกาศรับซื้อทุเรียน</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Banner End -->
+        <!-- Item Section Start -->
+        <div class="item-section p-0 custom-form">
+            <div class="input-box row">
+                <div class="col-4"><label class="control-label">ชื่อสายพันธุ์</label></div>
+                <div class="col-8">
+                    @if (Model.ProductTypeResp.Count > 0)
+                    {
+                        <select name="productype" style="width: 100%;">
+                            @foreach (var productType in ModelData.ProductTypeResp)
+                            {
+                                <option value="@productType.pdt_id">@productType.pdt_description</option>
+                            }
+                        </select>
+                    }
+                </div>
+            </div>
+            <div class="input-box row">
+                <div class="col-4"><label class="control-label">เกรด</label></div>
+                <div class="col-8">
+
+                    @if (Model.ProductGradeResp.Count > 0)
+                    {
+                        <select name="productgrade" style="width: 100%;">
+                            @foreach (var productGrade in Model.ProductGradeResp)
+                            {
+                                <option value="@productGrade.pdg_id">@productGrade.pdg_description</option>
+                            }
+                        </select>
+                    }
+                </div>
+            </div>
+            <div class="input-box row">
+                <div class="col-4"><label class="control-label">ราคารับซื้อ / กก.</label></div>
+                <div class="col-8">
+                    <input type="text" class="text-box single-line" name="price" style="width: 100%"
+                           pattern="^\d*(\.\d{0,2})?$" />
+                </div>
+            </div>
+            @* <div class="input-box row">
+            <div class="col-4"><label class="control-label">ปริมาณ (ตัน)</label></div>
+            <div class="col-8"><input type="text" class="text-box single-line" name="volume"
+            pattern="^\d*(\.\d{0,2})?$" /></div>
+            </div> *@
+
+        </div>
+        <div class="input-box row">
+            <div class="col-4"><label class="control-label">วันที่รับซื้อ</label></div>
+            <div class="col-8"><input type="text" class="text-box single-line" name="dtpicker" /></div>
+        </div>
+        <div class="input-box row" style="justify-content: center;">
+            <input id="btnBuyItem" type="button" value="ลงประกาศรับซื้อทุเรียน" class="btn btn-success"
+                    style="margin: 10px 0; width: 60%;"/>
+        </div>
+
+
+        <!-- Item Section End -->
+        <hr style="margin-top:0px" />
+        <div>
+        </div>
+        <div>
+
+            @foreach (var item in ModelData.TodayPriceResp)
+            { 
+                <!-- Price Box Start -->
+                <div class="order-box bg2-light" style="padding: 15px;margin-bottom: 10px;">
+                    <div style="float: right;">
+                        <span>
+                            <i style="font-size: 15px;" id="btnEdit" onclick="BuyerItemPage.GetDetails('@item.tdp_id')"
+                           class="fa-solid fa-pen-to-square"></i>
+                        </span>
+                        &nbsp;
+                        <span>
+                            <i style="font-size: 15px;" id="btnDelete" onclick="BuyerItemPage.btnDelete('@item.tdp_id')"
+                           class="fa-solid fa-trash-can"></i>
+                        </span>
+                    </div>
+                    <div class="media">
+                        <a href="javascript:void(0)" class="content-box">
+                            <h2 class="font-sm title-color" style="margin-bottom: 2px;">
+                                สายพันธุ์ @item.pdt_description
+                                (เกรด @item.pdg_description)
+
+                            </h2>
+
+                            <p class="font-sm content-color" style="margin-bottom: 2px;">
+                                ราคารับซื้อ / กก. @item.tdp_price
+                            </p>
+                            <p class="font-sm content-color" style="margin-bottom: 2px;">
+                                วันที่รับซื้อ 
+                                @item.tdp_date?.ToString("dd/MM/yyyy")
+                            </p>
+                            @*<p class="font-sm content-color" style="margin-bottom: 2px;">จำนวน @item.Amount</p>*@
+                            <p class="font-sm content-color" style="margin-bottom: 2px;">
+                                ประกาศ ณ วันที่
+                                @item.created_at?.ToString("dd/MM/yyyy HH:mm")
+                            </p>
+                        </a>
+                        <div class="media-body">
+                            <div class="img"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Price Box End -->
+               
+            }
+        </div>
+
+        <!-- Main End -->
+    </div>
+
+    <!-- The Modal -->
+    <div class="modal" id="Editmodal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">แก้ไขข้อมูลประกาศรับซื้อ</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="item-section p-0 custom-form">
+                        <div class="input-box row">
+                            <div class="col-4">
+                                <label class="control-label">ชื่อสายพันธุ์</label>
+                            </div>
+                            <div class="col-8">
+                                @if (Model.ProductTypeResp.Count > 0)
+                                {
+                                    <select name="Editproductype" style="width: 100%;">
+                                        @foreach (var productType in ModelData.ProductTypeResp)
+                                        {
+                                            if (productType.pdt_id == 0)
+                                            {
+                                                <option value=@productType.pdt_id selected>@productType.pdt_description</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@productType.pdt_id">@productType.pdt_description</option>
+                                            }
+                                        }
+                                    </select>
+                                }
+                            </div>
+                        </div>
+                        <!-- end row -->
+                        <div class="input-box row" style="margin-top:10px">
+                            <div class="col-4"><label class="control-label">เกรด</label></div>
+                            <div class="col-8">
+
+                                @if (Model.ProductGradeResp.Count > 0)
+                                {
+                                    <select name="Editproductgrade" style="width: 100%;">
+                                        @foreach (var productGrade in Model.ProductGradeResp)
+                                        {
+                                            if (productGrade.pdg_id == 0)
+                                            {
+                                                <option value=@productGrade.pdg_id selected>@productGrade.pdg_description</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@productGrade.pdg_id">@productGrade.pdg_description</option>
+                                            }
+
+                                        }
+                                    </select>
+                                }
+                            </div>
+                        </div>
+                        <!-- end row -->
+                        <div class="input-box row" style="margin-top:10px">
+                            <div class="col-4"><label class="control-label">ราคารับซื้อ / กก.</label></div>
+                            <div class="col-8">
+                                <input type="text" class="text-box single-line" name="Editprice" style="height:38px ;width: 100%"
+                                       pattern="^\d*(\.\d{0,2})?$" />
+                            </div>
+                        </div>
+                        <!-- end row -->
+                        <div class="input-box row" style="margin-top:10px">
+                            <div class="col-4"><label class="control-label">วันที่รับซื้อ</label></div>
+                            <div class="col-8"><input type="text"  class="input-box single-line" name="Editdtpicker" /></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <input hidden name="Editid" />
+                    <button type="button" class="btn btn-success" onclick="BuyerItemPage.btnEdit()">บันทึก</button>
+                    <button type="button" class="btn btn-light" style="background-color: #848b93; color:white " data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+</div>

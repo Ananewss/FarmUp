@@ -1,4 +1,7 @@
 using FarmUp.Services.Admin;
+using FarmUp.Services.Buyer;
+using FarmUp.Services.LineBot;
+using FarmUp.Services.MasterService;
 using FarmUp.Services.Seller;
 using FarmUp.Services.Seller.Todolist;
 
@@ -13,6 +16,9 @@ builder.Services.AddScoped<WeatherForecastService>();
 builder.Services.AddScoped<TodayPriceService>();
 builder.Services.AddScoped<BoardcastService>();
 builder.Services.AddScoped<AdminTodayPriceService>();
+builder.Services.AddScoped<BuyerService>();
+builder.Services.AddScoped<MasterService>();
+builder.Services.AddScoped<LineBotService>();
 
 
 builder.Services.AddDistributedMemoryCache();

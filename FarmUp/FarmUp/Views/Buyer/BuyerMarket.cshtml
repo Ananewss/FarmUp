@@ -1,0 +1,257 @@
+﻿@model FarmUp.Models.Response.BuyerMarketResponse;
+@{
+    ViewData["Title"] = "Buyer Market";
+    Layout = "~/Views/Shared/_BuyerPageLayout.cshtml";
+}
+@{
+    var ModelData = Model;
+    string Filter = Convert.ToString(ViewBag.Filter);
+
+}
+@section Scripts {
+    <script type="text/javascript" src="~/jqwidgets/jqxdatetimeinput.js"></script>
+    <script type="text/javascript" src="~/jqwidgets/jqxcalendar.js"></script>
+    <script type="text/javascript" src="~/jqwidgets/globalization/globalize.js"></script>
+    <script type="text/javascript" src="~/jqwidgets/globalization/globalize.culture.th-TH.js"></script>
+@*    <script src="sweetalert2.all.min.js"></script>*@
+    <script src="@Url.Content("~/js/Buyer/BuyerMarketPage.js")?v=@Html.Raw(Guid.NewGuid())"></script>
+}
+
+@section pageScriptLoaded
+{
+
+    BuyerMarketPage.init();
+
+}
+<!-- Skeleton loader Start -->
+<div>
+    <!-- Header Start -->
+    <header class="header">
+        <div class="logo-wrap">
+            <a href="index.html" style="visibility:hidden"><i class="iconly-Arrow-Left-Square icli"></i></a>
+            <h1 class="title-color font-md" style="visibility:hidden">รายการต้องทำ</h1>
+        </div>
+        <div class="avatar-wrap">
+            <a href="index.html" style="visibility:hidden">
+                <i class="iconly-Home icli"></i>
+            </a>
+        </div>
+    </header>
+    <!-- Header End -->
+    <!-- Main Start -->
+    <div class="main-wrap order-detail mb-xxl">
+        <!-- Banner Start -->
+        <div class="section-p-b">
+            <div class="banner-box">
+                <div class="media">
+                    <div class="img"></div>
+                    <div class="media-body">
+                        <h2>Buyer Market</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Banner End -->
+        <div class="item-section p-0 custom-form">
+            <div class="input-box row" style="justify-content:center;"> 
+                <button class="btn btn-light" onclick="BuyerMarketPage.OpenSearchModal()" style="width:90%">ค้นหา</button> 
+                 @if (!String.IsNullOrEmpty(Filter))
+                {
+                    <p style="font-weight:9px !important;">ค้นหาโดย : @Filter</p>
+                }
+            </div>
+            <div class="input-box row">
+                @if (ModelData.TrProductResp.Count > 0)
+                {
+                    @foreach (var item in ModelData.TrProductResp)
+                    {
+                        <!-- Price Box Start -->
+                        <div class="order-box bg2-light" style="padding: 15px;margin-bottom: 10px;"> 
+                            <div class="media">
+                                <a href="javascript:void(0)" class="content-box">
+                                    <h2 class="font-sm title-color" style="margin-bottom: 2px;">
+                                        สายพันธุ์ @item.pdt_description
+                                        (เกรด  @item.pdg_description)
+
+                                    </h2>
+
+                                    <p class="font-sm content-color" style="margin-bottom: 2px;">
+                                        ราคารับซื้อ / กก.  @item.prd_price_per_unit
+                                    </p>
+                                    <p class="font-sm content-color" style="margin-bottom: 2px;">
+                                        จำนวน (ตัน)  @item.prd_amount
+                                    </p>
+                                    <p class="font-sm content-color" style="margin-bottom: 2px;">
+                                        สถานที่  @item.slr_district_th
+                                    </p>
+                                    <p class="font-sm content-color" style="margin-bottom: 2px;">
+                                        วันที่เก็บเกี่ยว @item.prd_harvest_time?.ToString("dd/MM/yyyy")
+
+                                    </p>
+                                   
+                                    @*<p class="font-sm content-color" style="margin-bottom: 2px;">จำนวน @item.Amount</p>*@
+                                    @*<p class="font-sm content-color" style="margin-bottom: 2px;">
+                            ประกาศ ณ วันที่
+
+                            </p>*@
+                                </a>
+                                <div class="media-body">
+                                    <div class="img"></div> 
+                                </div> 
+                            </div>
+                            <button class="btn btn-success" style="text-align:center; margin-left:40%" onclick="BuyerMarketPage.alertAdmin('@item.prd_id')">สนใจ</button>
+                        </div>
+                        <!-- Price Box End -->
+                    }
+                }
+                else
+                {
+                    <!-- Price Box Start -->
+                    <div class="order-box bg2-light" style="padding: 15px;margin-bottom: 10px;  text-align:center !important;">
+                        <div class="media">
+                                <a href="javascript:void(0)" class="content-box">
+                                    <h2 class="font-sm title-color" style="margin-bottom: 2px; text-align:center !important;">
+                                       ไม่พบข้อมูล
+                                    </h2> 
+                                </a>
+                                <div class="media-body">
+                                    <div class="img"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Price Box End -->
+                }
+
+                
+            </div>
+        </div>
+        
+         
+
+        <!-- Main End -->
+    </div>
+
+
+    <!-- The Modal -->
+    <div class="modal" id="searchmodal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                @using (Html.BeginForm("BuyerMarket", "Buyer", FormMethod.Get))
+                {
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">ค้นหา</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="item-section p-0 custom-form">
+                            <div class="input-box row">
+                                <div class="col-4">
+                                    <label class="control-label">ชื่อสายพันธุ์</label>
+                                </div>
+                                <div class="col-8">
+                                    @if (Model.ProductTypeResp.Count > 0)
+                                    {
+                                        <select name="productype" style="width: 100%;">
+                                            <option value="" selected>--เลือก--</option>
+                                            @foreach (var productType in ModelData.ProductTypeResp)
+                                            {
+                                                if (productType.pdt_id == 0)
+                                                {
+                                                    <option value=@productType.pdt_id selected>@productType.pdt_description</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@productType.pdt_id">@productType.pdt_description</option>
+                                                }
+                                            }
+                                        </select>
+                                    }
+                                </div>
+                            </div>
+                            <!-- end row -->
+                            <div class="input-box row" style="margin-top:10px">
+                                <div class="col-4"><label class="control-label">เกรด</label></div>
+                                <div class="col-8">
+
+                                    @if (Model.ProductGradeResp.Count > 0)
+                                    {
+                                        <select name="productgrade" style="width: 100%;">
+                                            <option value="" selected>--เลือก--</option>
+                                            @foreach (var productGrade in Model.ProductGradeResp)
+                                            {
+                                                if (productGrade.pdg_id == 0)
+                                                {
+                                                    <option value=@productGrade.pdg_id selected>@productGrade.pdg_description</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@productGrade.pdg_id">@productGrade.pdg_description</option>
+                                                }
+
+                                            }
+                                        </select>
+                                    }
+                                </div>
+                            </div>
+                            <!-- end row -->
+                            <div class="input-box row" style="margin-top:10px">
+                                <div class="col-4"><label class="control-label">จังหวัด</label></div>
+                                <div class="col-8">
+
+                                    @if (Model.DistrictResp.Count > 0)
+                                    {
+                                        <select name="District" style="width: 100%;">
+                                            <option value="" selected>--เลือก--</option>
+                                            @foreach (var District in Model.DistrictResp)
+                                            {
+                                                <option value="@District">@District</option>
+
+                                            }
+                                        </select>
+                                    }
+                                </div>
+                            </div>
+                            <!-- end row -->
+                            @*<div class="input-box row" style="margin-top:10px">
+                                <div class="col-4"><label class="control-label">ราคารับซื้อ / กก.</label></div>
+                                <div class="col-8">
+                                    <input type="text" class="text-box single-line"  name="productype" style="height:38px ;width: 100%"
+                                       pattern="^\d*(\.\d{0,2})?$" />
+                                </div>
+                            </div>*@
+                            <!-- end row -->
+                            <div class="input-box row" style="margin-top:10px">
+                                <div class="col-4"><label class="control-label">วันที่เก็บเกี่ยว</label></div>
+                                <div class="col-8" style="height:39px;">
+                                    @*<input name="harvesttime" id="harvesttime" class="input-box single-line" />*@
+                                    <jqx-date-time-input name="harvesttime" style="border-style:none !important; height:39px"> </jqx-date-time-input>
+                                    
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <input hidden name="Editid" />
+
+
+                        <button type="submit" class="btn btn-success" >ค้นหา</button>
+                        <button type="button" class="btn btn-light" style="background-color: #848b93; color:white " data-bs-dismiss="modal">Close</button>
+                    </div>
+                }
+                
+                
+            </div>
+        </div>
+    </div>
+    
+    
+</div>
+
+ 

@@ -22,6 +22,7 @@
     <meta name="msapplication-TileImage" content="/assets/images/favicon.png" />
     <meta name="msapplication-TileColor" content="#FFFFFF" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+     
 
     <!-- Bootstrap 5 -->
     <link rel="stylesheet" type="text/css" href="/assets/css/vendors/bootstrap.css" />
@@ -31,20 +32,23 @@
 
     <!-- Style css -->
     <link rel="stylesheet" type="text/css" href="/assets/css/style.css" />
-
+    
     <!-- jqWidget -->
     <link rel="stylesheet" href="@Url.Content("~/jqwidgets/styles/jqx.base.css")" type="text/css" />
     <link rel="stylesheet" href="@Url.Content("~/jqwidgets/styles/jqx.light.css")" media="screen">
 
     <!-- font awesome -->
     <link rel="stylesheet" type="text/css" href="@Url.Content("~/awesome/css/all.css")" />
+
+    <!-- Custom css -->
+    <link rel="stylesheet" type="text/css" href="/styles/custom.css" />
 </head>
 <!-- Head End -->
 <!-- Body Start -->
 <body>
-    <div class="bg-pattern-wrap ratio2_1">
+    <div class="bg-pattern-wrap ratio2_1" style="height:0px;">
         <!-- Background Image -->
-        <div class="bg-patter">
+        <div class="bg-patter" style="background-color:#6dcfc2;">
             <img src="/assets/images/banner/bg-pattern2.png" class="bg-img" alt="pattern" />
         </div>
     </div>
@@ -68,19 +72,21 @@
 
     <!-- jqWidget -->
     <script src="@Url.Content("~/jqwidgets/jqxcore.js")"></script>
-
-    <!-- Line Script-->
-    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>  
+   @* <script src="@Url.Content("~/assets/js/sweetalert2.js")"></script>*@
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
      <!-- inline scripts related to this page -->
+    @await RenderSectionAsync("Scripts", required: false)
     <script type="text/javascript">
         var baseUrl = '@Url.Content("~")';
         var appActionName = '@ViewBag.ActionName';
         var appController = '@ViewBag.ControllerName';
-    </script>
-  
 
-    @await RenderSectionAsync("Scripts", required: false)
+        $(function () {  
+        @RenderSection("pageScriptLoaded", required: false)
+
+        });
+    </script>
 </body>
 <!-- Body End -->
 </html>
