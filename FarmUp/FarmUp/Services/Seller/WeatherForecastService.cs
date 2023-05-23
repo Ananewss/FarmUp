@@ -7,7 +7,7 @@ namespace FarmUp.Services.Seller
 {
     public class WeatherForecastService
     {
-        private readonly ILogger<WeatherForecastService> _logger;
+        private readonly ILogger<WeatherForecastService> _logger; 
         private readonly IConfiguration _config;
         public WeatherForecastService(ILogger<WeatherForecastService> logger,
                                              IConfiguration config)
