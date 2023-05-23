@@ -1,11 +1,159 @@
 ﻿@model FarmUp.Dtos.Seller.WeatherForecastDtoList
+@using System.Globalization;
 
 @{
     ViewData["Title"] = "สภาพอากาศวันนี้";
-    Layout = "~/Views/Shared/_SellerPageLayout.cshtml";
+    Layout = "~/Views/Shared/_SellerPageLayout_V2.cshtml";
 }
 
-<!-- Skeleton loader Start -->
+<div class="container-fluid" style="background-color:#90CD32;font-family:Sarabun;">
+    @{
+        var weathernow = Model.weatherForecastDtosList.FirstOrDefault(e => e.DT.Date == DateTime.Now.Date && e.DT.Hour == DateTime.Now.Hour);
+        var weatherToday = Model.weatherForecastDtosList.Where(e => e.DT.Date == DateTime.Now.Date && e.DT.TimeOfDay > weathernow.DT.TimeOfDay).ToList();
+        //var weatherToday = Model.weatherForecastDtosList ?? new List<FarmUp.Dtos.Seller.WeatherForecastDto>();
+    }
+    <div class="row">
+        <div class ="col-12" style="height:45px"></div>
+    </div>
+    <div class="row">
+        <div class="col-12 text-center">
+            <h2 class="fontcustom" style="font-size:20px;">วิเคราะห์สภาพอากาศ</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class ="col-12" style="height:20px"></div>
+    </div>
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1 class="fontcustom" style="font-size:25px"><b>@Model.District, @Model.Province</b></h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class ="col-12" style="height:10px"></div>
+    </div>
+    <div class="row">
+        <div class ="col-12">
+            <img src="~/assets/images/weather/@weathernow?.Icon" class="img-fluid subboxweather" alt="offer" style="">
+        </div>
+    </div>
+    <div class="row">
+        <div class ="col-12" style="height:15px"></div>
+    </div>
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1 class="fontcustom" style="font-size:45px"><b>@string.Format("{0}°C",weathernow?.Temp)</b></h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class ="col-12" style="height:20px"></div>
+    </div>
+    <div class="row">
+        <div class="col-12 text-center">
+            <h3 class="fontcustom" >@weathernow?.DisplayTitle</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class ="col-12" style="height:15px"></div>
+    </div>
+    <div class="row">
+        <div class="col-12 text-center">
+            <h5 class="fontcustom" >@string.Format(@"{0} | {1}",weathernow.DT.ToString("d MMM yyyy", new CultureInfo("th-TH")), weathernow.DT.ToString("HH:mm"))</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class ="col-12" style="height:25px"></div>
+    </div>
+    <div class="row">
+        <div class="col-12 center">
+            <hr class="center text-center" style="background-color:#FFFFFF;width:95%;margin:auto;"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class ="col-12" style="height:25px"></div>
+    </div>
+    <div class="row" style="padding-left:10px;padding-right:10px;">
+        <div class="col-6" >
+            <div class="col-12 text-center boxcustom verticalcenter" style="width:97%;">
+                <div style="height:7px"></div>
+                <img src="~/assets/images/weather/Wind.png" class="img-fluid subiconimage" alt="offer">
+                <h5 style="padding-top:15px"><b>@weathernow.Wind</b></h5>
+                <br />
+                <h5 style="margin-top:-20px">แรงลม</h5>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="col-12 text-center boxcustom verticalcenter" style="width:97%;">
+                <img src="~/assets/images/weather/Humidity.png" class="img-fluid subiconimage" alt="offer">
+                <h5 style="padding-top:15px"><b>@weathernow.Humidity%</b></h5> 
+                <br />
+                <h5 style="margin-top:-20px">ความชื้น</h5>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class ="col-12" style="height:40px"></div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <h3 class="fontcustom">&nbsp;&nbsp;<b>สภาพอากาศวันนี้ชั่วโมงถัดไป</b></h3>
+        </div>
+    </div>
+    <div class="main-wrap order-detail" style="background-color:#90CD32;padding-left:25px;padding-right:25px;">
+    @{
+        foreach(var item in weatherToday)
+        {
+            var dateTimeFormat = string.Format(@"{0} | {1}", item.DT.ToString("d MMM yyyy", new CultureInfo("th-TH")), item.DT.ToString("HH:mm"));
+            <div class="row order-box bg2-light boxcustom" >
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class ="col-12" style="height:10px"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <img src="~/assets/images/weather/@item?.Icon" class="img-fluid subiconimage" alt="offer" style="margin-left:-10px">
+                        </div>
+                        <div class="col-7 text-left verticalcenter">
+                            <h4 style="margin-left:-25px"><b>@item?.DisplayTitle</b></h4>
+                            <div style="height:5px"></div>
+                            <span style="margin-left:-25px">@dateTimeFormat</span>
+                        </div>
+                        <div class="col-2 text-center verticalcenter">
+                                <h2 style="font-size:30px;margin-left:-30px;"><b>@string.Format("{0}°C",item?.Temp)</b></h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class ="col-12" style="height:20px"></div>
+                    </div>
+                    <div class="row">
+                        <hr />
+                    </div>
+                    <div class="row">
+                        <div class="col-6 text-center">
+                            <div style="height:7px"></div>
+                            <img src="~/assets/images/weather/Wind.png" class="img-fluid subiconimage" alt="offer">
+                            <h5 style="padding-top:10px"><b>@item.Wind</b></h5>
+                            <br />
+                            <h5 style="margin-top:-20px">แรงลม</h5>
+                        </div>
+                        <div class="col-6 text-center">
+                            <img src="~/assets/images/weather/Humidity.png" class="img-fluid subiconimage" alt="offer">
+                            <h5 style="padding-top:10px"><b>@item.Humidity%</b></h5> 
+                            <br />
+                            <h5 style="margin-top:-20px">ความชื้น</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12" style="height:5px"></div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+        <div style="height:40px"></div>
+    </div>
+</div>
+
+@*<!-- Skeleton loader Start -->
 <div>
     <!-- Header Start -->
     <header class="header">
@@ -72,7 +220,7 @@
                         }
                     }
 
-                    @*<div class="product-list media">
+                    <div class="product-list media">
                         <img src="~/assets/images/weather/sun.png" class="img-fluid" alt="offer">
                         <div class="media-body">
                             <span class="font-sm title-color fw-600"> 0:00 โอกาสเกิดฝน 10%, อุณหภูมิ 26°C</span>
@@ -87,11 +235,11 @@
                             <span class="content-color font-sm">ความชื้น 20%, แรงลม 5 กม/ช</span>
                             <span class="content-color font-sm">เมฆมาก, UV 1/10</span>
                         </div>
-                    </div>*@
+                    </div>
                 </div>
             </div>
         </section>
     </div>
     <!-- Main End -->
 </div>
-<!-- Skeleton loader End -->
+<!-- Skeleton loader End -->*@

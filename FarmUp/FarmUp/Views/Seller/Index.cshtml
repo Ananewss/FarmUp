@@ -1,0 +1,50 @@
+﻿<script>              
+        window.onload = function () {
+            if(location.href.indexOf("localhost")>0)
+            {
+                var lineUserId = "U715e8a962480fce471439e813bc2bc0a";
+                var ref = getSearchParams("ref");
+                {
+                $.post('@Url.Action("GetLIFF", "Seller")', JSON.stringify({
+                          ref: ref,
+                          lineUserId: lineUserId
+                        })).done(function(result){
+                            if(result!=null && result!="")
+                                window.location = result;
+                        });
+                }
+            }else{
+                const defaultLiffId = '1657681416-QJr0wxdE';
+                liff.init({ liffId: defaultLiffId, withLoginOnExternalBrowser: true }).then(() => {
+                    liff.getProfile().then(function (profile) {
+                        console.log(profile);
+                        var lineUserId = profile.userId;
+                        console.log(lineUserId);
+                        var ref = getSearchParams("ref");
+                        
+                        //https://localhost:44335/?ref=Seller-WeatherForecast
+                        {
+                            $.post('@Url.Action("GetLIFF", "Seller")', JSON.stringify({
+                                  ref: ref,
+                                  lineUserId: lineUserId
+                                })).done(function(result){
+                                    if(result!=null && result!="")
+                                        window.location = result;
+                                });
+                        }
+                    });
+                }).catch((err) => {
+                    console.log(err.code, err.message);
+                })
+            }
+        }
+
+
+
+        function getSearchParams(k){
+            var p={};
+            location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(s,k,v){p[k]=v})
+            return k?p[k]:p;
+        }
+       
+    </script>

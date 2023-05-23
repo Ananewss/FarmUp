@@ -1,10 +1,11 @@
 ﻿@using FarmUp.Dtos.Seller
+@using System.Globalization;
 
 @model  FarmUp.Dtos.Seller.SellItemDtoList
 
 @{
     ViewData["Title"] = "Sell Item";
-    Layout = "~/Views/Shared/_SellerPageLayout.cshtml";
+    Layout = "~/Views/Shared/_SellerPageLayout_V2.cshtml";
 }
 @section Scripts {
 
@@ -15,21 +16,21 @@
     <script>
         
         $(document).ready(function () {
-            $("[name=dtpicker]").jqxDateTimeInput({ culture: 'th-TH', width: '250px', height: '25px'});
+            //$("[name=dtpicker]").jqxDateTimeInput({ culture: 'th-TH', width: '95%', height: '72px', placeHolder: 'วันที่คาดว่าจะตัดได้' });
         });
 
-            $(document).on('keydown', 'input[pattern]', function(e){
-              var input = $(this);
-              var oldVal = input.val();
-              var regex = new RegExp(input.attr('pattern'), 'g');
+        $(document).on('keydown', 'input[pattern]', function(e){
+            var input = $(this);
+            var oldVal = input.val();
+            var regex = new RegExp(input.attr('pattern'), 'g');
 
-              setTimeout(function(){
-                var newVal = input.val();
-                if(!regex.test(newVal)){
-                  input.val(oldVal); 
-                }
-              }, 1);
-            });
+            setTimeout(function(){
+            var newVal = input.val();
+            if(!regex.test(newVal)){
+                input.val(oldVal); 
+            }
+            }, 1);
+        });
 
         function SellItem(){
             var productype = $("[name=productype]").val();
@@ -37,13 +38,15 @@
             var productgradetitle = $("[name=productgrade] :selected").text();
             var price = $("[name=price]").val();
             var volume = $("input[name=volume]").val();
-            var dt= $("[name=dtpicker]").jqxDateTimeInput('getDate');
-            var dtpicker = dt.getFullYear() + "-" + dt.getMonth() + "-" + dt.getDate();
+            //var dt= $("[name=dtpicker]").jqxDateTimeInput('getDate');
+            //var dtpicker = dt.getFullYear() + "-" + dt.getMonth() + "-" + dt.getDate();
+            var dtpicker = $('#dtpicker').val();
 
             var pas = true;
             if(productype=="") { pas = false; alert("กรุณากรอกชื่อสายพันธุ์"); }
             if(price=="") { pas = false; alert("กรุณากรอกราคา"); }
             if(volume=="") { pas = false; alert("กรุณากรอกปริมาณ"); }
+            if (dtpicker == "") { pas = false; alert("กรุณากรอกวันที่คาดว่าจะตัด"); }
             
             if(!pas)
                 return;
@@ -70,11 +73,226 @@
                 }
             });
         }
+        
+        //$(document).on('click', '#dtpicker', function (e) {
+        //    $("-webkit-calendar-picker-indicator").click();
+        //});
+
+        $(document).on('focus', '#dtpicker', function (e) {
+            if ($(this).prop("type") == "text"){
+                $(this).prop("type", "date");
+            }
+        });
+
+        $(document).on('blur', '#dtpicker', function (e) {
+            var dateSelected = $(this).val() || "";
+            if (dateSelected == "" || dateSelected == undefined || dateSelected == null) {
+                $(this).prop("type", "text");
+                $(this).prop("placeholder", "วันที่คาดว่าจะตัดได้");
+            }
+        });
+
     </script>
 }
 
 <!-- Skeleton loader Start -->
+
+<div class="container-fluid bg-headersellitem col-md-12" >
+    <div class="row">
+        <div style="height:40px"></div>
+        <h1 class="fontcustom text-center col-md-12" style="padding-top:10px;font-size:30px">
+            ลงประกาศขายทุเรียน
+        </h1>
+        <h3 class="fontcustom text-center col-md-12" style="padding-top:20px;">
+            @DateTime.Now.ToString("d MMM yyyy", new CultureInfo("th-TH"))
+        </h3>
+        <div style="height:40px"></div>
+        @{
+            var dateMin = Model.sellItemList.OrderByDescending(e => e.prd_harvest_time).Select(e => e.prd_harvest_time).FirstOrDefault();
+            var dateMax = Model.sellItemList.OrderBy(e => e.prd_harvest_time).Select(e => e.prd_harvest_time).FirstOrDefault();
+            var datehavest = string.Format(@"{0} - {1}", dateMin.ToString("d MMM yy", new CultureInfo("th-TH")), dateMax.ToString("d MMM yy", new CultureInfo("th-TH")));
+            var sumprdamount = Model.sellItemList.Sum(e => e.prd_amount).ToString("#,##0.00");
+            var sumprdamountperunit = Model.sellItemList.Sum(e => e.prd_amount * e.prd_price_per_unit).ToString("#,##0.00");
+        }
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="342.02" height="192" viewBox="0 0 342.02 192" class="img-fluid subboxsellitem">
+            <defs>
+                <clipPath id="clip-path">
+                    <rect id="Rectangle_2" data-name="Rectangle 2" width="342" height="192" transform="translate(780 129)" fill="#fff" stroke="#707070" stroke-width="1" />
+                </clipPath>
+            </defs>
+            <g id="Group_3" data-name="Group 3" transform="translate(-3)">
+                <rect id="Rectangle_1" data-name="Rectangle 1" width="342" height="192" rx="8" transform="translate(3)" fill="#328e62" />
+            </g>
+            <g id="Mask_Group_1" data-name="Mask Group 1" transform="translate(-779.98 -129)" clip-path="url(#clip-path)">
+                <g id="Group_6" data-name="Group 6" transform="translate(-4.02 1.879)">
+                    <g id="Group_5" data-name="Group 5">
+                        <g id="Group_4" data-name="Group 4" transform="translate(777.98 127)">
+                            <path id="Path_1" data-name="Path 1" d="M332.139,44.406l-6.963,5.023,3.164,6.164-7.951,3.58,1.107,6.9-8.436,1.91-1.019,7.2-8.394.121-3.082,7.053-7.823-1.674-4.951,6.461-6.76-3.367-6.509,5.461L269.25,84.4l-7.658,4.12L258.137,82.5l-8.325,2.519L248.394,78.2l-8.47.759.705-7.187-8.082-1.048,2.787-7.1-7.187-2.789,4.69-6.574L227,49.9l6.3-5.632-4.126-5.647,7.515-4.335L234.539,27.7l8.258-2.768-.044-7.108,8.482-1.025L253.3,9.615l8.173.783,4.048-6.81,7.35,2.54L278.648.118l6.063,4.139L291.85-.572l4.4,5.476L304.3,1.558l2.456,6.471,8.463-1.651.36,7.057,8.342.146-1.76,7.2,7.7,1.933-3.768,6.894,6.565,3.6-5.54,6.151,5.023,5.04Z" fill="#679f10" />
+                            <path id="Path_2" data-name="Path 2" d="M271.273,76.522c-9.679.337-32.47-4.49-35.025-12.985a37.131,37.131,0,0,1-.611-14.987c4.919-33.883,51.286-52.926,80.932-35.992l.065-.186C328.013,34.7,304.76,79.374,271.273,76.522Zm18.45-70.006C259.393,5.309,228.234,37,236.528,63.531c11.924,16.822,55.484,18.492,69.755-3.605,13.629-19.31,15.669-34.023,10.307-47.074-8.757-4.046-18.1-6.411-26.865-6.335Z" />
+                            <path id="Path_3" data-name="Path 3" d="M235.306,61.359c-4.153,12.033,51.364,34.41,77.034-1.621,25.143-35.288,3.243-49.194,3.243-49.194C289.444-8.318,224.51,16.279,235.306,61.359Z" fill="#f5f5a0" />
+                            <path id="Path_4" data-name="Path 4" d="M240.188,67.226c25.2-17.648,51.457-28.449,77.663-49.1,9.828,15.255-1.092,20.075-4.394,28.725C302.8,66.979,293.3,65.113,283.377,71.387c-16.448,6.879-31.38,7.656-43.189-4.164Z" fill="#feb505" />
+                            <path id="Path_5" data-name="Path 5" d="M249.641,63.956s-5.047,6.861-2.007,8.562,23.678,8.892,27.832-2.563,2.383-22.051-1.923-20.32-23.9,14.322-23.9,14.322Z" fill="#ffd62a" />
+                            <path id="Path_6" data-name="Path 6" d="M279.09,47.283c-4.319,16.68,13.689,26.294,24.747,5.417,4.693-11.167.228-18.456-5.413-16.477s-19.334,11.06-19.337,11.06Z" fill="#ffd62a" />
+                            <path id="Path_7" data-name="Path 7" d="M314.1,21.393s-14.776,8.5-13.184,12.188,15.347,8.712,17.764,3.586.925-13.9,0-14.979-4.578-.793-4.578-.793Z" fill="#ffd62a" />
+                            <path id="Path_8" data-name="Path 8" d="M237.265,62.525c26.5-14.211,47.478-32.364,77.04-46.133-9.041-15.286-18.05-7.884-27.07-8.811-22.289.437-24.823,9.543-34.667,15.441C239.33,34.34,232.1,47.026,237.265,62.525Z" fill="#feb505" />
+                            <path id="Path_9" data-name="Path 9" d="M244.274,55.718S236.055,57.1,235.9,53.7s2.6-24.566,14.453-23.147S270.7,38.178,267.3,41.173,244.274,55.718,244.274,55.718Z" fill="#ffd62a" />
+                            <path id="Path_10" data-name="Path 10" d="M271.785,37.372c-16.455-3.553-17.052-23.5,6.114-23.969,11.832.82,16.253,7.924,12.05,11.972S271.785,37.372,271.785,37.372Z" fill="#ffd62a" />
+                            <path id="Path_11" data-name="Path 11" d="M309.806,18.229s-13.922,9.145-16.449,6.137-.894-17.222,4.653-17.071,12.575,5.312,13.11,6.595-1.314,4.342-1.314,4.342Z" fill="#ffd62a" />
+                            <path id="Path_12" data-name="Path 12" d="M316.4,10.912,334.024-10c5.555,1.318,5.9,7.917,5.976,11.652l-16.732,16.73Z" fill="#913d05" />
+                            <path id="Path_13" data-name="Path 13" d="M299.1,9.732c.161,1.523-1.7,3.479-2.216,5.521a23.157,23.157,0,0,0-1.188,5.9c-.117,1.272-.195,2.159-.586,2.272-2.352-1.136-2.147-6.482-.85-9.233C295.922,10.424,298.7,9.288,299.1,9.732Z" fill="#fce789" />
+                            <path id="Path_14" data-name="Path 14" d="M273.38,17.407c-.005.3-.661.521-1.636.933-2.61.9-5.6,3.691-6.152,6.79a10.382,10.382,0,0,0,.314,5.314c.412,1.356.849,2.205.594,2.444-2.49-.3-4.322-4.773-3.678-8.3.446-4.107,4.973-8.032,8.635-7.815,1.264,0,1.929.36,1.925.63Z" fill="#fce789" />
+                            <path id="Path_15" data-name="Path 15" d="M249.3,32.89c.267.293-.492,1.408-1.609,3.151a40.1,40.1,0,0,0-3.7,7.018,39.931,39.931,0,0,0-2.119,7.683c-.375,2.015-.586,3.333-.979,3.362-1.908-2.3-1.1-8.032.381-11.991,1.586-3.952,5.021-8.861,8.03-9.223Z" fill="#fce789" />
+                            <path id="Path_16" data-name="Path 16" d="M311.8,25.434c.111.387-.469.891-1.239,1.588a15.525,15.525,0,0,0-3.425,4.13c-1.054,1.948-1.376,3.793-2.025,3.839-.529.038-1.617-1.944-.5-4.952.822-2.705,5.04-6.185,7.187-4.6Z" fill="#fce789" />
+                            <path id="Path_17" data-name="Path 17" d="M295.932,39.579c.067.391-1.362.912-3.379,2.04a21.241,21.241,0,0,0-8,7.624,22.27,22.27,0,0,0-2.482,6.781c-.377,1.824-.51,3.013-.86,3.051-1.849-2.18-1.038-7.509.864-11.194,2.3-4.938,9.861-9.9,13.853-8.3Z" fill="#fce789" />
+                            <path id="Path_18" data-name="Path 18" d="M266.5,55.825c.149.368-.856,1.124-2.412,2.26A52.985,52.985,0,0,0,257.4,63.69a62.143,62.143,0,0,0-4.283,4.9c-1.057,1.3-1.768,2.107-2.1,1.952-.6-.28.375-4.557,4.321-8.821,2.781-2.973,8.124-6.708,11.162-5.894Z" fill="#fce789" />
+                            <path id="Path_19" data-name="Path 19" d="M348.585,176.833l-3.946,2.847,1.792,3.493-4.505,2.029.627,3.91-4.781,1.083-.577,4.082-4.758.069-1.746,4-4.434-.948-2.8,3.661-3.831-1.908-3.689,3.1-2.988-2.746-4.34,2.335-1.958-3.413-4.718,1.428-.8-3.865-4.8.431.4-4.073-4.581-.594,1.58-4.026-4.073-1.58,2.658-3.726L289,179.946l3.571-3.192-2.338-3.2,4.259-2.457-1.22-3.731,4.68-1.569-.025-4.028,4.807-.581,1.172-4.072,4.631.444,2.3-3.86L315,155.14l3.273-3.406,3.436,2.345,4.046-2.736,2.493,3.1,4.565-1.9,1.392,3.667,4.8-.935.2,4,4.728.083-1,4.082,4.361,1.1-2.135,3.907,3.721,2.041-3.14,3.486,2.847,2.857Z" fill="#679f10" />
+                            <path id="Path_20" data-name="Path 20" d="M314.09,195.034c-5.485.191-18.4-2.544-19.849-7.359a21.039,21.039,0,0,1-.346-8.493c2.787-19.2,29.065-30,45.865-20.4l.037-.106C346.246,171.335,333.068,196.65,314.09,195.034Zm10.456-39.674c-17.188-.684-34.846,17.275-30.146,32.312,6.757,9.533,31.443,10.479,39.531-2.043,7.724-10.943,8.88-19.282,5.841-26.678a36.269,36.269,0,0,0-15.225-3.591Z" />
+                            <path id="Path_21" data-name="Path 21" d="M293.707,186.441c-2.353,6.82,29.109,19.5,43.657-.919,14.249-20,1.838-27.879,1.838-27.879C324.389,146.954,287.589,160.893,293.707,186.441Z" fill="#f5f5a0" />
+                            <path id="Path_22" data-name="Path 22" d="M296.474,189.765c14.28-10,29.162-16.122,44.013-27.823,5.57,8.645-.619,11.377-2.49,16.279-6.039,11.4-11.422,10.347-17.047,13.9-9.321,3.9-17.784,4.338-24.476-2.36Z" fill="#feb505" />
+                            <path id="Path_23" data-name="Path 23" d="M301.831,187.912s-2.86,3.889-1.137,4.853,13.419,5.039,15.773-1.453,1.35-12.5-1.09-11.516-13.547,8.116-13.547,8.116Z" fill="#ffd62a" />
+                            <path id="Path_24" data-name="Path 24" d="M318.52,178.464c-2.447,9.452,7.759,14.9,14.025,3.069,2.66-6.328.129-10.459-3.067-9.337s-10.958,6.268-10.959,6.268Z" fill="#ffd62a" />
+                            <path id="Path_25" data-name="Path 25" d="M338.361,163.791s-8.373,4.817-7.471,6.906,8.7,4.938,10.067,2.033.524-7.878,0-8.489-2.6-.449-2.6-.449Z" fill="#ffd62a" />
+                            <path id="Path_26" data-name="Path 26" d="M294.817,187.1c15.02-8.054,26.907-18.341,43.661-26.145-5.124-8.663-10.23-4.468-15.342-4.993-12.631.248-14.067,5.408-19.646,8.751C295.988,171.129,291.891,178.318,294.817,187.1Z" fill="#feb505" />
+                            <path id="Path_27" data-name="Path 27" d="M298.79,183.244s-4.658.783-4.747-1.144,1.476-13.922,8.191-13.118,11.531,4.322,9.6,6.019S298.79,183.244,298.79,183.244Z" fill="#ffd62a" />
+                            <path id="Path_28" data-name="Path 28" d="M314.381,172.847c-9.326-2.013-9.664-13.318,3.465-13.584,6.7.465,9.21,4.491,6.828,6.785S314.381,172.847,314.381,172.847Z" fill="#ffd62a" />
+                            <path id="Path_29" data-name="Path 29" d="M335.928,162s-7.89,5.183-9.322,3.477-.507-9.759,2.637-9.674,7.126,3.011,7.43,3.737-.745,2.461-.745,2.461Z" fill="#ffd62a" />
+                            <path id="Path_30" data-name="Path 30" d="M339.663,157.851,349.653,146c3.148.747,3.343,4.487,3.387,6.6l-9.483,9.482Z" fill="#913d05" />
+                            <path id="Path_31" data-name="Path 31" d="M329.858,157.183c.092.863-.96,1.972-1.255,3.129a13.125,13.125,0,0,0-.674,3.343c-.066.72-.11,1.223-.332,1.287-1.333-.644-1.216-3.673-.481-5.232C328.06,157.575,329.635,156.931,329.858,157.183Z" fill="#fce789" />
+                            <path id="Path_32" data-name="Path 32" d="M315.284,161.532c0,.167-.374.295-.927.529a5.6,5.6,0,0,0-3.486,3.848,5.887,5.887,0,0,0,.178,3.012c.233.768.481,1.249.337,1.385-1.411-.168-2.45-2.705-2.085-4.7.253-2.328,2.819-4.552,4.894-4.429.716,0,1.093.2,1.091.357Z" fill="#fce789" />
+                            <path id="Path_33" data-name="Path 33" d="M301.637,170.306c.151.166-.279.8-.912,1.786a20.894,20.894,0,0,0-3.3,8.331c-.212,1.142-.332,1.889-.555,1.9-1.081-1.3-.625-4.552.216-6.795.9-2.24,2.846-5.022,4.551-5.227Z" fill="#fce789" />
+                            <path id="Path_34" data-name="Path 34" d="M337.056,166.082c.063.219-.266.505-.7.9a8.768,8.768,0,0,0-1.941,2.34c-.6,1.1-.781,2.15-1.148,2.176-.3.021-.917-1.1-.282-2.807.466-1.533,2.856-3.5,4.073-2.608Z" fill="#fce789" />
+                            <path id="Path_35" data-name="Path 35" d="M328.065,174.1c.038.222-.771.517-1.914,1.157a12.036,12.036,0,0,0-4.534,4.32,12.645,12.645,0,0,0-1.406,3.843c-.213,1.034-.289,1.708-.487,1.729-1.048-1.235-.588-4.255.489-6.344,1.3-2.8,5.589-5.609,7.851-4.705Z" fill="#fce789" />
+                            <path id="Path_36" data-name="Path 36" d="M311.384,183.3c.085.209-.485.637-1.367,1.281a30.041,30.041,0,0,0-3.788,3.177,34.8,34.8,0,0,0-2.427,2.776c-.6.736-1,1.194-1.191,1.106-.341-.159.212-2.583,2.449-5,1.576-1.685,4.6-3.8,6.326-3.341Z" fill="#fce789" />
+                        </g>
+                    </g>
+                </g>
+            </g>
+            <text id="สรุปภาพรวม" transform="translate(22 39)" fill="#fff" font-size="20" font-family="Sarabun-Bold, Sarabun" font-weight="700"><tspan x="0" y="0">สรุปภาพรวม</tspan></text>
+            <text id="@datehavest" data-name="@datehavest" transform="translate(22 64)" fill="#fff" font-size="14" font-family="Sarabun-Regular, Sarabun"><tspan x="0" y="0">@datehavest</tspan></text>
+            <text id="ลงทั้งหมด_ตัน_" data-name="ลงทั้งหมด (ตัน)" transform="translate(22 118)" fill="#fff" font-size="14" font-family="Sarabun-Regular, Sarabun"><tspan x="0" y="0">ลงทั้งหมด (ตัน)</tspan></text>
+            <text id="รายได้ทั้งหมด_บาท_" data-name="รายได้ทั้งหมด (บาท)" transform="translate(185 118)" fill="#fff" font-size="14" font-family="Sarabun-Regular, Sarabun"><tspan x="0" y="0">รายได้ทั้งหมด (บาท)</tspan></text>
+            <text id="@sumprdamount" data-name="@sumprdamount" transform="translate(21 158)" fill="#fff" font-size="24" font-family="Sarabun-Bold, Sarabun" font-weight="700"><tspan x="0" y="0">@sumprdamount</tspan></text>
+            <text id="@sumprdamountperunit" data-name="@sumprdamountperunit" transform="translate(185 158)" fill="#fff" font-size="24" font-family="Sarabun-Bold, Sarabun" font-weight="700"><tspan x="0" y="0">@sumprdamountperunit</tspan></text>
+        </svg>
+
+        <div style="height:40px"></div>
+    </div>
+</div>
+<br />
 <div>
+    <div class="main-wrap order-detail">
+        <!-- Item Section Start -->
+        <div class="item-section p-0 custom-form">
+            <h2 style="padding:10px 0;">&nbsp;&nbsp;<b>ลงประกาศขายทุเรียน</b></h2>
+            <br />
+            <div class="input-box row">
+                <div class="col-12">
+                    <input type="text" class="col-12 text-box single-line inputboxsellitem" name="productype" placeholder="ชื่อสายพันธุ์" style="border-color:#D6D6D6;border-radius: 10px;background-color:white;" />
+                </div>
+            </div>
+            <div style="height:15px"></div>
+            <div class="input-box row">
+                <div class="col-12">
+                    @if (Model.sellItemGradeDtoList.Count > 0)
+                    {
+                        <select name="productgrade" placeholder="เกรด" class="col-12 inputboxsellitem" style="border-color:#D6D6D6;border-radius: 10px;background-color:white;">
+                            <option value="" disabled selected hidden style="font-color:#9B9B9B">เกรด</option>
+                            @foreach (var grade in Model.sellItemGradeDtoList)
+                            {
+                                <option value="@grade.pdg_id">@grade.pdg_description</option>
+                            }
+                        </select>
+                    }
+                </div>
+            </div>
+            <div style="height:15px"></div>
+            <div class="input-box row">
+                <div class="col-12"><input type="text" class="text-box single-line col-12 inputboxsellitem" name="price" placeholder="ราคาที่ต้องการ บาท/กก." pattern="^\d*(\.\d{0,2})?$" style="border-color:#D6D6D6;border-radius: 10px;background-color:white;" /></div>
+            </div>
+            <div style="height:15px"></div>
+            <div class="input-box row">
+                <div class="col-12"><input type="text" class="text-box single-line col-12 inputboxsellitem" name="volume" placeholder="ปริมาณ (ตัน)" pattern="^\d*(\.\d{0,2})?$" style="border-color:#D6D6D6;border-radius: 10px;background-color:white;" /></div>
+            </div>
+            <div style="height:15px"></div>
+            <div class="row">
+                <div class="col-12">
+                    <input placeholder="วันที่คาดว่าจะตัดได้" type="text" lang="th-TH" culture="th-TH" class="inputboxsellitem" id="dtpicker" style="border-color:#D6D6D6;border-radius: 10px;background-color:white;">
+                </div>
+            </div>
+            <div style="height:35px"></div>
+            <input type="button" value="ลงขายทุเรียน" class="btn btn-warning col-11 submitbutton" onclick="SellItem();" style="border-radius: 10px;background-color:#FFD62A;font-size: 18px;padding-left:10%;" />
+            <div style="height:40px"></div>
+        </div>
+        <!-- Item Section End -->
+    </div>
+</div>
+
+<div>
+    <div class="main-wrap order-detail bgcard">
+        <div style="height:20px"></div>
+        <div >
+            @foreach (var item in Model.sellItemList)
+            {
+                <!-- Price Box Start -->
+                <div class="order-box bg2-light cardboxseller">
+                    <div class="container-fluid">
+                        <div class="row" style="padding-top:10px">
+                            <div class="col-9 textsellitemcus"><b>สายพันธุ์ @item.prd_pdt_desc</b></div>
+                            <div class="col-3" style="text-align:right;vertical-align:middle;">
+                                <a href="@Url.Action("SellItem", "Seller")" style"="vertical-align:middle;">
+                                    <i class="fa-thin fa-pen-to-square fa-lg" style"="vertical-align:middle;"></i>
+                                </a>
+                                &nbsp;
+                                &nbsp;
+                                <a href="@Url.Action("SellItem", "Seller")" style"="vertical-align:middle;">
+                                    <i class="fa-thin fa-trash-can fa-lg" style"="vertical-align:middle;"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12" style="height:30px;"></div>
+                        </div>
+                        <div class="row" style="font-size:15px">
+                            <div class="col-6" style="vertical-align:central;">เกรด</div>
+                            <div class="col-6 cardtext">@item.prd_pdg_desc</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12" style="height:5px;"></div>
+                        </div>
+                        <div class="row" style="font-size:15px">
+                            <div class="col-6" style="vertical-align:central;">จำนวน</div>
+                            <div class="col-6 cardtext">@item.prd_amount.ToString("#,##0.00") ตัน</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12" style="height:5px;"></div>
+                        </div>
+                        <div class="row" style="font-size:15px">
+                            <div class="col-6" style="vertical-align:central;">วันเก็บเกี่ยว</div>
+                            <div class="col-6 cardtext">@item.prd_harvest_time.ToString("d/MM/yyyy", new CultureInfo("th-TH"))</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12" style="height:10px;"></div>
+                        </div>
+                        <div class="row">
+                            <hr class="boxline" style="border: 1px dashed #D6D6D6;" />
+                        </div>
+                        <div class="row" style="font-size:18px">
+                            <div class="col-6" style="vertical-align:central;"><b>ราคาที่ต้องการ</b></div>
+                            <div class="col-6 cardtext"><b><span style="color:#FF3B4E;">@item.prd_price_per_unit.ToString("#,##0.00")</span> บาท/กก.</b></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12" style="height:10px;"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Price Box End -->
+            }
+        </div>
+        <div style="height:40px"></div>
+    </div>
+</div>
+
+@*<div>
     <!-- Header Start -->
     <header class="header">
         <div class="logo-wrap">
@@ -89,6 +307,7 @@
     </header>
     <!-- Header End -->
     <!-- Main Start -->
+    
         <div class="main-wrap order-detail mb-xxl">
             <!-- Banner Start -->
             <div class="section-p-b">
@@ -182,4 +401,4 @@
         </div>
 
     <!-- Main End -->
-</div>
+</div> *@

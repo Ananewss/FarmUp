@@ -39,6 +39,11 @@ namespace FarmUp.Services.Seller
                 {
                     District = readDataUsr["slr_district"].ToString() ?? "";
                     Province = readDataUsr["slr_province"].ToString() ?? "";
+
+                    #region ForTest
+                    //District = "Pak Kret";
+                    //Province = "Nonthaburi";
+                    #endregion Fortest
                 }
                 readDataUsr.Close();
                 readDataUsr.Dispose();
@@ -72,7 +77,7 @@ namespace FarmUp.Services.Seller
                     weatherForecastDto.Province = readData["Province"].ToString() ?? "";
 
                     var icon = readData["Title"].ToString().ToLower().Replace(" ", "").Trim();
-                    icon += (weatherForecastDto.DT.Hour > 18 || weatherForecastDto.DT.Hour < 6)? "_night.png" : "_day.png";
+                    icon += (weatherForecastDto.DT.Hour > 18 || weatherForecastDto.DT.Hour < 6)? "_night_V2.png" : "_day_V2.png";
                     weatherForecastDto.Icon = icon;
                     weatherForecastDto.CloudyMsg = (Int32.Parse(weatherForecastDto.CloudCover) >= 60) ? "เมฆมาก" : (Int32.Parse(weatherForecastDto.CloudCover) >= 30) ? "เมฆปานกลาง" : "เมฆน้อย";
                     weatherForecastDto.Title = readData["Title"].ToString() ?? "";

@@ -1,0 +1,284 @@
+﻿@using FarmUp.Dtos.Seller
+@using System.Globalization;
+
+@model  FarmUp.Dtos.Seller.SellerTodoListDtoList
+
+@{
+    ViewData["Title"] = "Todo List";
+    Layout = "~/Views/Shared/_SellerPageLayout_V2.cshtml";
+
+}
+<script>
+    const dt = new DataTransfer();
+
+    function readURL(event) {
+
+        var url = URL.createObjectURL(event.target.files[0]);
+
+        var filename = event.target.files[0].name
+
+        for (let i = 0; i < dt.items.length; i++) {
+            if (filename === dt.items[i].getAsFile().name) {
+                return;
+            }
+        }
+
+        dt.items.add(event.target.files[0]);
+        document.getElementById('file').files = dt.files;
+
+        var countImg = parseInt($("input[name=CountImgUpload]").val());
+        if ($("#IsRenderImg1").val() != "1") {
+            $("input[name=ImgName1]").val(filename);
+            $(".output1").attr("src", url);
+            $('.imgbox1').css("display", "");
+            $('#IsRenderImg1').val("1");
+
+            countImg += 1;
+        }
+        else if ($("#IsRenderImg2").val() != "1") {
+            $("input[name=ImgName2]").val(filename);
+            $(".output2").attr("src", url);
+            $('.imgbox2').css("display", "");
+            $('#IsRenderImg2').val("1");
+
+            countImg += 1;
+        }
+        else if ($("#IsRenderImg3").val() != "1") {
+            $("input[name=ImgName3]").val(filename);
+            $(".output3").attr("src", url);
+            $('.imgbox3').css("display", "");
+            $('#IsRenderImg3').val("1");
+
+            countImg += 1;
+        }
+        else if ($("#IsRenderImg4").val() != "1") {
+            $("input[name=ImgName4]").val(filename);
+            $(".output4").attr("src", url);
+            $('.imgbox4').css("display", "");
+            $('#IsRenderImg4').val("1");
+
+            countImg += 1;
+        }
+        else {
+            return;
+        }
+
+        if(countImg >= 4){
+            $('.uploadtag').css("display", "none");
+        }
+        $("input[name=CountImgUpload]").val(countImg);
+        $("#uploadamount").text(countImg);
+    }
+
+    function deleteoutput1(event) {
+
+        event.preventDefault();
+
+        var delFileName = $("input[name=ImgName1]").val();
+        self.removedupfilefromdt(delFileName);
+
+        var countImg = parseInt($("input[name=CountImgUpload]").val());
+        countImg = countImg - 1;
+        $("input[name=CountImgUpload]").val(countImg);
+        $("#uploadamount").text(countImg);
+
+        $('#IsRenderImg1').val("0");
+        $(".output1").attr("src", "");
+        $('.imgbox1').css("display", "none");
+
+        $('.uploadtag').css("display", "");
+    }
+
+    function deleteoutput2(event) {
+
+        event.preventDefault();
+
+        var delFileName = $("input[name=ImgName2]").val();
+        self.removedupfilefromdt(delFileName);
+
+        var countImg = parseInt($("input[name=CountImgUpload]").val());
+        countImg = countImg - 1;
+        $("input[name=CountImgUpload]").val(countImg);
+        $("#uploadamount").text(countImg);
+
+        $('#IsRenderImg2').val("0");
+        $(".output2").attr("src", "");
+        $('.imgbox2').css("display", "none");
+
+        $('.uploadtag').css("display", "");
+    }
+
+    function deleteoutput3(event) {
+
+        event.preventDefault();
+
+        var delFileName = $("input[name=ImgName3]").val();
+        self.removedupfilefromdt(delFileName);
+
+        var countImg = parseInt($("input[name=CountImgUpload]").val());
+        countImg = countImg - 1;
+        $("input[name=CountImgUpload]").val(countImg);
+        $("#uploadamount").text(countImg);
+
+        $('#IsRenderImg3').val("0");
+        $(".output3").attr("src", "");
+        $('.imgbox3').css("display", "none");
+
+        $('.uploadtag').css("display", "");
+    }
+
+    function deleteoutput4(event) {
+
+        event.preventDefault();
+
+        var delFileName = $("input[name=ImgName4]").val();
+        self.removedupfilefromdt(delFileName);
+
+        var countImg = parseInt($("input[name=CountImgUpload]").val());
+        countImg = countImg - 1;
+        $("input[name=CountImgUpload]").val(countImg);
+        $("#uploadamount").text(countImg);
+
+        $('#IsRenderImg4').val("0");
+        $(".output4").attr("src", "");
+        $('.imgbox4').css("display", "none");
+
+        $('.uploadtag').css("display", "");
+    }
+
+    function removedupfilefromdt (filename){
+
+        for (let i = 0; i < dt.items.length; i++) {
+            if (filename === dt.items[i].getAsFile().name) {
+                dt.items.remove(i);
+                continue;
+            }
+        }
+        document.getElementById('file').files = dt.files;
+    }
+    function onClickCancel() {
+        window.location.href = '/Seller/TodoList';
+        return false;
+    }
+</script>
+
+<div>
+    <div class="container-fluid" style="background-color:#90CD32;">
+        <div class="row">
+            <div style="height:30px"></div>
+        </div>
+        <div class="row">
+            <div class="text-center" style="color:#FFFFFF; font-size:30px"><b>เพิ่มรายการ</b></div>
+        </div>
+        <div class="row">
+            <div style="height:10px"></div>
+        </div>
+        <div class="row">
+            <div class="text-center" style="color:#FFFFFF; font-size:20px">@DateTime.Now.ToString("dd MMM yyyy", new CultureInfo("th-TH"))</div>
+        </div>
+        <div class="row">
+            <div style="height:30px"></div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid main-wrap order-detail" style="background-color:#FFFFFF">
+    <div class="row">
+        <div class="col-12" style="height:20px"></div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div style="font-size:24px;margin-top:5px">&nbsp;<b>ข้อสังเกตหรือปัญหาที่พบ</b></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12" style="height:20px"></div>
+    </div>
+    <div class="row">
+        <div class="input-box col-12">
+            @if (Model.titleActivity.Any())
+            {
+                <select name="productgrade" placeholder="หัวข้อ" class="col-12 inputboxaddform" style="border-color:#D6D6D6;border-radius: 10px;background-color:white;">
+                    <option value="" disabled selected hidden>หัวข้อ</option>
+                @foreach (var item in Model.titleActivity)
+                {
+                    <option value="@item">@item</option>
+                }
+                 </select>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12" style="height:20px"></div>
+    </div>
+    <div class="row">
+        <div class="col-12 input-box">
+            <textarea class="col-12 text-box single-line inputboxaddform" name="Description" placeholder="รายละเอียด" rows="15" style="border-color:#D6D6D6;border-radius: 10px;background-color:white;height:210px;padding:10px"></textarea>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12" style="height:30px"></div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div style="font-size:22px;margin-top:5px">&nbsp;<b>อัพโหลดรูป <span id="uploadamount">0</span>/4</b></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12" style="height:20px"></div>
+    </div>
+    @Html.Hidden("CountImgUpload", 0)
+    @Html.Hidden("IsRenderImg1","")
+    @Html.Hidden("IsRenderImg2","")
+    @Html.Hidden("IsRenderImg3","")
+    @Html.Hidden("IsRenderImg4","")
+    @Html.Hidden("ImgName1","")
+    @Html.Hidden("ImgName2","")
+    @Html.Hidden("ImgName3","")
+    @Html.Hidden("ImgName4","")
+    <div class="row">
+        <div class="col-12">
+            <div class="col-3 imgblock imgbox1" style="display: none;">
+                <img id="output1" class="output1 subiconimage img-fluid uploadimgpreview" src="" alt="img" style="" />
+                <span class="icondelete deleteoutput1 text-center" style="" onclick="deleteoutput1(event)"><i class="fa-regular fa-trash-can"></i></span>
+            </div>
+            <div class="col-3 imgblock imgbox2" style="display: none;">
+                <img id="output2" class="output2 subiconimage img-fluid uploadimgpreview" src="" alt="img" style="" />
+                <span class="icondelete deleteoutput2 text-center" style="" onclick="deleteoutput2(event)"><i class="fa-regular fa-trash-can"></i></span>
+            </div>
+            <div class="col-3 imgblock imgbox3" style="display: none;">
+                <img id="output3" class="output3 subiconimage img-fluid uploadimgpreview" src="" alt="img" style="" />
+                <span class="icondelete deleteoutput3 text-center" style="" onclick="deleteoutput3(event)"><i class="fa-regular fa-trash-can"></i></span>
+            </div>
+            <div class="col-3 imgblock imgbox4" style="display: none;">
+                <img id="output4" class="output4 subiconimage img-fluid uploadimgpreview" src="" alt="img" style="" />
+                <span class="icondelete deleteoutput4 text-center" style="" onclick="deleteoutput4(event)"><i class="fa-regular fa-trash-can"></i></span>
+            </div>
+
+            <div class="col-3 uploadtag uploadimg verticalcenter text-center" style="margin-top: 6px;">
+                <input type="file" accept="image/gif, image/jpeg, image/png" name="image" id="file" onchange="readURL(event)" style="display: none;">
+                <p>
+                    <label for="file" style="cursor: pointer;font-size:40px;color:#D6D6D6;">
+                        <i class="fa-solid fa-plus"></i>
+                    </label>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12" style="height:20px"></div>
+    </div>
+    <div class="row">
+        <input type="button" value="บันทึก" class="btn btn-warning col-11 submitbutton" onclick="" style="border-radius: 10px;background-color:#FFD62A;font-size: 20px;" />
+    </div>
+    <div class="row">
+        <div class="col-12" style="height:20px"></div>
+    </div>
+    <div class="row">
+        <input type="button" value="ยกเลิก" class="btn btn-warning col-11 submitbutton" onclick="onClickCancel()" style="border-radius: 10px;background-color:#F9F9F9;font-size: 20px;" />
+    </div>
+    <div class="row">
+        <div class="col-12" style="height:40px"></div>
+    </div>
+</div>

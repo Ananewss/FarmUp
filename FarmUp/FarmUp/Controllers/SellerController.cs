@@ -13,10 +13,11 @@ using System.IO;
 using FarmUp.Models;
 using System.Dynamic;
 using Ubiety.Dns.Core;
+using Microsoft.AspNetCore.Http;
 
 namespace FarmUp.Controllers
 {
-    public class SellerController : Controller
+    public class SellerController : BaseController //Controller
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
 
@@ -33,7 +34,7 @@ namespace FarmUp.Controllers
         private readonly TodayPriceService _todayPriceService;
 
 
-        public SellerController(IWebHostEnvironment webHostEnvironment, IConfiguration config, ILogger<SellerController> logger, TodoListService todoListService, WeatherForecastService weatherForecastService, TodayPriceService todayPriceService, SellerActivityService SellerActService)
+        public SellerController(IWebHostEnvironment webHostEnvironment, IConfiguration config, ILogger<SellerController> logger, TodoListService todoListService, WeatherForecastService weatherForecastService, TodayPriceService todayPriceService, SellerActivityService SellerActService) : base(webHostEnvironment, config, logger)
         {
             _webHostEnvironment = webHostEnvironment;
             _config = config;
@@ -44,11 +45,77 @@ namespace FarmUp.Controllers
             _SellerActService = SellerActService;
         }
 
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public String GetLIFF(int? id)
+        {
+            var content = Request.Form.FirstOrDefault().Key;
+            {
+                var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(content);
+                var lineUserId = dict["lineUserId"];
+                var refer = (dict.ContainsKey("ref")) ? dict["ref"] : "";
+
+                HttpContext.Session.SetString("lineUserId", lineUserId);
+
+                if (string.IsNullOrWhiteSpace(refer))
+                {
+                    refer = string.Format("/{0}/{1}", HttpContext.Session.GetString("controllerRedirect"), HttpContext.Session.GetString("actionRedirect"));
+                }
+
+                string strConn = _config.GetConnectionString($"onedurian");
+
+                MySqlConnection mSqlConn = new MySqlConnection(strConn);
+                try
+                {
+                    var sql = @"SELECT * 
+                        FROM ma_user
+                        WHERE usr_line_id = @usr_line_id";
+                    mSqlConn.Open();
+
+                    MySqlCommand mCmd = new MySqlCommand(sql, mSqlConn);
+                    mCmd.Parameters.AddWithValue("@usr_line_id", lineUserId);
+
+                    var readData = mCmd.ExecuteReader();
+                    if (!readData.Read())
+                    {
+                        refer = "-Account-Register";
+                    }
+                    else
+                    {
+                        HttpContext.Session.SetString("userId", readData["usr_id"].ToString());
+                    }
+                    readData.Close();
+
+                }
+                catch (Exception ex)
+                {
+
+                }
+                mSqlConn.Close();
+
+                //HttpContext.Session.GetString("lineUserId")
+
+                //if (refer != null)
+                //{
+                //    if (refer.Equals("WeatherForecast"))
+                //        //RedirectToAction("WeatherForecast","Seller");
+                //        Redirect("/Seller/WeatherForecast");
+                //}
+
+                return refer.Replace("-", "/");
+            }
+        }
+
         public async Task<ActionResult> TodoList()
         {
             var lineUerId = HttpContext.Session.GetString("lineUserId");
             var userId = HttpContext.Session.GetString("userId");
             var readTodoListData = await _todolistSrvice.GetTodoListByUser(userId);
+
             return View(readTodoListData);
 
             //TodoListDto renderList = new TodoListDto();
@@ -58,6 +125,14 @@ namespace FarmUp.Controllers
             //ViewData["selectProblemListValue"] = getValue.ProblemList;
             //TodoListFormDto todoListFormDto = new TodoListFormDto();
             //return View();
+        }
+
+        public async Task<ActionResult> TodoListAddForm()
+        {
+            var lineUerId = HttpContext.Session.GetString("lineUserId");
+            var userId = HttpContext.Session.GetString("userId");
+            var readTodoListData = await _todolistSrvice.GetTodoListByUser(userId);
+            return View(readTodoListData);
         }
 
         public ActionResult TakePhoto()
