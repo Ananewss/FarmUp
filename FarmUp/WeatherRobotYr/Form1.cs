@@ -155,6 +155,16 @@ namespace WeatherRobot
                         var humidity = data.XPathSelectElement("//td[8]/span/span").Value;
                         var cloudCover = data.XPathSelectElement("//td[10]/span/span").Value;
 
+                        //Edit Title
+                        {
+                            if (title.IndexOf("rain") >= 0) title = "rain";
+                            if (title.IndexOf("sleet") >= 0) title = "rain";
+                            if (title.IndexOf("snow") >= 0) title = "rain";
+                            if (title.IndexOf("thunder") >= 0) title = "rain";
+                        }
+
+
+
                         var weather_day = new tr_weather_day_Item()
                         {
                             DT = fullDt,

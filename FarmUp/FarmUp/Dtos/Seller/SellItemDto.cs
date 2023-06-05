@@ -1,4 +1,6 @@
-﻿namespace FarmUp.Dtos.Seller
+﻿using Dapper.Contrib.Extensions;
+
+namespace FarmUp.Dtos.Seller
 {
     public class SellItemGradeDto
     {
@@ -9,7 +11,10 @@
 
     public class SellItem
     {
+        [ExplicitKey]
+        public Guid prd_id { get; set; }
         public DateTime prd_datetime { get; set; }
+        public int prd_usr_id { get; set; }
         public string prd_pdt_desc { get; set; } = string.Empty;
         public int prd_pdg_id { get; set; }
         public string prd_pdg_desc { get; set; } = string.Empty;

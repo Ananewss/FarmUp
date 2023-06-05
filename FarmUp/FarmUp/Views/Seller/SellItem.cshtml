@@ -13,6 +13,7 @@
     <script type="text/javascript" src="~/jqwidgets/jqxcalendar.js"></script>
     <script type="text/javascript" src="~/jqwidgets/globalization/globalize.js"></script>
     <script type="text/javascript" src="~/jqwidgets/globalization/globalize.culture.th-TH.js"></script>
+    <script src="@Url.Content("~/js/Seller/SellItemPage.js")?v=@Html.Raw(Guid.NewGuid())"></script>
     <script>
         
         $(document).ready(function () {
@@ -112,7 +113,7 @@
             var dateMax = Model.sellItemList.OrderBy(e => e.prd_harvest_time).Select(e => e.prd_harvest_time).FirstOrDefault();
             var datehavest = string.Format(@"{0} - {1}", dateMin.ToString("d MMM yy", new CultureInfo("th-TH")), dateMax.ToString("d MMM yy", new CultureInfo("th-TH")));
             var sumprdamount = Model.sellItemList.Sum(e => e.prd_amount).ToString("#,##0.00");
-            var sumprdamountperunit = Model.sellItemList.Sum(e => e.prd_amount * e.prd_price_per_unit).ToString("#,##0.00");
+            var sumprdamountperunit = Model.sellItemList.Sum(e => e.prd_amount * 1000 * e.prd_price_per_unit).ToString("#,##0.00");
         }
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="342.02" height="192" viewBox="0 0 342.02 192" class="img-fluid subboxsellitem">
             <defs>
@@ -239,13 +240,13 @@
                         <div class="row" style="padding-top:10px">
                             <div class="col-9 textsellitemcus"><b>สายพันธุ์ @item.prd_pdt_desc</b></div>
                             <div class="col-3" style="text-align:right;vertical-align:middle;">
-                                <a href="@Url.Action("SellItem", "Seller")" style"="vertical-align:middle;">
-                                    <i class="fa-thin fa-pen-to-square fa-lg" style"="vertical-align:middle;"></i>
+                                <a href="#" style"="vertical-align:middle;">
+                                    <i class="fa-thin fa-pen-to-square fa-lg" style"="vertical-align:middle;" onclick="SellItemPage.GetDetails('@item.prd_id')"></i>
                                 </a>
                                 &nbsp;
                                 &nbsp;
-                                <a href="@Url.Action("SellItem", "Seller")" style"="vertical-align:middle;">
-                                    <i class="fa-thin fa-trash-can fa-lg" style"="vertical-align:middle;"></i>
+                                <a href="#" style"="vertical-align:middle;">
+                                    <i class="fa-thin fa-trash-can fa-lg" style"="vertical-align:middle;" onclick="SellItemPage.btnDelete('@item.prd_id')"></i>
                                 </a>
                             </div>
                         </div>
@@ -289,6 +290,85 @@
             }
         </div>
         <div style="height:40px"></div>
+    </div>
+
+
+</div>
+<div>
+    
+    <!-- The Modal -->
+    <div class="modal" id="Editmodal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">แก้ไขข้อมูลปะกาศขาย</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="item-section p-0 custom-form">
+                        <div class="input-box row">
+                            <div class="col-4">
+                                <label class="control-label">ชื่อสายพันธุ์</label>
+                            </div>
+                            <div class="col-8">
+                                <input type="text" class="text-box single-line" name="Editproductype" placeholder="ชื่อสายพันธุ์" style="height:38px ;width: 100%" />
+                            </div>
+                        </div>
+                        <!-- end row -->
+                        <div class="input-box row" style="margin-top:10px">
+                            <div class="col-4"><label class="control-label">เกรด</label></div>
+                            <div class="col-8">
+
+                                @if (Model.sellItemGradeDtoList.Count > 0)
+                                {
+                                    <select name="Editproductgrade" style="width: 100%;">
+                                        @foreach (var productGrade in Model.sellItemGradeDtoList)
+                                        {
+                                            if (!String.IsNullOrEmpty(productGrade.pdg_id) && !productGrade.pdg_id.Equals("0"))
+                                            {
+                                                <option value=@productGrade.pdg_id selected>@productGrade.pdg_description</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@productGrade.pdg_id">@productGrade.pdg_description</option>
+                                            }
+
+                                        }
+                                    </select>
+                                }
+                            </div>
+                        </div>
+                        <!-- end row -->
+                        <div class="input-box row" style="margin-top:10px">
+                            <div class="col-4"><label class="control-label">ราคาที่ต้องการ / กก.</label></div>
+                            <div class="col-8">
+                                <input type="text" class="text-box single-line" name="Editprice" placeholder="ราคาที่ต้องการ บาท/กก." style="height:38px ;width: 100%"
+                                       pattern="^\d*(\.\d{0,2})?$" />
+                            </div>
+                        </div>
+                        <!-- end row -->
+                        <div class="input-box row" style="margin-top:10px">
+                            <div class="col-4"><label class="control-label">จำนวน (ตัน)</label></div>
+                            <div class="col-8"><input type="text" class="text-box single-line" name="Editamount" placeholder="จำนวน (ตัน)" style="height:38px ;width: 100%"
+                                       pattern="^\d*(\.\d{0,2})?$" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <input hidden name="Editid" />
+                    <button type="button" class="btn btn-success" onclick="SellItemPage.btnEdit()">บันทึก</button>
+                    <button type="button" class="btn btn-light" style="background-color: #848b93; color:white " data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

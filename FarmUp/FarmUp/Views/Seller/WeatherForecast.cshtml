@@ -9,7 +9,7 @@
 <div class="container-fluid" style="background-color:#90CD32;font-family:Sarabun;">
     @{
         var weathernow = Model.weatherForecastDtosList.FirstOrDefault(e => e.DT.Date == DateTime.Now.Date && e.DT.Hour == DateTime.Now.Hour);
-        var weatherToday = Model.weatherForecastDtosList.Where(e => e.DT.Date == DateTime.Now.Date && e.DT.TimeOfDay > weathernow.DT.TimeOfDay).ToList();
+        var weatherToday = Model.weatherForecastDtosList.Where(e => (e.DT.Date == DateTime.Now.Date && e.DT.TimeOfDay > weathernow.DT.TimeOfDay) || (e.DT.TimeOfDay < weathernow.DT.TimeOfDay)).ToList();
         //var weatherToday = Model.weatherForecastDtosList ?? new List<FarmUp.Dtos.Seller.WeatherForecastDto>();
     }
     <div class="row">

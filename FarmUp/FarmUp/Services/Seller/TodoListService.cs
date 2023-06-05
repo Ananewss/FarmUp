@@ -338,7 +338,7 @@ namespace FarmUp.Services.Seller
             mysqlConn.Open();
             try
             {
-                using (MySqlCommand mysqlCmd = new MySqlCommand(@"UPDATE tr_activity SET ActDesc=@ActDesc, ActTopic=@ActTopic WHERE ImgUrl=@ImgUrl", mysqlConn))
+                using (MySqlCommand mysqlCmd = new MySqlCommand(@"UPDATE tr_activity SET ActDesc=@ActDesc, ActTopic=@ActTopic, updated_at = current_timestamp() WHERE ImgUrl=@ImgUrl", mysqlConn))
                 {
                     mysqlCmd.Parameters.Clear();
                     //mysqlCmd.Parameters.Add(new MySqlParameter("@ImgUrl", MySqlDbType.VarChar, 255)).Value = ActivityItem.ImgUrl;

@@ -14,6 +14,11 @@ using FarmUp.Models;
 using System.Dynamic;
 using Ubiety.Dns.Core;
 using Microsoft.AspNetCore.Http;
+using FarmUp.Models.Response.Product;
+using FarmUp.Services.Buyer;
+using FarmUp.Dtos.Admin;
+using static Dapper.SqlMapper;
+using FarmUp.Models.Request.Product;
 
 namespace FarmUp.Controllers
 {
@@ -452,6 +457,7 @@ namespace FarmUp.Controllers
 
         public ActionResult SellItem()
         {
+            var userId = HttpContext.Session.GetString("userId");
             string strConn = _config.GetConnectionString($"onedurian");
             MySqlConnection mSqlConn = new MySqlConnection(strConn);
             SellItemDtoList answerList = new SellItemDtoList();
@@ -480,9 +486,10 @@ namespace FarmUp.Controllers
                     }
                 }
                 {
-                    MySqlCommand usrCmd = new MySqlCommand(@"SELECT *
+                    MySqlCommand usrCmd = new MySqlCommand(@"SELECT *,BIN_TO_UUID(prd_id) uid
                                                         FROM tr_product
-                                                        WHERE deleted_at IS NULL ", mSqlConn);
+                                                        WHERE deleted_at IS NULL AND prd_usr_id=@usr_id ", mSqlConn);
+                    usrCmd.Parameters.AddWithValue("@usr_id", userId);
 
                     var reader = usrCmd.ExecuteReader();
                     if (reader.HasRows)
@@ -491,7 +498,9 @@ namespace FarmUp.Controllers
                         {
                             SellItem model = new SellItem();
                             //model.q_ID = reader.GetInt32(0);
+                            model.prd_id = new Guid((string)reader["uid"]);
                             model.prd_datetime = (DateTime) reader["prd_datetime"];
+                            model.prd_usr_id = (int)reader["prd_usr_id"];
                             model.prd_pdt_desc = reader["prd_pdt_desc"].ToString();
                             model.prd_pdg_id = (int)reader["prd_pdg_id"];
                             model.prd_pdg_desc = reader["prd_pdg_desc"].ToString();
@@ -519,5 +528,148 @@ namespace FarmUp.Controllers
             return View();
         }
 
+        
+        [HttpGet]
+        public async Task<SellItem> DetailSellItem(Guid prd_id)
+        {
+
+            var userId = HttpContext.Session.GetString("userId");
+            string strConn = _config.GetConnectionString($"onedurian");
+            MySqlConnection mSqlConn = new MySqlConnection(strConn);
+
+
+            SellItem sellItem = new SellItem();
+            try
+            {
+                mSqlConn.Open();
+                {
+                    MySqlCommand usrCmd = new MySqlCommand(@"SELECT *,BIN_TO_UUID(prd_id) uid
+                                                        FROM tr_product
+                                                        WHERE prd_id = (UNHEX(REPLACE(@prd_id, '-',''))); ", mSqlConn);
+                    usrCmd.Parameters.AddWithValue("@prd_id", prd_id);
+
+                    var reader = usrCmd.ExecuteReader();
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            sellItem.prd_id = new Guid((string)reader["uid"]);
+                            sellItem.prd_datetime = (DateTime)reader["prd_datetime"];
+                            sellItem.prd_usr_id = (int)reader["prd_usr_id"];
+                            sellItem.prd_pdt_desc = (string)reader["prd_pdt_desc"];
+                            sellItem.prd_pdg_id = (int)reader["prd_pdg_id"];
+                            sellItem.prd_pdg_desc = (string)reader["prd_pdg_desc"];
+                            sellItem.prd_amount = (decimal)reader["prd_amount"];
+                            sellItem.prd_price_per_unit = (decimal)reader["prd_price_per_unit"];
+                            sellItem.prd_harvest_time = (DateTime)reader["prd_harvest_time"];
+                        }
+                    }
+                    reader.Close();
+                }
+                mSqlConn.Close();
+            }
+            catch (Exception)
+            {
+                mSqlConn.Close();
+            }
+
+            return sellItem;
+        }
+
+        [HttpDelete]
+        public async Task<ResponseMSG> DeleteSellItem(Guid prd_id)
+        {
+
+            var userId = HttpContext.Session.GetString("userId");
+            string strConn = _config.GetConnectionString($"onedurian");
+            MySqlConnection mSqlConn = new MySqlConnection(strConn);
+
+            ResponseMSG responseMSG = new ResponseMSG();
+            responseMSG.Status = 400;
+            responseMSG.Result = $"Bad Request";
+
+            SellItem sellItem = new SellItem();
+            try
+            {
+                mSqlConn.Open();
+                {
+                    MySqlCommand usrCmd = new MySqlCommand(@"UPDATE tr_product
+                                                        SET deleted_at = current_timestamp()
+                                                        WHERE prd_id = (UNHEX(REPLACE(@prd_id, '-','')))
+                                                                AND prd_usr_id=@prd_usr_id; ", mSqlConn);
+                    usrCmd.Parameters.AddWithValue("@prd_id", prd_id);
+                    usrCmd.Parameters.AddWithValue("@prd_usr_id", userId);
+
+                    var reader = usrCmd.ExecuteNonQuery();
+                    if(reader > 0)
+                    {
+                        responseMSG.Status = 200;
+                        responseMSG.Result = $"Success";
+                    }
+                }
+                mSqlConn.Close();
+            }
+            catch (Exception)
+            {
+                mSqlConn.Close();
+            }
+
+            return responseMSG;
+        }
+
+        [HttpPut]
+        public async Task<ResponseMSG> EditSellItem(UpdateSellItemReq req)
+        {
+            var userId = HttpContext.Session.GetString("userId");
+            string strConn = _config.GetConnectionString($"onedurian");
+            MySqlConnection mSqlConn = new MySqlConnection(strConn);
+
+            ResponseMSG responseMSG = new ResponseMSG();
+            responseMSG.Status = 400;
+            responseMSG.Result = $"Bad Request";
+
+            SellItem sellItem = new SellItem();
+            try
+            {
+                mSqlConn.Open();
+                {
+                    var sql = @"UPDATE tr_product
+                        SET updated_at = current_timestamp()";
+
+                    sql += (req.price == null) ? "" : " , prd_price_per_unit=@prd_price_per_unit ";
+                    sql += (req.amount == null) ? "" : " , prd_amount=@prd_amount ";
+                    sql += (req.productype == null) ? "" : " , prd_pdt_desc=@prd_pdt_desc ";
+                    sql += (req.productgrade == null) ? "" : " , prd_pdg_id=@prd_pdg_id ";
+
+                    MySqlCommand usrCmd = new MySqlCommand(sql + @"WHERE prd_id = (UNHEX(REPLACE(@prd_id, '-','')))
+                                                                AND prd_usr_id=@prd_usr_id; ", mSqlConn);
+                    usrCmd.Parameters.AddWithValue("@prd_id", req.prd_id);
+                    usrCmd.Parameters.AddWithValue("@prd_usr_id", userId);
+
+                    if (req.price != null)
+                        usrCmd.Parameters.AddWithValue("@prd_price_per_unit", req.price);
+                    if (req.amount != null)
+                        usrCmd.Parameters.AddWithValue("@prd_amount", req.amount);
+                    if (req.productype != null)
+                        usrCmd.Parameters.AddWithValue("@prd_pdt_desc", req.productype);
+                    if (req.productgrade != null)
+                        usrCmd.Parameters.AddWithValue("@prd_pdg_id", req.productgrade);
+
+                    var reader = usrCmd.ExecuteNonQuery();
+                    if (reader > 0)
+                    {
+                        responseMSG.Status = 200;
+                        responseMSG.Result = $"Success";
+                    }
+                }
+                mSqlConn.Close();
+            }
+            catch (Exception)
+            {
+                mSqlConn.Close();
+            }
+
+            return responseMSG;
+        }
     }
 }
